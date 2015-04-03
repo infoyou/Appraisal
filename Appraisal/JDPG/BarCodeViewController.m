@@ -1,10 +1,3 @@
-//
-//  BarCodeViewController.m
-//  Aladdin
-//
-//  Created by Adam on 14-12-17.
-//  Copyright (c) 2014年 com.jit. All rights reserved.
-//
 
 #import "BarCodeViewController.h"
 

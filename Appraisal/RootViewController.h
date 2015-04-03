@@ -10,6 +10,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MobClick.h"
+
+#import "AppDelegate.h"
 #import "AppManager.h"
 #import "GlobalConstants.h"
 #import "FMDBConnection.h"

@@ -1,5 +1,7 @@
 
 #import "PhotoViewController.h"
+#import "ResultViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -35,8 +37,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) BOOL lockInterfaceRotation;
 @property (nonatomic) id runtimeErrorHandlingObserver;
 
-
-@property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, retain) NSTimer *videoTimer;
 @end
 
 @implementation PhotoViewController
@@ -267,6 +268,7 @@ AVCaptureVideoDataOutput *videoOutput;
     
     // result
     [self addTapGestureRecognizer:self.resultTakePhoto];
+    [self addTapGestureRecognizer:self.resultDoneBtn];
 }
 
 
@@ -350,6 +352,9 @@ AVCaptureVideoDataOutput *videoOutput;
         }
         
     } else if ([view isEqual:self.doneBtn]) {
+
+        ResultViewController *resultVC = [[ResultViewController alloc] init];
+        [self presentViewController:resultVC animated:YES completion:^{}];
         
     } else if ([view isEqual:self.resultTakePhoto]) {
         
@@ -359,7 +364,7 @@ AVCaptureVideoDataOutput *videoOutput;
             [self takePhoto:INPUT_PHOTO_TYPE];
         } else if (inputType == INPUT_VIDEO_TYPE) {
             
-            if (![[self movieFileOutput] isRecording])
+            if (self.timeLabel.isHidden)
             {
                 // 开始视频拍摄
                 self.resultTakePhoto.image = [UIImage imageNamed:@"btnStop.png"];
@@ -377,6 +382,8 @@ AVCaptureVideoDataOutput *videoOutput;
         
     } else if ([view isEqual:self.resultDoneBtn]) {
         
+        ResultViewController *resultVC = [[ResultViewController alloc] init];
+        [self presentViewController:resultVC animated:YES completion:^{}];
     }
 }
 
@@ -408,6 +415,8 @@ AVCaptureVideoDataOutput *videoOutput;
     [self clearData];
     
     [self dismissViewControllerAnimated:NO completion:nil];
+    
+    [((AppDelegate *)APP_DELEGATE).window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)doSwitchType:(id)sender {
@@ -465,63 +474,6 @@ AVCaptureVideoDataOutput *videoOutput;
             self.photoView.hidden = YES;
         }
     }
-}
-
-- (void)takePhoto0:(id)sender
-{
-    
-    AVCaptureConnection *videoConnection = nil;
-    
-    for (AVCaptureConnection *connection in stillImageOutput.connections) {
-        for (AVCaptureInputPort *port in [connection inputPorts]) {
-            if ([[port mediaType] isEqual:AVMediaTypeVideo]) {
-                videoConnection = connection;
-                break;
-            }
-        }
-        
-        if (videoConnection) {
-            break;
-        }
-    }
-    
-    [stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-        if (imageDataSampleBuffer != NULL) {
-            NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-            
-            // 得到照片
-            UIImage *image = [UIImage imageWithData:imageData];
-            // 保存到内存
-            [localImgArray addObject:image];
-            // 加载到页面
-            [self loadLocalImageScroll];
-            // 显示照片
-            [self turnPage];
-            
-            /*
-            // 保存照片到文件
-            NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-            
-            // If you go to the folder below, you will find those pictures
-            NSLog(@"%@",docDir);
-            
-            NSLog(@"saving png");
-            
-            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-            NSTimeInterval a=[dat timeIntervalSince1970];
-            NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
-            
-            NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@.png", docDir, dateId];
-            NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(image)];
-            [data1 writeToFile:pngFilePath atomically:YES];
-            
-            // 保存文件地址
-            [localImgPathArray addObject:pngFilePath];
-             NSLog(@"saving image done");
-            */
-            
-        }
-    }];
 }
 
 - (void)turnPage
@@ -819,7 +771,8 @@ AVCaptureVideoDataOutput *videoOutput;
 {
     
     dispatch_async([self sessionQueue], ^{
-        if (![[self movieFileOutput] isRecording])
+        // if (![[self movieFileOutput] isRecording]) // 此判断无效 @ios 7.1.2
+        if (!self.timeLabel.isHidden)
         {
 
             [self setLockInterfaceRotation:YES];
@@ -876,6 +829,29 @@ AVCaptureVideoDataOutput *videoOutput;
                     [self loadLocalImageScroll];
                     // 显示照片
                     [self turnPage];
+                    
+                    /*
+                     // 保存照片到文件
+                     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                     
+                     // If you go to the folder below, you will find those pictures
+                     NSLog(@"%@",docDir);
+                     
+                     NSLog(@"saving png");
+                     
+                     NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+                     NSTimeInterval a=[dat timeIntervalSince1970];
+                     NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+                     
+                     NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@.png", docDir, dateId];
+                     NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(image)];
+                     [data1 writeToFile:pngFilePath atomically:YES];
+                     
+                     // 保存文件地址
+                     [localImgPathArray addObject:pngFilePath];
+                     NSLog(@"saving image done");
+                     */
+
                 } else {
                     self.photoView.hidden = NO;
                     self.photoView.image = image;
@@ -893,7 +869,7 @@ AVCaptureVideoDataOutput *videoOutput;
     s = 0;
     h = 0;
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.f
+    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:1.f
                                                   target:self
                                                 selector:@selector(showTime)
                                                 userInfo:NULL
@@ -905,8 +881,8 @@ AVCaptureVideoDataOutput *videoOutput;
 - (void)stopRecordTime
 {
     
-    [self.timer invalidate];
-    self.timer = nil;
+    [self.videoTimer invalidate];
+    self.videoTimer = nil;
     
     self.timeLabel.text = @"00:00:00";
     self.timeLabel.hidden = YES;

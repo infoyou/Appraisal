@@ -141,8 +141,7 @@
     
     // 修饰 NavigationViewController
     [paneNavigationViewController.navigationBar setBackgroundImage:[UIImage imageNamed:@"naviBg.png"] forBarMetrics:UIBarMetricsDefault];
-    [paneNavigationViewController.navigationBar setBarStyle:UIBarStyleBlack];
-    
+    [paneNavigationViewController.navigationBar setBarStyle:UIBarStyleBlack];    
     
     self.paneViewControllerType = paneViewControllerType;
 }

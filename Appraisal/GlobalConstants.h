@@ -8,12 +8,6 @@
 
 #define VERSION         @"1.0.1"
 
-#ifdef DEBUG
-#    define DLog(...)     NSLog(__VA_ARGS__)
-#else
-#    define DLog(...)
-#endif
-
 #define UMENG_ANALYS_APP_KEY        @"5515104ffd98c502c70005e1"
 
 #define PROJECT_DB_NAME             @"ProjectDB"
@@ -23,9 +17,6 @@
 
 //  0,不可以编辑; 1,可以编辑;
 #define ADMIN_CAN_EDIT_FLAG         @"0"
-
-#define SCREEN_WIDTH                ([[UIScreen mainScreen] bounds].size.width)
-#define SCREEN_HEIGHT               ([[UIScreen mainScreen] bounds].size.height)
 
 #define ORIGINAL_MAX_WIDTH          640.0f
 

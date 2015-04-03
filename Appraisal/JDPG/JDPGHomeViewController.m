@@ -4,18 +4,28 @@
 #import "BarCodeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
+//#import "LYBgImageView.h"
+//#import "LYMovePathView.h"
+//#import "LYFireworksView.h"
+
 #import "UIViewController+RECurtainViewController.h"
 
 @interface JDPGHomeViewController () <UINavigationControllerDelegate>
+
+@property (nonatomic, retain) NSTimer *bgSwitchTimer; // 背景
 
 @end
 
 @implementation JDPGHomeViewController
 {
-    CALayer                 *ballLayer;//摇动的layer
+    // 摇动的layer
+    CALayer                 *ballLayer;
     float                   angle;
     float                   timeInter;
+    
+    // 背景
     NSInteger               index;
+    BOOL                    isChange;
 }
 
 @synthesize mScrollView;
@@ -42,6 +52,10 @@
     timeInter = 0.05;
     
     index = 1;
+    
+//    [self doBGAnimation];
+    
+    self.photoImg.image = [UIImage imageNamed:@"homeCenter.png"];
 }
 
 - (void)viewDidLoad
@@ -49,8 +63,63 @@
     [super viewDidLoad];
     
     [self initLayer];
+    [self performSelector:@selector(doLayoutAnimation) withObject:nil afterDelay:0.1];
     
-    [self performSelector:@selector(go) withObject:nil afterDelay:0.1];
+//    [self addLiziAnimation];
+    
+}
+
+/*
+- (void)addLiziAnimation
+{
+    // 背景梦幻星空
+    do {
+        LYBgImageView *animationView = [[LYBgImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        [self.view addSubview:animationView];
+    } while (0);
+    
+    // 第一条移动星星闪烁动画
+    do {
+        CGMutablePathRef path = CGPathCreateMutable();
+        
+        CGPathMoveToPoint(path, NULL, 0, 0);
+        CGPathAddCurveToPoint(path, NULL, 50.0, 100.0, 50.0, 120.0, 50.0, 275.0);
+        CGPathAddCurveToPoint(path, NULL, 50.0, 275.0, 150.0, 275.0, 160.0, 460.0);
+        
+        LYMovePathView *animationView = [[LYMovePathView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) movePath:path];
+        [self.view addSubview:animationView];
+    } while (0);
+    
+    // 第二条移动星星闪烁动画
+    do {
+        CGMutablePathRef path = CGPathCreateMutable();
+        
+        CGPathMoveToPoint(path, NULL, SCREEN_WIDTH - 0, SCREEN_HEIGHT - 0);
+        CGPathAddCurveToPoint(path, NULL, SCREEN_WIDTH - 50.0, SCREEN_HEIGHT - 100.0, SCREEN_WIDTH - 50.0, SCREEN_WIDTH - 120.0, SCREEN_WIDTH - 50.0, SCREEN_WIDTH - 275.0);
+        CGPathAddCurveToPoint(path, NULL, SCREEN_WIDTH - 50.0, SCREEN_HEIGHT - 275.0, SCREEN_WIDTH - 150.0, SCREEN_WIDTH - 275.0, 160.0, 160.0);
+        
+        LYMovePathView *animationView = [[LYMovePathView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) movePath:path];
+        [self.view addSubview:animationView];
+    } while (0);
+    
+    // 祝贺花筒，彩色炮竹
+    do {
+        LYFireworksView *animationView = [[LYFireworksView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        [self.view addSubview:animationView];
+    } while (0);
+}
+*/
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    
+    [self.bgSwitchTimer invalidate];
+    self.bgSwitchTimer = nil;
 }
 
 - (void)adjustView
@@ -76,21 +145,24 @@
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
+- (void)goPhotoVC
+{
+    
+    PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
+//    [self.navigationController pushViewController:photoViewController animated:YES];
+    [self presentViewController:photoViewController animated:YES completion:^{}];
+}
+
 - (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
 {
-        
+    
     UIView *view = (UIView*)[gestureRecognizer view];
     
     if ([view isEqual:self.tapPhotoView]) {
         DLog(@"tap tap Photo View");
         
-        
-        PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
-//        [self.navigationController pushViewController:photoViewController animated:YES];
-        
         self.photoImg.image = [UIImage imageNamed:@"homeCenter_sel.png"];
-        
-        [self presentViewController:photoViewController animated:YES completion:^{}];
+        [self performSelector:@selector(goPhotoVC) withObject:nil afterDelay:1];
         
 //        [self curtainRevealViewController:photoViewController transitionStyle:RECurtainTransitionHorizontal];
         
@@ -105,7 +177,7 @@
 
 #pragma mark -
 #pragma mark 动画
-- (void)go
+- (void)doLayoutAnimation
 {
     self.tapPhotoView.hidden = YES;
     //左右摇摆时间是定义的时间的2倍
@@ -116,6 +188,15 @@
                                     repeats:YES];
     
     index = 0;
+}
+
+- (void)doBGAnimation
+{
+    self.bgSwitchTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
+                                                       target:self
+                                                     selector:@selector(bgAnmation)
+                                                     userInfo:NULL
+                                                      repeats:YES];
 }
 
 - (void)initLayer
@@ -142,19 +223,18 @@
     CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.toValue = [NSNumber numberWithFloat:(DEGREES_TO_RADIANS(angle))];
     rotationAnimation.duration = timeInter;
+    rotationAnimation.repeatCount = MAXFLOAT;
     rotationAnimation.autoreverses = YES; // Very convenient CA feature for an animation like this
     rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    [ballLayer addAnimation:rotationAnimation forKey:@"revItUpAnimation"];
     
-    // Scan image
-    self.scanningImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"scan%d.png", index++]];
+//    rotationAnimation.fromValue = [NSNumber numberWithDouble:0];
+//    rotationAnimation.toValue = [NSNumber numberWithDouble:M_PI*2];
     
-    if (index > 4) {
-        index = 1;
-    }
+    [ballLayer addAnimation:rotationAnimation forKey:@"transform"/*forKey:@"revItUpAnimation"*/];
     
-    // Back image
-    self.bgImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"bg%d.png", index%3]];
+//    rotationAnimation.duration = 200;
+//    rotationAnimation.repeatCount = MAXFLOAT;
+//    [ballLayer addAnimation:rotationAnimation forKey:@"transform"];
     
     //动画完毕操作
     if (angle == 0) {
@@ -165,11 +245,29 @@
         
         ballLayer.hidden = YES;
         self.tapPhotoView.hidden = NO;
-        
-        // image
-        self.scanningImg.image = [UIImage imageNamed:@"scan1.png"];
-        self.bgImg.image = [UIImage imageNamed:@"bg0.png"];
     }
+}
+
+- (void)bgAnmation
+{
+    // Scan image
+    self.scanningImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"scan%d.png", index++]];
+    
+    if (index > 4) {
+        index = 1;
+    }
+    
+    isChange = !isChange;
+    
+    // Back image
+//    if (isChange) {
+//
+//        self.bgImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"bg%d.png", index%3]];
+//    }
+
+    // 结束状态的image
+//    self.scanningImg.image = [UIImage imageNamed:@"scan1.png"];
+//    self.bgImg.image = [UIImage imageNamed:@"bg0.png"];
 }
 
 @end

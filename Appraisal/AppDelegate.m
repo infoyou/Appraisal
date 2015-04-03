@@ -28,7 +28,6 @@
     
     // Left
     LeftMenuViewController *leftMenuVC = [[LeftMenuViewController alloc] init];
-    
     leftMenuVC.dynamicsDrawerViewController = self.dynamicsDrawerViewController;
     [self.dynamicsDrawerViewController setDrawerViewController:leftMenuVC forDirection:MSDynamicsDrawerDirectionLeft];
     
@@ -48,8 +47,13 @@
     
     
     //开始
-    UIImageView *splashView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, 320, 568)];
-    splashView.image = [UIImage imageNamed:@"Default-568h.png"];
+    UIImageView *splashView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    if(SCREEN_HEIGHT < 568) {
+        splashView.image = [UIImage imageNamed:@"Default.png"];
+    } else {
+        splashView.image = [UIImage imageNamed:@"Default-568h.png"];
+    }
+    
     [self.window addSubview:splashView];
     [self.window bringSubviewToFront:splashView];  //放到最顶层;
     [UIView beginAnimations:nil context:nil];
@@ -70,6 +74,25 @@
 - (void)loadLogicView
 {
     self.window.rootViewController = self.dynamicsDrawerViewController;
+    
+    if (true) {
+        return;
+    }
+    
+//    UIWebViewController *webVC = [[UIWebViewController alloc] init];
+    UINavigationController *webNav = [[UINavigationController alloc] initWithRootViewController:self.dynamicsDrawerViewController];
+    [webNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"naviBg.png"] forBarMetrics:UIBarMetricsDefault];
+    [webNav.navigationBar setBarStyle:UIBarStyleBlack];
+    
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+     @{UITextAttributeTextColor:[UIColor blackColor],
+       UITextAttributeTextShadowOffset:[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
+       UITextAttributeTextShadowColor:[UIColor whiteColor],
+       UITextAttributeFont: [UIFont fontWithName:@"Helvetica" size:17.0]
+       }
+                                                                                            forState:UIControlStateNormal];
+    
+    self.window.rootViewController = webNav;
 }
 
 - (void)regist3rd

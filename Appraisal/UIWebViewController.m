@@ -30,6 +30,7 @@ NSString * const MSMonospaceURL = @"http://www.baidu.com";
         self.webView.backgroundColor = [UIColor blackColor];
         [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:MSMonospaceURL]]];
     }
+    
     return _webView;
 }
 
