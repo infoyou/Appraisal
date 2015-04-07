@@ -38,6 +38,9 @@
 
 @property (nonatomic, retain) NSDictionary *profileCellNumberDict;
 
+//是否发表评论
+@property (nonatomic) BOOL isUserComment;
+
 + (AppManager *)instance;
 
 - (BOOL)loadUser;

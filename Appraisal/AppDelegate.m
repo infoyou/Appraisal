@@ -45,6 +45,7 @@
     [self.window addSubview:self.windowBackground];
     [self.window sendSubviewToBack:self.windowBackground];
     
+    [self regist3rd];
     
     //开始
     UIImageView *splashView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, SCREEN_HEIGHT)];
@@ -102,6 +103,49 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     [MobClick setAppVersion:version];
     [MobClick setLogEnabled:YES];
+    
+    // Share
+    [ShareSDK registerApp:kShareSDK_Key];
+    
+    [self initializeSharePlat];
+}
+
+/*
+ *注册第三方分享的平台
+ */
+- (void)initializeSharePlat
+{
+    
+    //添加新浪微博应用 注册网址 http://open.weibo.com
+    [ShareSDK connectSinaWeiboWithAppKey:kSinaAppKey
+                               appSecret:kSinaAppSecret
+                             redirectUri:@"https://api.weibo.com/oauth2/default.html"];
+    
+    //添加QQ应用  注册网址  http://mobile.qq.com/api/
+    [ShareSDK connectQQWithQZoneAppKey:kQQAppKey
+                     qqApiInterfaceCls:[QQApiInterface class]
+                       tencentOAuthCls:[TencentOAuth class]];
+    
+    
+    //当使用新浪微博客户端分享的时候需要按照下面的方法来初始化新浪的平台
+    [ShareSDK  connectSinaWeiboWithAppKey:kSinaAppKey
+                                appSecret:kSinaAppSecret
+                              redirectUri:@"https://api.weibo.com/oauth2/default.html"
+                              weiboSDKCls:[WeiboSDK class]];
+    
+    //添加QQ空间应用  注册网址  http://connect.qq.com/intro/login/
+    [ShareSDK connectQZoneWithAppKey:kQQAppKey
+                           appSecret:kQQAppSecret
+                   qqApiInterfaceCls:[QQApiInterface class]
+                     tencentOAuthCls:[TencentOAuth class]];
+    
+    id<ISSQZoneApp> app =(id<ISSQZoneApp>)[ShareSDK getClientWithType:ShareTypeQQSpace];
+    [app setIsAllowWebAuthorize:YES];
+    
+    
+    //添加微信应用 注册网址 http://open.weixin.qq.com
+    [ShareSDK connectWeChatWithAppId:kWeiXinKey
+                           wechatCls:[WXApi class]];
 }
 
 #pragma mark - AppDelegate

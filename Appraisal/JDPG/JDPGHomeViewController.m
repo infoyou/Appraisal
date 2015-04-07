@@ -4,12 +4,6 @@
 #import "BarCodeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-//#import "LYBgImageView.h"
-//#import "LYMovePathView.h"
-//#import "LYFireworksView.h"
-
-#import "UIViewController+RECurtainViewController.h"
-
 @interface JDPGHomeViewController () <UINavigationControllerDelegate>
 
 @property (nonatomic, retain) NSTimer *bgSwitchTimer; // 背景

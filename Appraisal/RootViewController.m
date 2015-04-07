@@ -22,7 +22,6 @@
     [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
-
 - (void)viewDidLoad {
     
     [super viewDidLoad];

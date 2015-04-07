@@ -22,6 +22,30 @@
 
 #define DEGREES_TO_RADIANS(d)       (d * M_PI / 180)
 
+
+typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
+    VideoSinaAlertType = 20,
+    VideoQQAlertType,
+    VideoWeiXinAlertType,
+};
+
+// ######################### Share Begin #########################
+//新浪微博
+#define kSinaAppKey    @"2980000350"
+#define kSinaAppSecret @"0092e8fe7462bfeeeab8cb3744317c39"
+
+//QQ&QQ空间
+#define kQQAppKey    @"1103963649"
+#define kQQAppSecret @"PRziCk9p4qJR1seI"
+
+//微信
+#define kWeiXinKey    @"wx0999d9a65c311323"
+#define kWeiXinSecret @"9bef7f83ffc4f587bad4bbe299f5eba6"
+
+//ShareSDK平台
+#define kShareSDK_Key @"50d277e18231"
+// ######################### Share End #########################
+
 @interface GlobalConstants : NSObject {
     
 }
