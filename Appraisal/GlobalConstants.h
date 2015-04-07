@@ -31,16 +31,16 @@ typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
 
 // ######################### Share Begin #########################
 //新浪微博
-#define kSinaAppKey    @"2980000350"
-#define kSinaAppSecret @"0092e8fe7462bfeeeab8cb3744317c39"
+#define kSinaAppKey    @"2105826350" //@"2980000350"
+#define kSinaAppSecret @"55d17f68e1145fe152f2f2404c876dbb" //@"0092e8fe7462bfeeeab8cb3744317c39"
 
 //QQ&QQ空间
-#define kQQAppKey    @"1103963649"
-#define kQQAppSecret @"PRziCk9p4qJR1seI"
+#define kQQAppKey     @"1103963649"
+#define kQQAppSecret  @"PRziCk9p4qJR1seI"
 
 //微信
-#define kWeiXinKey    @"wx0999d9a65c311323"
-#define kWeiXinSecret @"9bef7f83ffc4f587bad4bbe299f5eba6"
+#define kWeiXinKey    @"wx786e4023e0972b2e"
+#define kWeiXinSecret @"845408466861c80e84276323fa3ccce3"
 
 //ShareSDK平台
 #define kShareSDK_Key @"50d277e18231"
