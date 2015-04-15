@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ResultViewController">
             <connections>
+                <outlet property="mWebView" destination="1Lv-m7-ukA" id="hCt-dN-vMn"/>
                 <outlet property="photoBgView" destination="pq9-JB-9Jf" id="43Z-fP-2xP"/>
-                <outlet property="uiWebView" destination="1Lv-m7-ukA" id="T5M-1L-2dc"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="z1T-QA-Jhq"/>
             </connections>
         </placeholder>

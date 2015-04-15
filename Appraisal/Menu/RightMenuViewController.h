@@ -8,11 +8,19 @@
 
 #import "LeftMenuViewController.h"
 
+typedef NS_ENUM(NSUInteger, MSPaneRightViewControllerType) {
+    
+    // Right
+    DDJLVC,
+    JDPGJLVC,
+    AboutVC
+};
+
 @interface RightMenuViewController : UITableViewController
 
-@property (nonatomic, assign) MSPaneViewControllerType paneViewControllerType;
+@property (nonatomic, assign) MSPaneRightViewControllerType paneViewControllerType;
 @property (nonatomic, weak) MSDynamicsDrawerViewController *dynamicsDrawerViewController;
 
-- (void)transitionToViewController:(MSPaneViewControllerType)paneViewControllerType;
+- (void)transitionToViewController:(MSPaneRightViewControllerType)paneViewControllerType;
 
 @end

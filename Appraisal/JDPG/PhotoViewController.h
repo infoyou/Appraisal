@@ -15,7 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *photoBgView;
 
 // Capture view
-
 @property (nonatomic, weak) IBOutlet AVCamPreviewView *previewView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *videoImgView;

@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
+<link href="global.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="config.js"></script>
+<title>鉴定评估</title>
+</head>
+  
+<body>
+	<div class="bg"><img src="bg.jpg" width="100%" /></div>
+	<div class="content apply">
+        <div class="applyMain">
+        	<div class="appleTop">
+            	<div class="appmem">75%</div>
+            	<div class="progress">
+                	<div class="progressbar"></div>
+            	</div>
+                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+            </div>
+            <div class="iptDiv"><input type="text" placeholder="请输入所用材质" class="iptTxt"></div>
+            <div class="choeckfu">
+            	<ul>
+                    <li class="clearfix">
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bido.png" width="61px" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio01.png" width="62" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio02.png" width="86" /></a> 
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio.png" width="99" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio03.png" width="98" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio04.png" width="85" /></a> 
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio05.png" width="97" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio04.png" width="85" /></a> 
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio06.png" width="76" /></a> 
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio07.png" width="90" /></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio08.png" width="101"/></a>
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio11.png" width="116"/></a>  
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio09.png" width="76"/></a> 
+                        <a href="javascript:void(0)" class="checxLaDif" onClick="checkLabelFood(this)"><i></i><img src="bio10.png" width="34"/></a> 
+                    </li>
+                </ul>
+            </div>
+            <div class="btnDiv btnDivDifent"><a href="#"><img src="next.png" width="100%" /></a></div>
+        </div>
+	</div>
+    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <script type="text/javascript">
+    	function checkLabelFood(o){
+			if($(o).hasClass('cur')){
+				$(o).removeClass('cur');    
+			}else{
+				$(o).addClass('cur');       
+			}
+		}
+    </script>
+</body>
+</html>

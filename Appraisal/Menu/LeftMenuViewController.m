@@ -72,6 +72,7 @@
 - (void)initialize
 {
     self.paneViewControllerType = NSUIntegerMax;
+    
     self.paneViewControllerTitles = @{
         @(JDPGVC) : @"鉴定评估",
         @(JRDDVC) : @"金融典当",
@@ -90,9 +91,9 @@
     
 }
 
-- (MSPaneViewControllerType)paneViewControllerTypeForIndexPath:(NSIndexPath *)indexPath
+- (MSPaneLeftViewControllerType)paneViewControllerTypeForIndexPath:(NSIndexPath *)indexPath
 {
-    MSPaneViewControllerType paneViewControllerType;
+    MSPaneLeftViewControllerType paneViewControllerType;
     if (indexPath.section == 0) {
         paneViewControllerType = indexPath.row;
     } else {
@@ -102,13 +103,15 @@
     return paneViewControllerType;
 }
 
-- (void)transitionToViewController:(MSPaneViewControllerType)paneViewControllerType
+- (void)transitionToViewController:(MSPaneLeftViewControllerType)paneViewControllerType
 {
-    // Close pane if already displaying that pane view controller
+    /*
+     // Close pane if already displaying that pane view controller
     if (paneViewControllerType == self.paneViewControllerType) {
         [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateClosed animated:YES allowUserInterruption:YES completion:nil];
         return;
     }
+     */
     
     BOOL animateTransition = self.dynamicsDrawerViewController.paneViewController != nil;
     
@@ -243,17 +246,46 @@
     typeName.textColor = [CommonUtils colorWithHexString:@"3d98ff"];
     selCell.backgroundColor = [CommonUtils colorWithHexString:@"0a1425"];
     
+    switch (selIndex) {
+            
+        case UIWebVC:
+        {
+            [AppManager instance].webUrl = @"http://finance.baidu.com/";
+        }
+            break;
+            
+        case UIWebVC1:
+        {
+            [AppManager instance].webUrl = @"http://tech.baidu.com/";
+        }
+            break;
+            
+        case UIWebVC2:
+        {
+            [AppManager instance].webUrl = @"http://internet.baidu.com/";
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
     // 页面切换
-    MSPaneViewControllerType paneViewControllerType = [self paneViewControllerTypeForIndexPath:indexPath];
+    MSPaneLeftViewControllerType paneViewControllerType = [self paneViewControllerTypeForIndexPath:indexPath];
     [self transitionToViewController:paneViewControllerType];
     
     // Prevent visual display bug with cell dividers
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    [self.tableView reloadData];
+    
+    /*
     double delayInSeconds = 0.3;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self.tableView reloadData];
     });
+     */
 }
 
 #pragma mark - MSDynamicsDrawerViewControllerDelegate

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
+<link href="global.css" type="text/css" rel="stylesheet">
+<title>鉴定评估</title>
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
+</head>
+  
+<body>
+	<div class="bg"><img src="bg.jpg" width="100%" /></div>
+	<div class="content apply">
+        <div class="applyMain">
+        	<div class="appleTop">
+            	
+            	<div class="progress" style="position:relative;" id="progressbox">
+                    <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%</div>
+                        <div class="progressbar" style=" width:1px;"></div>
+                    </div>
+                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+            </div>
+            <div class="tit"><img src="title.png" width="100%" /></div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>&nbsp;</p>
+                    <select id="city"  >
+                        <option value="">请选择</option>    
+                    </select>
+                    <span></span>
+                </div>
+       	    </div>
+            <div class="iptDiv" style="position:relative"><input type="text" id="HouseName" placeholder="请输入地区或小区名" class="iptTxt" value="" onKeyUp="SearchFun(this)" onKeyPress="SearchFun(this)" />
+            	
+            	<Div class="keywordBox" id="keywordBox" style="display:none;"> 
+                </Div>
+            </div>
+            <div class="iptDiv"><input type="number" placeholder="请输入面积（平方米）" class="iptTxt" value="" id="Area"></div>
+            <div class="btnDiv"><a href="javascript:void(0)" onclick="submitAssessmentHouse()"><img src="pingu.png" width="100%" /></a></div>
+        </div>
+	</div>
+  <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <script type="text/javascript">
+	$(function(){
+			ProgressAnimate(75);	
+			getCity();
+	})
+	function submitAssessmentHouse(){
+		var getCity = $.trim($("#city").val());
+		var district = $.trim($("#HouseName").val());
+		var Area = $.trim($("#Area").val());
+		if(Area<=0){
+				SubmitAlert('请正确输入面积的大小');
+				return false;
+		}
+		if(getCity == ""){
+			SubmitAlert('请选择城市！');
+				return false;
+		}
+		if(district == ""){
+			SubmitAlert('请输入地区或小区名！');
+				return false;
+		}
+		var SubmitData ={city:encodeURIComponent(getCity),district:encodeURIComponent(district),Area:Area,type:"1"};		
+		SubmitToApp('evaluationInfo',SubmitData)	
+	}
+	
+	</script>
+</body>
+</html>

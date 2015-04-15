@@ -252,7 +252,7 @@ void MSDynamicsDrawerDirectionActionForMaskedValues(MSDynamicsDrawerDirection di
     self.paneTapGestureRecognizer.delegate = self;
     [self.paneView addGestureRecognizer:self.paneTapGestureRecognizer];
     
-    self.gravityMagnitude = 2.0;
+    self.gravityMagnitude = 5.0; //2.0
     self.elasticity = 0.0;
     self.bounceElasticity = 0.5;
     self.bounceMagnitude = 60.0;

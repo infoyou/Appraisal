@@ -5,16 +5,19 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+#import "AFHTTPRequestOperationManager.h"
+
 #define SCROLL_UNIT_WIDTH       65.f
+#define MAXIMUM_DURATION        40
 
 typedef enum {
-    INPUT_FIRST_SCREEN = 0,        //照片模式
-    INPUT_SECOND_SCREEN = 1,       //摄像模式
-} InputSCREENType;
+    INPUT_FIRST_SCREEN = 0,     // 照片模式
+    INPUT_SECOND_SCREEN = 1,    // 摄像模式
+} InputScreenType;
 
 typedef enum {
-    INPUT_PHOTO_TYPE = 0,       //照片模式
-    INPUT_VIDEO_TYPE = 1,       //摄像模式
+    INPUT_PHOTO_TYPE = 0,       // 照片模式
+    INPUT_VIDEO_TYPE = 1,       // 摄像模式
 } InputContentType;
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
@@ -54,11 +57,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSInteger m;
     NSInteger s;
     NSInteger h;
+    
+    // 转码开始时间
+    NSDate* _startDate;
 }
-
-AVCaptureSession *session;
-AVCaptureStillImageOutput *stillImageOutput;
-AVCaptureVideoDataOutput *videoOutput;
 
 #pragma mark - UIViewController
 
@@ -92,8 +94,6 @@ AVCaptureVideoDataOutput *videoOutput;
     [self initData];
     
     [self loadCameraResource];
-    
-    [self performSelector:@selector(adjustFlowView) withObject:nil afterDelay:1];
 }
 
 - (void)adjustFlowView
@@ -105,8 +105,6 @@ AVCaptureVideoDataOutput *videoOutput;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-//    [self loadCamera];
     
     [self loadTypeResource];
     
@@ -128,6 +126,7 @@ AVCaptureVideoDataOutput *videoOutput;
         [[self session] startRunning];
     });
     
+    [self performSelector:@selector(adjustFlowView) withObject:nil afterDelay:1];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -157,6 +156,7 @@ AVCaptureVideoDataOutput *videoOutput;
     self.typeFlowView.minimumPageScale = 0.9;
 }
 
+/*
 - (void)loadCamera
 {
     session = [[AVCaptureSession alloc] init];
@@ -213,6 +213,7 @@ AVCaptureVideoDataOutput *videoOutput;
     
     [session startRunning];
 }
+*/
 
 - (void)loadLocalImageScroll
 {
@@ -271,7 +272,6 @@ AVCaptureVideoDataOutput *videoOutput;
     [self addTapGestureRecognizer:self.resultDoneBtn];
 }
 
-
 - (NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAllButUpsideDown;
@@ -286,6 +286,8 @@ AVCaptureVideoDataOutput *videoOutput;
 
 - (void)didScrollToPage:(NSInteger)pageNumber inFlowView:(PagedFlowView *)flowView {
     NSLog(@"Scrolled to page # %ld", pageNumber);
+    
+    [AppManager instance].babyType = pageNumber;
     
     NSString *imgName = [NSString stringWithFormat:@"title_item%ld.png", pageNumber+1];
     self.resultTextImg.image = [UIImage imageNamed:imgName];
@@ -384,12 +386,59 @@ AVCaptureVideoDataOutput *videoOutput;
         
         ResultViewController *resultVC = [[ResultViewController alloc] init];
         [self presentViewController:resultVC animated:YES completion:^{}];
+        
+//        [self postVideoMehtod];
     }
+}
+
+- (void)postVideoMehtod
+{
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    NSString *typeName = @"image";
+    
+    // Local dir
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    
+    // video
+//    typeName = @"video";
+//    NSDictionary *parameters = @{@"fileName": @"test.mov"};
+//    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
+//    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"test" stringByAppendingPathExtension:@"mov"]];
+    
+    // photo
+    NSDictionary *parameters = @{@"fileName": @"1428661887.png"};
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/image"];
+    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"1428661887" stringByAppendingPathExtension:@"png"]];
+    
+    NSLog(@"dataFilePath = %@", dataFilePath);
+    
+    NSURL *filePath = [NSURL fileURLWithPath:dataFilePath];
+    
+    [manager POST:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:filePath name:@"image" error:nil];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Success: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+    
+//    NSString *videoURL = [[NSBundle mainBundle] pathForResource:@"myVideo" ofType:@"mov"];
+//    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath: videoURL]];
+
 }
 
 - (void)clearData
 {
     screenType = INPUT_FIRST_SCREEN;
+    
+    if (!self.timeLabel.isHidden) {
+        
+        [self clearPlayState];
+    }
     
     [localImgArray removeAllObjects];
     [self.photoScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -486,6 +535,7 @@ AVCaptureVideoDataOutput *videoOutput;
     }
 }
 
+#pragma mark
 #pragma mark File Output Delegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
@@ -499,15 +549,18 @@ AVCaptureVideoDataOutput *videoOutput;
     UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
     [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
     
+    /*
+     存相册
     [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
         if (error)
             NSLog(@"%@", error);
         
         [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-        
+     
         if (backgroundRecordingID != UIBackgroundTaskInvalid)
             [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
     }];
+     */
 }
 
 #pragma mark Device Configuration
@@ -771,7 +824,7 @@ AVCaptureVideoDataOutput *videoOutput;
 {
     
     dispatch_async([self sessionQueue], ^{
-        // if (![[self movieFileOutput] isRecording]) // 此判断无效 @ios 7.1.2
+//         if (![[self movieFileOutput] isRecording]) // 此判断无效 @ios 7.1.2
         if (!self.timeLabel.isHidden)
         {
 
@@ -789,13 +842,32 @@ AVCaptureVideoDataOutput *videoOutput;
             // Turning OFF flash for video recording
             [PhotoViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
             
+            /*
+             NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+             NSTimeInterval a=[dat timeIntervalSince1970];
+             NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+             
+            // 保存到文件目录
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+            NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
+            
+             if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+             [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:NULL]; //Create folder
+             }
+            
+            NSString *movieFilePath = [dataPath stringByAppendingPathComponent:[@"movie1" stringByAppendingPathExtension:@"mov"]];
+            NSLog(@"movieFilePath = %@", movieFilePath);
+            [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:movieFilePath] recordingDelegate:self];
+            */
+            
             // Start recording to a temporary file.
-            NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie" stringByAppendingPathExtension:@"mov"]];
+            NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie2" stringByAppendingPathExtension:@"mov"]];
+            NSLog(@"outputFilePath = %@", outputFilePath);
             [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
             
-        }
-        else
-        {
+        } else {
+            
             [self takePhoto:INPUT_VIDEO_TYPE];
             // 停止录制
             [[self movieFileOutput] stopRecording];
@@ -819,7 +891,27 @@ AVCaptureVideoDataOutput *videoOutput;
             {
                 NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                 UIImage *image = [[UIImage alloc] initWithData:imageData];
+                
+                /*
+                // 保存到系统相册
                 [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+                */
+                
+                NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+                NSTimeInterval a=[dat timeIntervalSince1970];
+                NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+
+                // 保存到文件目录
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+                NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/image"];
+                
+                if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+                    [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:NULL]; //Create folder
+                }
+
+                NSString *photoFilePath = [dataPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", dateId]]; //Add the file name
+                [imageData writeToFile:photoFilePath atomically:YES]; //Write the file
                 
                 if (type != INPUT_VIDEO_TYPE) {
 
@@ -881,11 +973,11 @@ AVCaptureVideoDataOutput *videoOutput;
 - (void)stopRecordTime
 {
     
+    self.timeLabel.text = @"00:00";
+    self.timeLabel.hidden = YES;
+    
     [self.videoTimer invalidate];
     self.videoTimer = nil;
-    
-    self.timeLabel.text = @"00:00:00";
-    self.timeLabel.hidden = YES;
 }
 
 - (void)showTime
@@ -921,15 +1013,100 @@ AVCaptureVideoDataOutput *videoOutput;
         mStr = [NSString stringWithFormat:@"0%d", m];
     }
     
-    NSString *hStr = nil;
-    if (h >= 10) {
-        hStr = [NSString stringWithFormat:@"%d", h];
-    } else {
-        hStr = [NSString stringWithFormat:@"0%d", h];
-    }
+//    NSString *hStr = nil;
+//    if (h >= 10) {
+//        hStr = [NSString stringWithFormat:@"%d", h];
+//    } else {
+//        hStr = [NSString stringWithFormat:@"0%d", h];
+//    }
     
-    NSString *showMessage = [NSString stringWithFormat:@"%@:%@:%@", hStr, mStr, sStr];
+//    NSString *showMessage = [NSString stringWithFormat:@"%@:%@:%@", hStr, mStr, sStr];
+    
+    NSString *showMessage = [NSString stringWithFormat:@"%@:%@", mStr, sStr];
     self.timeLabel.text = showMessage;
+    
+    if (s > MAXIMUM_DURATION) {
+        // 最多拍摄40s
+        [self clearPlayState];
+    }
 }
+
+- (void)clearPlayState
+{
+    self.resultTakePhoto.image = [UIImage imageNamed:@"btnVideo.png"];
+    
+    [self takeVideo:nil];
+    
+    [self stopRecordTime];
+}
+
+/*
+- (void)encodeMov2Mp4
+{
+    
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:_videoURL options:nil];
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    NSLog(@"%@", compatiblePresets);
+    
+    if ([compatiblePresets containsObject:_mp4Quality])
+        
+    {
+        [self showAlert:@"等待.."];
+        
+        UIActivityIndicatorView* activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activity.frame = CGRectMake(140,
+                                    80,
+                                    (SCREEN_WIDTH - 2 * 140),
+                                    80);
+        _startDate = [NSDate date];
+        
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset
+                                                                              presetName:_mp4Quality];
+        NSLog(@"%@", exportSession.supportedFileTypes);
+        
+        NSDateFormatter* formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
+        NSString *_mp4Path = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/output-%@.mp4", [formater stringFromDate:[NSDate date]]];
+        
+        exportSession.outputURL = [NSURL fileURLWithPath: _mp4Path];
+//        exportSession.shouldOptimizeForNetworkUse = _networkOpt;
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            switch ([exportSession status]) {
+                case AVAssetExportSessionStatusFailed:
+                {
+                    [self showTimeAlert:@"提示" message:[[exportSession error] localizedDescription]];
+                    break;
+                }
+                    
+                case AVAssetExportSessionStatusCancelled:
+                    NSLog(@"Export canceled");
+                    break;
+                case AVAssetExportSessionStatusCompleted:
+                    NSLog(@"Successful!");
+                    [self performSelectorOnMainThread:@selector(convertFinish) withObject:nil waitUntilDone:NO];
+                    break;
+                default:
+                    break;
+            }
+        }];
+    }
+    else
+    {
+        [self showTimeAlert:@"错误" message:@"AVAsset doesn't support mp4 quality"];
+    }
+}
+
+- (void) convertFinish
+{
+
+    CGFloat duration = [[NSDate date] timeIntervalSinceDate:_startDate];
+    [self showTimeAlert:@"结束" message:[NSString stringWithFormat:@"转码成功, 花费 %.2fs", duration]];
+    
+//    _convertTime.text = [NSString stringWithFormat:@"%.2f s", duration];
+//    _mp4Size.text = [NSString stringWithFormat:@"%d kb", [self getFileSize:_mp4Path]];
+//    _hasMp4 = YES;
+}
+*/
 
 @end

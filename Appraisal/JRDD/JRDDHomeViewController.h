@@ -16,5 +16,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *tapScanningView;
 
+@property (weak, nonatomic) IBOutlet UIImageView *photoImg;
 
 @end

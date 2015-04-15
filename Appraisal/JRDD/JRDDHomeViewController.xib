@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JRDDHomeViewController">
             <connections>
                 <outlet property="mScrollView" destination="FR2-hB-d1U" id="7RX-he-hbB"/>
+                <outlet property="photoImg" destination="K8N-A4-xJ5" id="LO4-Km-df4"/>
                 <outlet property="tapPhotoView" destination="de2-5I-QQv" id="40r-kY-Ez5"/>
                 <outlet property="tapScanningView" destination="o1a-AJ-Vph" id="4fa-x9-o6I"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="z1T-QA-Jhq"/>
@@ -38,11 +39,11 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="de2-5I-QQv">
-                            <rect key="frame" x="62" y="207" width="199" height="192"/>
+                            <rect key="frame" x="60" y="207" width="200" height="191"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jrddHomeCenter.png" id="K8N-A4-xJ5">
-                                    <rect key="frame" x="0.0" y="0.0" width="199" height="194"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="200" height="191"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                             </subviews>
@@ -70,7 +71,7 @@
     <resources>
         <image name="bg0.png" width="640" height="1079"/>
         <image name="jrddHomeBottom.png" width="335" height="128"/>
-        <image name="jrddHomeCenter.png" width="399" height="385"/>
+        <image name="jrddHomeCenter.png" width="400" height="382"/>
         <image name="jrddHomeTop.png" width="345" height="171"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

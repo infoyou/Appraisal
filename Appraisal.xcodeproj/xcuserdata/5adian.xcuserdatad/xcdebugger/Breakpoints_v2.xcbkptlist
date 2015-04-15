@@ -10,27 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/Menu/LeftMenuViewController.m"
-            timestampString = "449741776.077719"
+            timestampString = "450598106.585959"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
-            landmarkName = "-tableView:didSelectRowAtIndexPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Appraisal/Menu/LeftMenuViewController.m"
-            timestampString = "449741776.077719"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
             landmarkName = "-dynamicsDrawerViewController:didUpdateToPaneState:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/Menu/RightMenuViewController.m"
-            timestampString = "449663734.895509"
+            timestampString = "450597250.625195"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
             landmarkName = "-dynamicsDrawerViewController:didUpdateToPaneState:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/Menu/RightMenuViewController.m"
-            timestampString = "449663734.895509"
+            timestampString = "450259564.629069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "-dynamicsDrawerRevealRightBarButtonItemTapped:"
             landmarkType = "5">
          </BreakpointContent>
@@ -73,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            filePath = "Appraisal/JDPG/BarCodeViewController.m"
+            timestampString = "450265459.962943"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "887"
-            endingLineNumber = "887"
-            landmarkName = "-stopRecordTime"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "-doBackAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,12 +73,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            filePath = "Appraisal/JDPG/BarCodeViewController.m"
+            timestampString = "450265461.478961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
             landmarkName = "-imageviewTouchEvents:"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            timestampString = "450685942.798524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "856"
-            endingLineNumber = "856"
-            landmarkName = "-takePhoto:"
+            startingLineNumber = "556"
+            endingLineNumber = "556"
+            landmarkName = "-captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -122,11 +106,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            timestampString = "450685942.798524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "801"
-            endingLineNumber = "801"
+            startingLineNumber = "554"
+            endingLineNumber = "554"
+            landmarkName = "-captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Appraisal/JDPG/PhotoViewController.m"
+            timestampString = "450685942.798524"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "861"
+            endingLineNumber = "861"
             landmarkName = "-takeVideo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,12 +138,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            timestampString = "450685942.798524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "799"
-            endingLineNumber = "799"
-            landmarkName = "-takeVideo:"
+            startingLineNumber = "423"
+            endingLineNumber = "423"
+            landmarkName = "-postVideoMehtod"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,43 +154,91 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Appraisal/JDPG/PhotoViewController.m"
-            timestampString = "449746079.366297"
+            timestampString = "450685942.798524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "386"
-            endingLineNumber = "386"
-            landmarkName = "-imageviewTouchEvents:"
+            startingLineNumber = "425"
+            endingLineNumber = "425"
+            landmarkName = "-postVideoMehtod"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Appraisal/JDPG/PhotoViewController.m"
+            timestampString = "450685942.798524"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "-postVideoMehtod"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Appraisal/JDPG/PhotoViewController.m"
+            timestampString = "450685942.798524"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "420"
+            endingLineNumber = "420"
+            landmarkName = "-postVideoMehtod"
             landmarkType = "5">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PhotoViewController imageviewTouchEvents:]"
+                  symbolName = "-[PhotoViewController postVideoMehtod]"
                   moduleName = "Appraisal"
                   urlString = "file:///Users/5adian/Documents/Project/Appraisal/Appraisal/JDPG/PhotoViewController.m"
-                  timestampString = "449746079.412581"
+                  timestampString = "450776850.225586"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "386"
-                  endingLineNumber = "386"
-                  offsetFromSymbolStart = "2196">
+                  startingLineNumber = "420"
+                  endingLineNumber = "420"
+                  offsetFromSymbolStart = "566">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__44-[PhotoViewController imageviewTouchEvents:]_block_invoke_2"
+                  symbolName = "__38-[PhotoViewController postVideoMehtod]_block_invoke"
                   moduleName = "Appraisal"
                   urlString = "file:///Users/5adian/Documents/Project/Appraisal/Appraisal/JDPG/PhotoViewController.m"
-                  timestampString = "449746079.412692"
+                  timestampString = "450776850.22575"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "386"
-                  endingLineNumber = "386"
-                  offsetFromSymbolStart = "6">
+                  startingLineNumber = "420"
+                  endingLineNumber = "420"
+                  offsetFromSymbolStart = "66">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Appraisal/App/RootViewController.m"
+            timestampString = "450776914.462394"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
+            landmarkName = "-sendShareVideoWithType:withTitle:withContent:withImage:withVideoUrl:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

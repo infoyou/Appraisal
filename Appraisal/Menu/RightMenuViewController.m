@@ -1,9 +1,12 @@
 
 #import "RightMenuViewController.h"
-#import "JDPGHomeViewController.h"
 
 #import "UIWebViewController.h"
 #import "CommonUtils.h"
+
+#import "DDJLHomeViewController.h"
+#import "JDPGJLHomeViewController.h"
+#import "AboutViewController.h"
 
 @interface RightMenuViewController ()
 
@@ -25,7 +28,6 @@
     NSInteger selIndex;
     NSArray *menuIconArray;
     NSArray *menuIconSelArray;
-    
 }
 
 #pragma mark - NSObject
@@ -74,22 +76,22 @@
 {
     self.paneViewControllerType = NSUIntegerMax;
     self.paneViewControllerTitles = @{
-                                      @(JDPGVC) : @"典当记录",
-                                      @(JRDDVC) : @"鉴定评估记录",
-                                      @(UIWebVC) : @"关于我们"
+                                      @(DDJLVC) : @"典当记录",
+                                      @(JDPGJLVC) : @"鉴定评估记录",
+                                      @(AboutVC) : @"关于我们"
                                       };
     
     self.paneViewControllerClasses = @{
-                                       @(JDPGVC) : [JDPGHomeViewController class],
-                                       @(JRDDVC) : [JDPGHomeViewController class],
-                                       @(UIWebVC) : [UIWebViewController class]
+                                       @(DDJLVC) : [DDJLHomeViewController class],
+                                       @(JDPGJLVC) : [JDPGJLHomeViewController class],
+                                       @(AboutVC) : [AboutViewController class]
                                        };
 
 }
 
-- (MSPaneViewControllerType)paneViewControllerTypeForIndexPath:(NSIndexPath *)indexPath
+- (MSPaneRightViewControllerType)paneViewControllerTypeForIndexPath:(NSIndexPath *)indexPath
 {
-    MSPaneViewControllerType paneViewControllerType;
+    MSPaneRightViewControllerType paneViewControllerType;
     if (indexPath.section == 0) {
         paneViewControllerType = indexPath.row;
     } else {
@@ -100,13 +102,15 @@
     return paneViewControllerType;
 }
 
-- (void)transitionToViewController:(MSPaneViewControllerType)paneViewControllerType
+- (void)transitionToViewController:(MSPaneRightViewControllerType)paneViewControllerType
 {
+    /*
     // Close pane if already displaying that pane view controller
     if (paneViewControllerType == self.paneViewControllerType) {
         [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateClosed animated:YES allowUserInterruption:YES completion:nil];
         return;
     }
+    */
     
     BOOL animateTransition = self.dynamicsDrawerViewController.paneViewController != nil;
     
@@ -246,16 +250,21 @@
     selCell.backgroundColor = [CommonUtils colorWithHexString:@"0a1425"];
     
     // 页面切换
-    MSPaneViewControllerType paneViewControllerType = [self paneViewControllerTypeForIndexPath:indexPath];
+    MSPaneRightViewControllerType paneViewControllerType = [self paneViewControllerTypeForIndexPath:indexPath];
     [self transitionToViewController:paneViewControllerType];
     
     // Prevent visual display bug with cell dividers
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    [self.tableView reloadData];
+    
+    /*
     double delayInSeconds = 0.3;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self.tableView reloadData];
     });
+     */
 }
 
 #pragma mark - MSDynamicsDrawerViewControllerDelegate

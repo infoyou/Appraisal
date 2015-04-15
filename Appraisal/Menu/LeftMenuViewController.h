@@ -6,20 +6,21 @@
 //  Copyright (c) 2015年 Adam. All rights reserved.
 //
 
-typedef NS_ENUM(NSUInteger, MSPaneViewControllerType) {
+typedef NS_ENUM(NSUInteger, MSPaneLeftViewControllerType) {
+    // Left
     JDPGVC,
     JRDDVC,
     UIWebVC,
     UIWebVC1,
     UIWebVC2,
-    MSPaneViewControllerTypeCount
+    MSPaneViewControllerTypeCount,
 };
 
 @interface LeftMenuViewController : UITableViewController
 
-@property (nonatomic, assign) MSPaneViewControllerType paneViewControllerType;
+@property (nonatomic, assign) MSPaneLeftViewControllerType paneViewControllerType;
 @property (nonatomic, weak) MSDynamicsDrawerViewController *dynamicsDrawerViewController;
 
-- (void)transitionToViewController:(MSPaneViewControllerType)paneViewControllerType;
+- (void)transitionToViewController:(MSPaneLeftViewControllerType)paneViewControllerType;
 
 @end

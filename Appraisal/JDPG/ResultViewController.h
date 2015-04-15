@@ -12,6 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoBgView;
 
-@property (weak, nonatomic) IBOutlet UIWebView *uiWebView;
+@property (weak, nonatomic) IBOutlet UIWebView *mWebView;
 
 @end

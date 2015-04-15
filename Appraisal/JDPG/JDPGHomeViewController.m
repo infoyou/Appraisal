@@ -4,7 +4,7 @@
 #import "BarCodeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface JDPGHomeViewController () <UINavigationControllerDelegate>
+@interface JDPGHomeViewController () 
 
 @property (nonatomic, retain) NSTimer *bgSwitchTimer; // 背景
 
@@ -41,15 +41,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //设置默认参数
-    angle =30.0;
-    timeInter = 0.05;
     
-    index = 1;
     
 //    [self doBGAnimation];
     
     self.photoImg.image = [UIImage imageNamed:@"homeCenter.png"];
+    
+    self.tapPhotoView.hidden = YES;
+    self.tapScanningView.hidden = YES;
+    
+    //设置默认参数
+    [self performSelector:@selector(doPhotoAnmation) withObject:nil afterDelay:1];
+    [self performSelector:@selector(doLayoutAnimation) withObject:nil afterDelay:1];
 }
 
 - (void)viewDidLoad
@@ -57,52 +60,8 @@
     [super viewDidLoad];
     
     [self initLayer];
-    [self performSelector:@selector(doLayoutAnimation) withObject:nil afterDelay:0.1];
-    
-//    [self addLiziAnimation];
     
 }
-
-/*
-- (void)addLiziAnimation
-{
-    // 背景梦幻星空
-    do {
-        LYBgImageView *animationView = [[LYBgImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        [self.view addSubview:animationView];
-    } while (0);
-    
-    // 第一条移动星星闪烁动画
-    do {
-        CGMutablePathRef path = CGPathCreateMutable();
-        
-        CGPathMoveToPoint(path, NULL, 0, 0);
-        CGPathAddCurveToPoint(path, NULL, 50.0, 100.0, 50.0, 120.0, 50.0, 275.0);
-        CGPathAddCurveToPoint(path, NULL, 50.0, 275.0, 150.0, 275.0, 160.0, 460.0);
-        
-        LYMovePathView *animationView = [[LYMovePathView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) movePath:path];
-        [self.view addSubview:animationView];
-    } while (0);
-    
-    // 第二条移动星星闪烁动画
-    do {
-        CGMutablePathRef path = CGPathCreateMutable();
-        
-        CGPathMoveToPoint(path, NULL, SCREEN_WIDTH - 0, SCREEN_HEIGHT - 0);
-        CGPathAddCurveToPoint(path, NULL, SCREEN_WIDTH - 50.0, SCREEN_HEIGHT - 100.0, SCREEN_WIDTH - 50.0, SCREEN_WIDTH - 120.0, SCREEN_WIDTH - 50.0, SCREEN_WIDTH - 275.0);
-        CGPathAddCurveToPoint(path, NULL, SCREEN_WIDTH - 50.0, SCREEN_HEIGHT - 275.0, SCREEN_WIDTH - 150.0, SCREEN_WIDTH - 275.0, 160.0, 160.0);
-        
-        LYMovePathView *animationView = [[LYMovePathView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) movePath:path];
-        [self.view addSubview:animationView];
-    } while (0);
-    
-    // 祝贺花筒，彩色炮竹
-    do {
-        LYFireworksView *animationView = [[LYFireworksView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        [self.view addSubview:animationView];
-    } while (0);
-}
-*/
 
 - (void)viewDidDisappear:(BOOL)animated
 {
@@ -118,21 +77,18 @@
 
 - (void)adjustView
 {
-    
     if (SCREEN_HEIGHT < 568) {
-
+        
         ((UIScrollView*)(self.mScrollView)).contentSize = CGSizeMake(SCREEN_WIDTH, 640);
         ((UIScrollView*)(self.mScrollView)).scrollEnabled = YES;
     }
     
     NSLog(@"SCREEN_HEIGHT = %f", SCREEN_HEIGHT);
     
-    
     // action
     [self addTapGestureRecognizer:self.tapPhotoView];
     [self addTapGestureRecognizer:self.tapScanningView];
 }
-
 
 - (NSUInteger)supportedInterfaceOrientations
 {
@@ -153,7 +109,7 @@
     UIView *view = (UIView*)[gestureRecognizer view];
     
     if ([view isEqual:self.tapPhotoView]) {
-        DLog(@"tap tap Photo View");
+        DLog(@"tap Photo View");
         
         self.photoImg.image = [UIImage imageNamed:@"homeCenter_sel.png"];
         [self performSelector:@selector(goPhotoVC) withObject:nil afterDelay:1];
@@ -171,8 +127,12 @@
 
 #pragma mark -
 #pragma mark 动画
-- (void)doLayoutAnimation
+- (void)doPhotoAnmation
 {
+    angle = 30.0;
+    timeInter = 0.05;
+    index = 1;
+    
     self.tapPhotoView.hidden = YES;
     //左右摇摆时间是定义的时间的2倍
     [NSTimer scheduledTimerWithTimeInterval:timeInter*2
@@ -182,6 +142,49 @@
                                     repeats:YES];
     
     index = 0;
+}
+
+- (void)doLayoutAnimation
+{
+    /*
+    // tap photo
+    self.tapPhotoView.hidden = NO;
+    [self.tapPhotoView setFrame:CGRectMake(49, 0, 221, 194)];
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self.tapPhotoView setFrame:CGRectMake(49, 207, 221, 194)];
+                         
+                         if (SCREEN_HEIGHT < 568) {
+                             
+                             tapPhotoView.frame = CGRectMake(tapPhotoView.frame.origin.x, tapPhotoView.frame.origin.y - 20, CGRectGetWidth(tapPhotoView.frame), CGRectGetHeight(tapPhotoView.frame));
+                             
+                         }
+
+                     }
+                     completion:nil];
+    */
+    
+    // tap scanning
+    self.tapScanningView.hidden = NO;
+    [self.tapScanningView setFrame:CGRectMake(45, SCREEN_HEIGHT, 230, 90)];
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self.tapScanningView setFrame:CGRectMake(45, 458, 230, 90)];
+                         
+                         if (SCREEN_HEIGHT < 568) {
+                             
+                             tapScanningView.frame = CGRectMake(tapScanningView.frame.origin.x, tapScanningView.frame.origin.y - 60, CGRectGetWidth(tapScanningView.frame), CGRectGetHeight(tapScanningView.frame));
+                         }
+
+                     }
+                     completion:nil];
+    
 }
 
 - (void)doBGAnimation
@@ -195,7 +198,7 @@
 
 - (void)initLayer
 {
-    ballLayer=[CALayer layer];
+    ballLayer = [CALayer layer];
     ballLayer.bounds = CGRectMake(0, 0, 221, 194);
     ballLayer.position = CGPointMake(159, 400);
     ballLayer.contents = (id)[UIImage imageNamed:@"homeCenter.png"].CGImage;
@@ -207,11 +210,11 @@
 - (void)ballAnmation:(NSTimer *)theTimer
 {
     //设置左右摇摆
-    angle=-angle;
+    angle =- angle;
     if (angle > 0) {
-        angle-=2;
+        angle -= 2;
     } else {
-        angle+=2;
+        angle += 2;
     }
     
     CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
@@ -220,15 +223,7 @@
     rotationAnimation.repeatCount = MAXFLOAT;
     rotationAnimation.autoreverses = YES; // Very convenient CA feature for an animation like this
     rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    
-//    rotationAnimation.fromValue = [NSNumber numberWithDouble:0];
-//    rotationAnimation.toValue = [NSNumber numberWithDouble:M_PI*2];
-    
-    [ballLayer addAnimation:rotationAnimation forKey:@"transform"/*forKey:@"revItUpAnimation"*/];
-    
-//    rotationAnimation.duration = 200;
-//    rotationAnimation.repeatCount = MAXFLOAT;
-//    [ballLayer addAnimation:rotationAnimation forKey:@"transform"];
+    [ballLayer addAnimation:rotationAnimation forKey:@"transform"];
     
     //动画完毕操作
     if (angle == 0) {

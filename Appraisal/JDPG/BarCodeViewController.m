@@ -1,6 +1,8 @@
 
 #import "BarCodeViewController.h"
 
+#import "ReportViewController.h"
+
 @interface BarCodeViewController ()
 
 @end
@@ -46,16 +48,17 @@
         cameraSim.readerView = readerView;
     }
     
-    /*
-    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(16, 28, 13, 20)];
-    backImg.image = [UIImage imageNamed:@"back.png"];
+    // Title
+    UIImageView *titleImg = [[UIImageView alloc] initWithFrame:CGRectMake(64.25, 340, 191.5, 11.5)];
+    titleImg.image = [UIImage imageNamed:@"scanTitle.png"];
+    [self.view addSubview:titleImg];
+    
+    // Back
+    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(76.25, SCREEN_HEIGHT - 80, 167.5, 64)];
+    backImg.image = [UIImage imageNamed:@"backGujia.png"];
     [self.view addSubview:backImg];
     
-    UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnBack.frame = CGRectMake(0, 13, 64, 51);
-    [btnBack addTarget:self action:@selector(doBackAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:btnBack];
-     */
+    [self addTapGestureRecognizer:backImg];
 }
 
 - (void) readerView: (ZBarReaderView*) readerView
@@ -71,11 +74,21 @@
             
             NSLog(@"bar code result = %@", result);
             [self showAlert:result];
+            
+            [self performSelector:@selector(goReport) withObject:nil afterDelay:1];
         } else {
             [self showAlert:@"无效二维码"];
         }
         
     }
+}
+
+- (void)goReport
+{
+    ReportViewController *reportVC = [[ReportViewController alloc] init];
+    
+    [self.navigationController pushViewController:reportVC animated:YES];
+
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) orient
@@ -112,6 +125,16 @@
 - (void)doBackAction:(id)sender {
     
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
+{
+    UIView *view = (UIView*)[gestureRecognizer view];
+    int viewTag = view.tag;
+    
+    DLog(@"%d is touched",viewTag);
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

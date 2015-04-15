@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
+<link href="global.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="config.js"></script>
+<title>鉴定评估</title>
+</head>
+  
+<body>
+	<div class="bg"><img src="bg.jpg" width="100%" /></div>
+	<div class="content apply">
+        <div class="applyMain">
+        	<div class="appleTop">
+            	<div class="appmem">75%</div>
+            	<div class="progress">
+                	<div class="progressbar"></div>
+            	</div>
+                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+            </div>
+            <div class="tit"><img src="title.png" width="100%" /></div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>请选择手表品牌</p>
+                    <select>
+                        <option value="请选择">请选择</option>
+                        <option value="请选择11">请选择11</option>
+                        <option value="请选择22">请选择22</option>
+                        <option value="请选择33">请选择33</option>
+                    </select>
+                    <span></span>
+                </div>
+       	    </div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>请选择所属系列（选项）</p>
+                    <select>
+                        <option value="请选择">请选择</option>
+                        <option value="请选择11">请选择11</option>
+                        <option value="请选择22">请选择22</option>
+                        <option value="请选择33">请选择33</option>
+                    </select>
+                    <span></span>
+                </div>
+       	    </div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>请选择性别</p>
+                    <select>
+                        <option value="请选择">请选择</option>
+                        <option value="请选择11">请选择11</option>
+                        <option value="请选择22">请选择22</option>
+                        <option value="请选择33">请选择33</option>
+                    </select>
+                    <span></span>
+                </div>
+       	    </div>
+            <div class="btnDiv"><a href="#"><img src="pingu.png" width="100%" /></a></div>
+        </div>
+	</div>
+    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <script type="text/javascript">
+		//select
+		$(function(){
+			$('p').css("opacity","0");
+			$('.selectBox select').change(function(){
+				$(this).siblings('p').html($(this).val());
+			});
+		})
+	</script>
+</body>
+</html>
