@@ -4,8 +4,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
+     <link href="mobiscroll.custom-2.6.2.min.css" type="text/css" rel="stylesheet">
 <title>鉴定评估</title>
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
+   <script type="text/javascript" src="mobiscroll.custom-2.6.2.min.js"></script>
 </head>
   
 <body>
@@ -13,75 +16,204 @@
 	<div class="content apply">
         <div class="applyMain">
         	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
+            
+            	<div class="progress" style="position:relative;" id="progressbox">
+                    <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%</div>
+                        <div class="progressbar" style=" width:1px;"></div>
+                    </div>
                 <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
             </div>
             <div class="tit"><img src="title.png" width="100%" /></div>
             <div class="iptDiv">
                 <div class="selectBox">
-                    <p>请选择城市</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
+                    <p>&nbsp;</p>
+                    <select id="city">
+                        <option value="">请选择城市</option>
+                      
                     </select>
                     <span></span>
                 </div>
        	    </div>
             <div class="iptDiv">
                 <div class="selectBox">
-                    <p>请选择品牌</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
+                    <p>&nbsp;</p>
+                    <select id="BrandName" onchange="SelectBrandName(this)">
+                        <option value="">请选择品牌</option>
+                       
                     </select>
                     <span></span>
                 </div>
        	    </div>
             <div class="iptDiv">
                 <div class="selectBox">
-                    <p>请选择车系</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
+                     <p>&nbsp;</p>
+                    <select id="SerialName" onchange="SelectSerialName(this)">
+                        <option value="">请选择车系</option>
+                       
                     </select>
                     <span></span>
                 </div>
        	    </div>
             <div class="iptDiv">
                 <div class="selectBox">
-                    <p>请选择车型</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
+                    <p>&nbsp;</p>
+                    <select id="SerialNameList">
+                        <option value="">请选择车型</option>
+                       
                     </select>
                     <span></span>
                 </div>
        	    </div>
-            <div class="iptDiv"><input type="text" placeholder="请选择上牌时间" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入里程" class="iptTxt"></div>
-            <div class="btnDiv btnDivDif"><a href="#"><img src="pingu.png" width="100%" /></a></div>
+            <div class="iptDiv"><input type="text" style="height:18px"  placeholder="请选择上牌时间" id="cardDate" name="cardDate" class="iptTxt" value=""></div>
+            <div class="iptDiv"><input type="number" placeholder="请输入里程(万公里)" class="iptTxt" id="mileage" /></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="submitAssessmentCar()"><img src="pingu.png" width="100%" /></a></div>
         </div>
 	</div>
-    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+   <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
     <script type="text/javascript">
-		//select
-		$(function(){
-			$('p').css("opacity","0");
-			$('.selectBox select').change(function(){
-				$(this).siblings('p').html($(this).val());
-			});
-		})
+			$(function(){
+				var opt = {
+        preset: 'date', //日期
+        theme: 'android-ics light', //皮肤样式
+        display: 'modal', //显示方式 
+        mode: 'scroller', //日期选择模式
+        dateFormat: 'yy-mm-dd', // 日期格式
+        setText: '确定', //确认按钮名称
+        cancelText: '取消',//取消按钮名籍我
+        dateOrder: 'yymmdd', //面板中日期排列格式
+        dayText: '日', monthText: '月', yearText: '年', //面板中年月日文字
+        endYear:2015 //结束年份
+    };
+    $("#cardDate").mobiscroll(opt).date(opt);
+			ProgressAnimate(75);	
+			getCity();
+			carTypeSeriesModels();
+			})
+	
+	function submitAssessmentCar(){
+		var getCity = $.trim($("#city").val());
+		var brand = $("#BrandName").val();
+		var car = $("#SerialName").val();
+		var carModel = $("#SerialNameList").val();
+		var cardDate = $.trim($("#cardDate").val());
+		var mileage = $.trim($("#mileage").val());
+		
+		if(mileage<=0){
+				SubmitAlert('请正确填写里程(万公里)!');
+				return false;
+		}
+		if(getCity == ""){
+				SubmitAlert('请选择城市！');
+				return false;
+		}
+		if(brand == ""){
+			SubmitAlert('请选择品牌');
+				return false;
+		}
+		if(car == ""){
+			SubmitAlert('请选择车系');
+				return false;
+		}
+		if(carModel == ""){
+			SubmitAlert('请选择车型');
+				return false;
+		}
+		if(cardDate == ""){
+			SubmitAlert('请选择上牌时间');
+				return false;
+		}
+		
+		var SubmitData ={city:encodeURIComponent(getCity),brand:encodeURIComponent(brand),car:encodeURIComponent(car),carModel:encodeURIComponent(carModel),cardDate:encodeURIComponent(cardDate),mileage:mileage,type:"2"};		
+		SubmitToApp('evaluationInfo',SubmitData)	
+	}
+	
+	
+	var DataObj = [];		
+	function carTypeSeriesModels(){
+		 var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "carTypeSeriesModels",
+				"base":{},
+				"data":{}
+                
+            })
+        };
+		$.ajax({
+			//dataType:'jsonp',
+			data:jsonarr,
+			type:"POST",
+			//jsonp:'jsonp_callback',
+			dataType:"json",
+			url:url,
+			success:function(msg){
+			//	console.log(msg);
+				if(msg.errmsg == "ok"){
+				//	<option value="">请选择</option>    
+					var data =msg.result;
+					DataObj = data
+					
+					if(data.length > 0 ){
+						var istring = '';
+						for(var i=0; i< data.length; i++){
+							istring += '<option value="'+data[i].BrandName+'">'+data[i].BrandName+'</option>';
+						}
+						$("#BrandName").append(istring);	
+					}
+				//	console.log(data);
+				}
+			},
+		});	
+	}
+	function SelectBrandName(o){
+		if(DataObj.length > 0 ){
+			var getval = $(o).val();
+			if(getval == ""){
+				$("#SerialName").empty().append('<option value="">请选择车系</option>');
+				$("#SerialNameList").empty().append('<option value="">请选择车型</option>');
+				return false; 	
+			}
+			for(var i=0; i<DataObj.length; i++ ){
+				if(DataObj[i].BrandName  == getval){
+				
+					var getCarSerialList = DataObj[i].CarSerialList;
+					var istring = '';
+						for(var j = 0; j < getCarSerialList.length; j++){
+							istring += '<option value="'+getCarSerialList[j].SerialName+'">'+getCarSerialList[j].SerialName+'</option>';	
+						}
+					$("#SerialName").empty().append('<option value="">请选择车系</option>'+istring);
+				}
+			}
+		}		
+	}
+
+function SelectSerialName(o){
+		if(DataObj.length > 0 ){
+			var getval = $(o).val();
+			var getBrandNameVal = $("#BrandName").val()
+			if(getval == ""){;
+				$("#SerialNameList").empty().append('<option value="">请选择车型</option>');
+				return false; 	
+			}
+			for(var i=0; i<DataObj.length; i++ ){
+				if(DataObj[i].BrandName  == getBrandNameVal){
+				
+					var getCarSerialList = DataObj[i].CarSerialList;
+					var istring = '';
+						for(var j = 0; j < getCarSerialList.length; j++){
+							if(getCarSerialList[j].SerialName == getval){
+									var getSerialNameList = getCarSerialList[j].CarTypeList;
+									for(var k=0; k<getSerialNameList.length; k++ ){
+										istring += '<option value="'+getSerialNameList[k]+'">'+getSerialNameList[k]+'</option>';	
+									}
+									$("#SerialNameList").empty().append('<option value="">请选择车系</option>'+istring);
+								}
+						
+						}
+					
+				}
+			}
+		}		
+	}
 	</script>
 </body>
 </html>

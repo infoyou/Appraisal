@@ -20,11 +20,12 @@ typedef enum {
     INPUT_VIDEO_TYPE = 1,       // 摄像模式
 } InputContentType;
 
+// Photo & Video
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface PhotoViewController () <UINavigationControllerDelegate, PagedFlowViewDelegate, PagedFlowViewDataSource, AVCaptureFileOutputRecordingDelegate>
+@interface PhotoViewController () <PagedFlowViewDelegate, PagedFlowViewDataSource, AVCaptureFileOutputRecordingDelegate>
 
 // Session management.
 @property (nonatomic) dispatch_queue_t sessionQueue; // Communicate with the session and other session objects on this queue.
@@ -40,6 +41,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) BOOL lockInterfaceRotation;
 @property (nonatomic) id runtimeErrorHandlingObserver;
 
+// 录制计时器
 @property (nonatomic, retain) NSTimer *videoTimer;
 @end
 
@@ -60,7 +62,15 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // 转码开始时间
     NSDate* _startDate;
+    
+    // 业务类型
+    LogicType logicType;
+    
+    // 第一次加载
+    BOOL isFirst;
 }
+
+@synthesize session;
 
 #pragma mark - UIViewController
 
@@ -94,12 +104,29 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self initData];
     
     [self loadCameraResource];
+    
+    isFirst = NO;
 }
 
 - (void)adjustFlowView
 {
     self.photoBgView.hidden = YES;
-    [self.typeFlowView scrollToPage:2];
+    
+    if (!isFirst) {
+
+        [self.typeFlowView scrollToPage:2];
+        [AppManager instance].babyType = 2;
+        isFirst = YES;
+    }
+    
+    if ([AppManager instance].logicType == JDPG_LOGIC_TYPE) {
+        
+        self.titleLabel.text = @"鉴定评估";
+        
+    } else if ([AppManager instance].logicType == JRDD_LOGIC_TYPE) {
+        
+        self.titleLabel.text = @"金融典当";
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -120,7 +147,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             dispatch_async([strongSelf sessionQueue], ^{
                 // Manually restarting the session since it must have been stopped due to an error.
                 [[strongSelf session] startRunning];
-//                [[strongSelf recordButton] setTitle:NSLocalizedString(@"Record", @"Recording button record title") forState:UIControlStateNormal];
             });
         }]];
         [[self session] startRunning];
@@ -155,65 +181,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.typeFlowView.minimumPageAlpha = 0.3;
     self.typeFlowView.minimumPageScale = 0.9;
 }
-
-/*
-- (void)loadCamera
-{
-    session = [[AVCaptureSession alloc] init];
-    [session setSessionPreset:AVCaptureSessionPresetPhoto];
-    
-    NSError *error;
-    AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:&error];
-    
-    // Input
-    if (!deviceInput)
-    {
-        NSLog(@"No deviceInput");
-    }
-    
-    if ([session canAddInput:deviceInput]) {
-        [session addInput:deviceInput];
-    }
-    
-    // Preview Layer
-    AVCaptureVideoPreviewLayer *preViewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [preViewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    CALayer *rootLayer = [[self view] layer];
-    [rootLayer setMasksToBounds:YES];
-    CGRect frame = self.previewView.frame;
-    [preViewLayer setFrame:frame];
-    [rootLayer insertSublayer:preViewLayer atIndex:0];
-    
-    // Output Photo
-    stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG, AVVideoCodecKey, nil];
-    [stillImageOutput setOutputSettings:outputSettings];
-    [session addOutput:stillImageOutput];
-    
-    // Output Video
-    videoOutput = [[AVCaptureVideoDataOutput alloc] init];
-    videoOutput.videoSettings = @{ (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) };
-    [session addOutput:videoOutput];
-
-    // Audio
-    AVCaptureDevice *audioDevice = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
-    AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-    
-    if (error)
-    {
-        NSLog(@"%@", error);
-    }
-    
-    if ([session canAddInput:audioDeviceInput])
-    {
-        [session addInput:audioDeviceInput];
-    }
-    
-    [session startRunning];
-}
-*/
 
 - (void)loadLocalImageScroll
 {
@@ -285,11 +252,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)didScrollToPage:(NSInteger)pageNumber inFlowView:(PagedFlowView *)flowView {
-    NSLog(@"Scrolled to page # %ld", pageNumber);
+    NSLog(@"Scrolled to page # %d", pageNumber);
     
     [AppManager instance].babyType = pageNumber;
     
-    NSString *imgName = [NSString stringWithFormat:@"title_item%ld.png", pageNumber+1];
+    NSString *imgName = [NSString stringWithFormat:@"title_item%d.png", pageNumber+1];
     self.resultTextImg.image = [UIImage imageNamed:imgName];
     self.resultTextImg.frame = CGRectMake(self.resultTextImg.frame.origin.x, self.resultTextImg.frame.origin.y, self.resultTextImg.image.size.width/2, self.resultTextImg.image.size.height/2);
 }
@@ -550,13 +517,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
     
     /*
-     存相册
+    // 存相册
     [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
         if (error)
             NSLog(@"%@", error);
         
         [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-     
+        
         if (backgroundRecordingID != UIBackgroundTaskInvalid)
             [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
     }];
@@ -669,14 +636,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)loadCameraResource
 {
     // Create the AVCaptureSession
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setSession:session];
-    
-    // Setup the preview view
-    [[self previewView] setSession:session];
-    
-    // Check for device authorization
-    [self checkDeviceAuthorizationStatus];
+    AVCaptureSession *mSession = [[AVCaptureSession alloc] init];
+//    [mSession setSessionPreset:AVCaptureSessionPresetPhoto];
+    [self setSession:mSession];
     
     // Preview Layer
     AVCaptureVideoPreviewLayer *preViewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
@@ -687,6 +649,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     CGRect frame = self.previewView.frame;
     [preViewLayer setFrame:frame];
     [rootLayer insertSublayer:preViewLayer atIndex:0];
+    
+    // Setup the preview view
+    [[self previewView] setSession:mSession];
+    
+    // Check for device authorization
+    [self checkDeviceAuthorizationStatus];
     
     // In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
     // Why not do all of this on the main queue?
@@ -755,6 +723,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     });
 }
 
+#pragma mark - Custom Photo & Video
 - (BOOL)isSessionRunningAndDeviceAuthorized
 {
     return [[self session] isRunning] && [self isDeviceAuthorized];
@@ -843,34 +812,33 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [PhotoViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
             
             /*
-             NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-             NSTimeInterval a=[dat timeIntervalSince1970];
-             NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
-             
-            // 保存到文件目录
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-            NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
-            
-             if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-             [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:NULL]; //Create folder
-             }
-            
-            NSString *movieFilePath = [dataPath stringByAppendingPathComponent:[@"movie1" stringByAppendingPathExtension:@"mov"]];
-            NSLog(@"movieFilePath = %@", movieFilePath);
-            [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:movieFilePath] recordingDelegate:self];
-            */
-            
             // Start recording to a temporary file.
             NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie2" stringByAppendingPathExtension:@"mov"]];
-            NSLog(@"outputFilePath = %@", outputFilePath);
             [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+            */
             
+            /* 动态生成id
+            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+            NSTimeInterval a=[dat timeIntervalSince1970];
+            NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+             */
+            
+            // 保存到文件目录
+            NSString *pathName = [CommonUtils getPathName:@"/video"];
+            
+            NSString *movieFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
+            NSLog(@"movieFilePath = %@", movieFilePath);
+            [CommonUtils removeDocumentFile:movieFilePath];
+            
+            [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:movieFilePath] recordingDelegate:self];
+
         } else {
             
             [self takePhoto:INPUT_VIDEO_TYPE];
             // 停止录制
             [[self movieFileOutput] stopRecording];
+            // 转码
+            [self doEncodeVideoPre];
         }
     });
 }
@@ -1040,61 +1008,83 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self stopRecordTime];
 }
 
-/*
-- (void)encodeMov2Mp4
+- (void)doEncodeVideoPre
+{
+    NSString *pathName = [CommonUtils getPathName:@"/video"];
+    NSString *movieFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
+    NSLog(@"movieFilePath = %@", movieFilePath);
+    NSURL *videoURL = [NSURL fileURLWithPath:movieFilePath];
+    
+    // 删除已有的mp4文件
+    NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mp4"]];
+    [CommonUtils removeDocumentFile:exportFilePath];
+    
+    [self encodeVideo:videoURL];
+}
+
+- (BOOL)encodeVideo:(NSURL *)videoURL
 {
     
-    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:_videoURL options:nil];
-    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
-    NSLog(@"%@", compatiblePresets);
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
     
-    if ([compatiblePresets containsObject:_mp4Quality])
-        
+    // Create the composition and tracks
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *assetVideoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    if (assetVideoTracks.count <= 0)
     {
-        [self showAlert:@"等待.."];
-        
-        UIActivityIndicatorView* activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        activity.frame = CGRectMake(140,
-                                    80,
-                                    (SCREEN_WIDTH - 2 * 140),
-                                    80);
-        _startDate = [NSDate date];
-        
-        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset
-                                                                              presetName:_mp4Quality];
-        NSLog(@"%@", exportSession.supportedFileTypes);
-        
-        NSDateFormatter* formater = [[NSDateFormatter alloc] init];
-        [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
-        NSString *_mp4Path = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/output-%@.mp4", [formater stringFromDate:[NSDate date]]];
-        
-        exportSession.outputURL = [NSURL fileURLWithPath: _mp4Path];
-//        exportSession.shouldOptimizeForNetworkUse = _networkOpt;
-        exportSession.outputFileType = AVFileTypeMPEG4;
-        [exportSession exportAsynchronouslyWithCompletionHandler:^{
-            switch ([exportSession status]) {
-                case AVAssetExportSessionStatusFailed:
-                {
-                    [self showTimeAlert:@"提示" message:[[exportSession error] localizedDescription]];
-                    break;
-                }
-                    
-                case AVAssetExportSessionStatusCancelled:
-                    NSLog(@"Export canceled");
-                    break;
-                case AVAssetExportSessionStatusCompleted:
-                    NSLog(@"Successful!");
-                    [self performSelectorOnMainThread:@selector(convertFinish) withObject:nil waitUntilDone:NO];
-                    break;
-                default:
-                    break;
-            }
-        }];
+        NSLog(@"Error reading the transformed video track");
+        return NO;
     }
-    else
-    {
-        [self showTimeAlert:@"错误" message:@"AVAsset doesn't support mp4 quality"];
-    }
+    
+    // Insert the tracks in the composition's tracks
+    AVAssetTrack *assetVideoTrack = [assetVideoTracks firstObject];
+    [videoTrack insertTimeRange:assetVideoTrack.timeRange ofTrack:assetVideoTrack atTime:CMTimeMake(0, 1) error:nil];
+    [videoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
+    
+    AVAssetTrack *assetAudioTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
+    [audioTrack insertTimeRange:assetAudioTrack.timeRange ofTrack:assetAudioTrack atTime:CMTimeMake(0, 1) error:nil];
+    
+    // Begin
+//    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    
+    // Export to mp4
+    NSString *mp4Quality = AVAssetExportPresetMediumQuality;
+    NSString *pathName = [CommonUtils getPathName:@"/video"];
+    NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mp4"]];
+    NSLog(@"export FilePath = %@", exportFilePath);
+    
+    NSURL *exportUrl = [NSURL fileURLWithPath:exportFilePath];
+    
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:mp4Quality];
+    exportSession.outputURL = exportUrl;
+    CMTime start = CMTimeMakeWithSeconds(0.0, 0);
+    CMTimeRange range = CMTimeRangeMake(start, [asset duration]);
+    exportSession.timeRange = range;
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        switch ([exportSession status])
+        {
+            case AVAssetExportSessionStatusCompleted:
+                NSLog(@"MP4 Successful!");
+//                [self showTopMessage:@"转码成功"];
+//                [self showTimeAlert:@"结束" message:[NSString stringWithFormat:@"转码成功, 花费 %.2fs", duration]];
+//                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                break;
+            case AVAssetExportSessionStatusFailed:
+                NSLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
+                break;
+            case AVAssetExportSessionStatusCancelled:
+                NSLog(@"Export canceled");
+                break;
+            default:
+                break;
+        }
+    }];
+    
+    return YES;
 }
 
 - (void) convertFinish
@@ -1107,6 +1097,5 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 //    _mp4Size.text = [NSString stringWithFormat:@"%d kb", [self getFileSize:_mp4Path]];
 //    _hasMp4 = YES;
 }
-*/
 
 @end

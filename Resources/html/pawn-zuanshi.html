@@ -4,49 +4,236 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
-<title>鉴定评估</title>
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
+<title>钻石品</title>
 </head>
   
 <body>
 	<div class="bg"><img src="bg.jpg" width="100%" /></div>
 	<div class="content apply">
-        <div class="applyMain">
-        	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
-                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+    	<div class="appleTop">
+            <div class="progress" style="position:relative;" id="progressbox">
+                <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%
+                </div>
+                <div class="progressbar" style=" width:1px;"></div>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt"></div>
+            <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+        </div>
+        <div class="applyMain" id="zuanone">
+            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt" id="name"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt" id="username"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt" id="telephone"></div>
             <div class="iptDiv">
             	<div class="selectBox">
                             <p>请选择贵金属类别</p>
-                            <select>
-                                <option value="请选择">请选择</option>
-                                <option value="请选择11">请选择11</option>
-                                <option value="请选择22">请选择22</option>
-                                <option value="请选择33">请选择33</option>
+                            <select id="categoryTypeSelectTag">
                             </select>
                             <span></span>
-                        </div>
+                </div>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入全重" class="iptTxt"></div>
-            <div class="btnDiv btnDivDif"><a href="#"><img src="next.png" width="100%" /></a></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入全重" class="iptTxt" id="weight" onkeyup='checkDecimal(this)'></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="stepone()"><img src="next.png" width="100%" /></a></div>
+        </div>
+        <div class="applyMain" id="zuantwo" style="display: none">
+            <div class="iptDiv"><input type="text" placeholder="请输入大小" class="iptTxt" id="goleSize"  onkeyup='checkDecimal(this)'></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入颜色" class="iptTxt" id="goleColor"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入净度" class="iptTxt" id="cleanliness"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入品名" class="iptTxt" id="commodityName"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入成色" class="iptTxt" id="fineness"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="steptwo()"><img src="next.png" width="100%" /></a></div>
+        </div>
+        <div class="applyMain" id="zuanthr" style="display: none">
+            <div class="iptDiv"><input type="text" placeholder="请输入品牌" class="iptTxt" id="brand"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入切工" class="iptTxt" id="cut"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入钻石4C品质" class="iptTxt" id="diamondQuality"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入证书出具鉴定机构" class="iptTxt" id="certificate"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入证书编号" class="iptTxt" id="certificateNo"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入物品描述" class="iptTxt" id="description"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="submitCreateImpawn()"><img src="submitt.png" width="100%" /></a></div>
         </div>
 	</div>
-     <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
     <script type="text/javascript">
 		//select
 		$(function(){
-			$('p').css("opacity","0");
+			$('.iptDiv p').css("opacity","0");
 			$('.selectBox select').change(function(){
 				$(this).siblings('p').html($(this).val());
 			});
 		})
+		$(function () {
+            ProgressAnimate(50);
+            nobleMetalType();
+        })
+    	function stepone() {
+            var name=$("#name").val();
+            var username=$("#username").val();
+            var telephone=$("#telephone").val();
+            var categoryType=$("#categoryTypeSelectTag").val();
+            var weight=$("#weight").val();
+            if(name=="")
+            {
+                SubmitAlert('请输入典当物名称！');
+                return false;
+            }
+            if(username=="")
+            {
+                SubmitAlert('请输入联系人姓名！');
+                return false;
+            }
+            if(telephone=="")
+            {
+                SubmitAlert('请输入联系方式！');
+                return false;
+            }
+            if(categoryType=="")
+            {
+                SubmitAlert('请选择贵金属类别！');
+                return false;
+            }
+            if(weight=="")
+            {
+                SubmitAlert("请输入全重");
+                return false;
+            }
+            ProgressAnimate(75);
+            $("#zuanone").hide();
+            $("#zuantwo").show();
+		}
+		function steptwo() {
+            var goleSize=$("#goleSize").val();
+            var goleColor=$("#goleColor").val();
+            var cleanliness=$("#cleanliness").val();
+            var commodityName=$("#commodityName").val();
+            var fineness=$("#fineness").val();
+            if(goleSize=="")
+            {
+                SubmitAlert("请输入大小");
+                return false;
+            }
+            if(goleColor=="")
+            {
+                SubmitAlert("请输入颜色");
+                return false;
+            }
+            if(cleanliness=="")
+            {
+                SubmitAlert("请输入净度");
+                return false;
+            }
+            if(commodityName=="")
+            {
+                SubmitAlert("请输入品名");
+                return false;
+            }
+            if(fineness=="")
+            {
+                SubmitAlert("请输入成色");
+                return false;
+            }
+            ProgressAnimate(100);
+            $("#zuantwo").hide();
+            $("#zuanthr").show();
+		}
+        function nobleMetalType()
+        {
+            var jsonarr = {
+                cmd: JSON.stringify({
+                    "route": "nobleMetalType",
+                    "base": {},
+                    "data": {}
+                })
+            };
+            $.ajax({
+                data: jsonarr,
+                type: "POST",
+                dataType: "json",
+                url: url,
+                success: function (msg) {
+                    if (msg.errmsg == "ok") {
+                       var  MetalType = msg.result;
+                        var html = '<option value="">请选择贵金属类别</option>';
+                        for (var i = 0; i < MetalType.length; i++) {
+                            html += '<option value="' + MetalType[i].ValueId + '">' + MetalType[i].ValueStr + '</option>';
+                        }
+                        $("#categoryTypeSelectTag").html(html);
+                    } else {
+                        SubmitAlert('数据加载异常！');
+                    }
+                }
+            });
+        }
+        function submitCreateImpawn() {
+            var brand=$("#brand").val();
+            var cut=$("#cut").val();
+            var diamondQuality=$("#diamondQuality").val();
+            var certificate=$("#certificate").val();
+            var certificateNo=$("#certificateNo").val();
+            var description=$("#description").val();
+            if(brand=="")
+            {
+                SubmitAlert('请输入品牌！');
+                return false;
+            }
+            if(cut=="")
+            {
+                SubmitAlert('请输入切工！');
+                return false;
+            }
+            if(diamondQuality=="")
+            {
+                SubmitAlert('请输入钻石4C品质！');
+                return false;
+            }
+            if(certificate=="")
+            {
+                SubmitAlert('请输入证书出具鉴定机构！');
+                return false;
+            }
+            if(certificateNo=="")
+            {
+                SubmitAlert('请输入证书编号！');
+                return false;
+            }
+            if(description=="")
+            {
+                SubmitAlert('请输入物品描述！');
+                return false;
+            }
+            var name=$("#name").val();
+            var username=$("#username").val();
+            var telephone=$("#telephone").val();
+            var categoryType=$("#categoryTypeSelectTag").val();
+            var weight=$("#weight").val();
+            var goleSize=$("#goleSize").val();
+            var goleColor=$("#goleColor").val();
+            var cleanliness=$("#cleanliness").val();
+            var commodityName=$("#commodityName").val();
+            var fineness=$("#fineness").val();
+
+            var SubmitData = {
+                type:"3",
+                name: encodeURIComponent(name),
+                username:encodeURIComponent(username),
+                telephone:encodeURIComponent(telephone),
+                categoryType:encodeURIComponent(categoryType),
+                weight:encodeURIComponent(weight),
+                goleSize:encodeURIComponent(goleSize),
+                goleColor:encodeURIComponent(goleColor),
+                cleanliness:encodeURIComponent(cleanliness),
+                commodityName:encodeURIComponent(commodityName),
+                fineness:encodeURIComponent(fineness),
+                brand:encodeURIComponent(brand),
+                cut:encodeURIComponent(cut),
+                diamondQuality:encodeURIComponent(diamondQuality),
+                certificate:encodeURIComponent(certificate),
+                certificateNo:encodeURIComponent(certificateNo),
+                description:encodeURIComponent(description)
+            };
+//            console.debug(SubmitData);
+            SubmitToApp('createImpawn', SubmitData)
+        }
 	</script>
 </body>
 </html>

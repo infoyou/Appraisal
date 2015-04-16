@@ -2,6 +2,7 @@
 #import "JDPGJLHomeViewController.h"
 #import "PhotoViewController.h"
 #import "BarCodeViewController.h"
+#import "ReportViewController.h"
 
 @interface JDPGJLHomeViewController () 
 
@@ -97,6 +98,17 @@
 //    self.navigationController.visibleViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"团购" style:0 target:nil action:nil];
 //    [self.navigationController pushViewController:productVC animated:YES];
     
+    [self goReport:[NSDictionary dictionary]];
+}
+
+- (void)goReport:(NSDictionary *)msgDict
+{
+    ReportViewController *reportVC = [[ReportViewController alloc] init];
+    
+    //    [self.navigationController pushViewController:reportVC animated:YES];
+    [self presentViewController:reportVC animated:YES completion:^{}];
+    
+    [reportVC updateData:msgDict];
 }
 
 @end

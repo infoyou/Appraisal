@@ -381,6 +381,7 @@
 }
 
 - (void)scrollToPage:(NSUInteger)pageNumber {
+    
     if (pageNumber < _pageCount) {
         switch (orientation) {
             case PagedFlowViewOrientationHorizontal:

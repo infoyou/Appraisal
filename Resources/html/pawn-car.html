@@ -4,8 +4,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
-<title>鉴定评估</title>
+   <link href="mobiscroll.custom-2.6.2.min.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
+   <script type="text/javascript" src="mobiscroll.custom-2.6.2.min.js"></script>
+<title>典当金融</title>
 </head>
   
 <body>
@@ -13,18 +16,145 @@
 	<div class="content apply">
         <div class="applyMain">
         	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
+            
+            	<div class="progress" style="position:relative;" id="progressbox">
+                    <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%</div>
+                        <div class="progressbar" style=" width:1px;"></div>
+                    </div>
                 <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入所在地" class="iptTxt"></div>
-            <div class="btnDiv"><a href="#"><img src="next.png" width="100%" /></a></div>
+            <div id="Step1" style="position:relative; left:0;">
+                <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" id="name" class="iptTxt"></div>
+                <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" id="userName" class="iptTxt"></div>
+                <div class="iptDiv"><input type="text" placeholder="请输入联系方式" id="telephone" class="iptTxt"></div>
+                <div class="iptDiv"><input type="text" placeholder="请输入所在地" id="address" class="iptTxt"></div>
+                <div class="btnDiv"><a href="javascript:void(0)" onClick="PawnCarStep1()"><img src="next.png" width="100%" /></a></div>
+            </div>
+              <div id="Step2" style=" position:relative; left:100%; display:none;">
+             <div class="iptDiv"><input type="text" placeholder="请输入车型名称" id="modelName" class="iptTxt"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入排量" id="displacement" class="iptTxt"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入上牌日期" id="cardDate" name="cardDate" class="iptTxt"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入行驶里程" id="mileage" class="iptTxt"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入物品描述" id="description" class="iptTxt"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="PawnCarStep2()"><img src="submitt.png" width="100%" /></a></div>
+            </div>
         </div>
 	</div>
+    <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <script type="text/javascript">
+		$(function(){
+			var opt = {
+				preset: 'date', //日期
+				theme: 'android-ics light', //皮肤样式
+				display: 'modal', //显示方式 
+				mode: 'scroller', //日期选择模式
+				dateFormat: 'yy-mm-dd', // 日期格式
+				setText: '确定', //确认按钮名称
+				cancelText: '取消',//取消按钮名籍我
+				dateOrder: 'yymmdd', //面板中日期排列格式
+				dayText: '日', monthText: '月', yearText: '年', //面板中年月日文字
+				endYear:2015 //结束年份
+			};
+   				 $("#cardDate").mobiscroll(opt).date(opt);
+				ProgressAnimate(50);	
+				
+				
+		})
+		var SubmitData = {}
+		function PawnCarStep1(){
+			var name = $.trim($("#name").val());
+			var userName = $.trim($("#userName").val());
+			var telephone = $.trim($("#telephone").val());
+			var address = $.trim($("#address").val());
+			if(name == ""){
+				SubmitAlert('请输入典当物名称');
+				return false;	
+			}
+			if(userName == ""){
+				SubmitAlert('请输入联系人姓名');
+				return false;	
+			}
+			if(telephone == ""){
+				SubmitAlert('请输入联系方式');
+				return false;	
+			}
+			if(address == ""){
+				SubmitAlert('请输入所在地');
+				return false;	
+			}
+			
+			ProgressAnimate(75);	
+			NextFun();
+		}
+		function NextFun(){
+			$("#Step1").addClass("lightSpeedOut animated");
+			$("#Step1").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#Step2").show().animate({left:0},1200,function(){});	
+			});
+		}
+		function PawnCarStep2(){
+				var name = $.trim($("#name").val());
+			var userName = $.trim($("#userName").val());
+			var telephone = $.trim($("#telephone").val());
+			var address = $.trim($("#address").val());
+			var modelName = $.trim($("#modelName").val());
+			var displacement = $.trim($("#displacement").val());
+			var cardDate = $.trim($("#cardDate").val());
+			var mileage = $.trim($("#mileage").val());
+			var description = $.trim($("#description").val());
+			if(name == ""){
+				SubmitAlert('请输入典当物名称');
+				return false;	
+			}
+			if(userName == ""){
+				SubmitAlert('请输入联系人姓名');
+				return false;	
+			}
+			if(telephone == ""){
+				SubmitAlert('请输入联系方式');
+				return false;	
+			}
+			if(address == ""){
+				SubmitAlert('请输入所在地');
+				return false;	
+			}
+			if(modelName == ""){
+				SubmitAlert('请输入车型名称');
+				return false;	
+			}
+			if(displacement == ""){
+				SubmitAlert('请输入排量');
+				return false;	
+			}
+			if(cardDate == ""){
+				SubmitAlert('请输入上牌日期');
+				return false;	
+			}
+			if(mileage == ""){
+				SubmitAlert('请输入行驶里程');
+				return false;	
+			}
+			if(description == ""){
+				SubmitAlert('请输入物品描述');
+				return false;	
+			}
+			
+			var SubmitData ={
+				name:encodeURIComponent(name),
+				userName:encodeURIComponent(userName),
+				telephone:encodeURIComponent(telephone),
+				address:encodeURIComponent(address),
+				modelName:encodeURIComponent(modelName),
+				displacement:encodeURIComponent(displacement),
+				cardDate:encodeURIComponent(cardDate),
+				mileage:encodeURIComponent(mileage),
+				description:encodeURIComponent(description),
+				type:"2"
+				};		
+			SubmitToApp('createImpawn',SubmitData)		
+		}
+</script>
 </body>
+
 </html>

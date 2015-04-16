@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[RootViewController sendShareVideoWithType:withTitle:withContent:withImage:withVideoUrl:]:RootViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "shareImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:pngfile]]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

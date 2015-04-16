@@ -31,7 +31,7 @@ function getParam(para) {
 
 
 function SubmitAlert(txt){
-	
+	alert(txt)
 	if(getParam("plat") == "android"){
 		window.jsObj.Alert(txt);	
 	}else{
@@ -44,7 +44,7 @@ function SubmitAlert(txt){
 	*SubmitData  数据json对象  Object
 */
 function SubmitToApp(apiName,SubmitData){
-
+		ProgressAnimate(100);
 	if(getParam("plat") == "android"){
 		var jsonStringData = JSON.stringify({"route":apiName,"data":SubmitData});
 		window.jsObj.GotoSubmitData(jsonStringData);	
@@ -55,7 +55,7 @@ function SubmitToApp(apiName,SubmitData){
 				iosUrlString+=i+"="+SubmitData[i]+"&"
 		})
 		iosUrlString = iosUrlString.substring(0,iosUrlString.length-1);
-
+		
 		$("#isLoadComplete").html("<iframe scrolling='no' src='"+iosUrlString+"' frameborder='0'></iframe>");
 	}
 }
@@ -83,7 +83,7 @@ function getCity(){
 			success:function(msg){
 				if(msg.errmsg == "ok"){
 				//	<option value="">请选择</option>    
-					var data = eval("("+msg.result+")");
+					var data = msg.result;
 					if(data.length > 0 ){
 						var istring = '';
 						for(var i=0; i< data.length; i++){
@@ -93,7 +93,7 @@ function getCity(){
 					}
 				//	console.log(data);
 				}
-			},
+			}
 		});	
 	}
 function SearchFun(o){
@@ -133,7 +133,7 @@ function SearchFun(o){
 					}
 				//	console.log(data);
 				}
-			},
+			}
 		});	
 }
 function getSelectFun(o){
@@ -157,3 +157,41 @@ var checkDecimal=function(n){
         }
     }
 }
+
+/* 
+用途：检查输入字符串是否符合电话格式
+输入：
+s：字符串 010-20123251-2356
+返回：
+如果通过验证返回true,否则返回false
+*/
+function isPhone(phone){
+   var p1 = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)?(\d{7,8})(-(\d{0,4}))?$/;
+   if (p1.test(phone)) {
+       return true;
+   }
+   else {
+       return false;
+   }
+}
+
+/* 
+用途：检查输入字符串是否符合正整数格式
+输入：
+s：字符串
+返回：
+如果通过验证返回true,否则返回false
+*/
+function isNumber(s){
+   var regu = "^[0-9]+$";
+   var re = new RegExp(regu);
+   if (s.search(re) != -1) {
+       return true;
+   }
+   else {
+       return false;
+   }
+}
+
+
+

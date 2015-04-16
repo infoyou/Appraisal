@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0"/>
+    <link href="global.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    
+    <title>钻石评估</title>
+</head>
+
+<body>
+<div class="bg">
+    <img src="bg.jpg" width="100%"/>
+</div>
+<div class="content apply">
+    <div class="applyMain">
+        <div class="appleTop">
+            <div class="progress" style="position:relative;" id="progressbox">
+                <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%
+                </div>
+                <div class="progressbar" style=" width:1px;"></div>
+            </div>
+            <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+        </div>
+        <div class="tit">
+            <img src="title.png" width="100%"/>
+        </div>
+        <div class="outMain">
+            <ul class="titOut clearfix">
+                <li class="curre" mark="1"><a href="javascript:void(0)"><i></i><img src="icon02.png" width="62"/></a>
+                </li>
+                <li mark="2"><a href="javascript:void(0)"><i></i><img src="icon01.png" width="62"/></a>
+                </li>
+            </ul>
+            <div class="diamond">
+                <div class="iptDiv">
+                    <input type="text" placeholder="请输入大小" onkeyup='checkDecimal(this)' class="iptTxt" id="size_1">
+                </div>
+                <div class="iptDiv">
+                    <div class="selectBox">
+                        <p>请选择颜色</p>
+                        <select class="colorSelectTag color_1">
+                            <option value="">请选择颜色</option>
+                        </select>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="iptDiv">
+                    <div class="selectBox">
+                        <p>请选择净度</p>
+                        <select class="cleanlinessSelectTag cleanliness_1">
+                            <option value="">请选择净度</option>
+                        </select>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="diamond" style="display:none;">
+                <div class="iptDiv">
+                    <input type="text" placeholder="请输入大小" class="iptTxt" onkeyup='checkDecimal(this)' id="size_2">
+                </div>
+                <div class="iptDiv">
+                    <div class="selectBox">
+                        <p>请选择颜色</p>
+                        <select class="colorSelectTag color_2">
+                            <option value="">请选择颜色</option>
+                        </select>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="iptDiv">
+                    <div class="selectBox">
+                        <p>请选择净度</p>
+                        <select class="cleanlinessSelectTag cleanliness_2">
+                            <option value="">请选择净度</option>
+                        </select>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="iptDiv">
+                    <div class="selectBox">
+                        <p>请选择材质</p>
+                        <select class="materialSelectTag material_2">
+                            <option value="">请选择材质</option>
+                        </select>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="iptDiv">
+                    <input type="text" placeholder="请输入重量" class="iptTxt" onkeyup='checkDecimal(this)' id="weight_2">
+                </div>
+            </div>
+        </div>
+        <!--<div class="foun"><a href="#">GIA查询</a>-->
+        <!--</div>-->
+        <div class="btnDiv btnDivDif">
+                <a href="javascript:void(0)" onclick="submitZuanshiData()">
+                <img src="pingu.png" width="100%"/>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+<script type="text/javascript">
+    $(function () {
+        ProgressAnimate(100);
+        diamondColorCleanlinessMaterial();
+    })
+    //select
+    $(function () {
+		$('.iptDiv p').css("opacity","0");
+        $('.selectBox select').change(function () {
+            $(this).siblings('p').html($(this).val());
+        });
+    })
+
+
+    $(function () {
+        $('.titOut li').click(function () {
+            $(this).addClass('curre').siblings().removeClass('curre');
+            $('.diamond').eq($(this).index()).show().siblings('.diamond').hide();
+        });
+    });
+    function diamondColorCleanlinessMaterial() {
+        var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "diamondColorCleanlinessMaterial",
+                "base": {},
+                "data": {}
+
+            })
+        };
+        $.ajax({
+            data: jsonarr,
+            type: "POST",
+            dataType: "json",
+            url: url,
+            success: function (msg) {
+                if (msg.errmsg == "ok") {
+                    var data = msg.result;
+                    var dataColor = data.color;
+                    var dataCleanliness =data.cleanliness;
+                    var dataMaterial =data.material;
+                    var colorhtml = '';
+                    for (var i = 0; i < dataColor.length; i++) {
+                        colorhtml += '<option value="' + dataColor[i] + '">' + dataColor[i] + '</option>';
+                    }
+                    var cleanlinesshtml = '';
+                    for (var i = 0; i < dataCleanliness.length; i++) {
+                        cleanlinesshtml += '<option value="' + dataCleanliness[i] + '">' + dataCleanliness[i] + '</option>';
+                    }
+                    var materialhtml = '';
+                    for (var i = 0; i < dataMaterial.length; i++) {
+                        materialhtml += '<option value="' + dataMaterial[i] + '">' + dataMaterial[i] + '</option>';
+                    }
+                    $(".colorSelectTag").append(colorhtml);
+                    $(".cleanlinessSelectTag").append(cleanlinesshtml);
+                    $(".materialSelectTag").append(materialhtml);
+                } else {
+                    SubmitAlert('数据加载异常！');
+                }
+            }
+        });
+    }
+    function submitZuanshiData() {
+        //获取当前选中类型
+        var  goldType="";
+        $('.titOut li').each(function(index, element) {
+            if($(this).hasClass('curre')){
+                goldType = $(this).attr("mark");
+            }
+        });
+        if(goldType=="")
+        {
+            SubmitAlert('请选择钻石类型');
+            return false;
+        }
+        var  goleSize="",goldColor="",cleanliness="",material="",weight="";
+        goleSize=$("#size_"+goldType).val();
+        if(goleSize=="")
+        {
+            SubmitAlert('请输入大小');
+            return false;
+        }
+        goldColor=$(".color_"+goldType).val();
+        if(goldColor=="")
+        {
+            SubmitAlert('请选择颜色');
+            return false;
+        }
+        cleanliness=$(".cleanliness_"+goldType).val();
+        if(cleanliness=="")
+        {
+            SubmitAlert('请选择净度');
+            return false;
+        }
+        if(goldType=="2")
+        {
+            material=$(".material_2").val();
+            if(material=="")
+            {
+                SubmitAlert('请选择材质');
+                return false;
+            }
+            weight=$("#weight_2").val();
+            if(weight=="")
+            {
+                SubmitAlert('请输入重量');
+                return false;
+            }
+        }
+        var SubmitData = {type:"3",goldType: encodeURIComponent(goldType), goleSize: encodeURIComponent(goleSize), goldColor: encodeURIComponent(goldColor), cleanliness:encodeURIComponent(cleanliness),material:encodeURIComponent(material),weight:encodeURIComponent(weight)};
+        SubmitToApp('evaluationInfo', SubmitData)
+    }
+</script>
+</body>
+
+</html>

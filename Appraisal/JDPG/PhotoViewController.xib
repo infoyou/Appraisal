@@ -22,6 +22,7 @@
                 <outlet property="resultView" destination="0we-96-20p" id="1sV-zB-j78"/>
                 <outlet property="takePhotoBtn" destination="9wq-ad-f8R" id="sp7-Oo-vDj"/>
                 <outlet property="timeLabel" destination="3DG-hk-PEr" id="xXc-7n-V5F"/>
+                <outlet property="titleLabel" destination="7xv-WK-dWx" id="Sdb-Vs-tKb"/>
                 <outlet property="typeFlowView" destination="0EI-0f-pBu" id="5lb-Mr-Um4"/>
                 <outlet property="videoImgView" destination="4GO-hv-zfY" id="kjp-kR-H1M"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="z1T-QA-Jhq"/>

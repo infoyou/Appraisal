@@ -6,6 +6,7 @@
 #import "RightMenuViewController.h"
 #import "MobClick.h"
 #import "GlobalConstants.h"
+#import "AppManager.h"
 
 @interface AppDelegate ()
 
@@ -66,6 +67,8 @@
     splashView.frame = CGRectMake(-60, -85, 440, 635);
     [UIView commitAnimations];
     //结束;
+    
+    [[AppManager instance] initLocation];
     
     [self performSelector:@selector(loadLogicView) withObject:nil afterDelay:2.5];
     

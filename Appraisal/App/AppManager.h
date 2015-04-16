@@ -7,6 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "GlobalConstants.h"
 
 @interface AppManager : NSObject {
     
@@ -40,10 +41,11 @@
 
 @property (nonatomic, retain) NSDictionary *profileCellNumberDict;
 
-@property (nonatomic, assign) NSInteger babyType;
+@property (nonatomic, assign) LogicType logicType;
+@property (nonatomic, assign) BabyType babyType;
 
-@property (nonatomic, copy) NSString *latitude;
 @property (nonatomic, copy) NSString *longitude;
+@property (nonatomic, copy) NSString *latitude;
 
 //是否发表评论
 @property (nonatomic) BOOL isUserComment;
@@ -62,5 +64,6 @@
 - (void)saveQuestionData:(NSString *)resultId resultMsg:(NSString *)resultMsg;
 - (void)saveQuestionDataIndex:(NSString *)result;
 - (NSString *)getResultIds;
+- (void)initLocation;
 
 @end

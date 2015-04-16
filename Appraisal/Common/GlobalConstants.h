@@ -51,6 +51,11 @@ typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
 #define kShareSDK_Key @"6a46cccf1e16"
 // ######################### Share End #########################
 
+typedef NS_ENUM(NSUInteger, LogicType) {
+    JDPG_LOGIC_TYPE,
+    JRDD_LOGIC_TYPE,
+};
+
 /**
 玉石
 艺术品

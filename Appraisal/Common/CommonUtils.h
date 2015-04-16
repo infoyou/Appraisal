@@ -48,9 +48,13 @@
                   url:(NSString *)url;
 
 + (NSString *)deviceModel;
+
++ (NSString *)getPathName:(NSString *)dirName;
++ (void)removeDocumentFile:(NSString *)fileName;
 + (NSString *)documentsDirectory;
 + (CGFloat)currentOSVersion;
 
++ (UIImage *) loadImageFromDocument:(NSString *)pathName file:(NSString *)fileName;
 + (UIImage *)createImageWithColor:(UIColor *)color;
 + (UIImage *)createImageWithColor:(UIColor *)color withRect:(CGRect )rect;
 

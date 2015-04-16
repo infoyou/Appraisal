@@ -4,5 +4,5 @@ var oHead = document.getElementsByTagName('HEAD')[0];
 
 var oScript= document.createElement("script");
 oScript.type = "text/javascript";
-oScript.src="js/jquery-1.7.min.js";
+oScript.src="jquery-1.7.min.js";
 oHead.appendChild(oScript);

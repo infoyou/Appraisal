@@ -4,28 +4,352 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
-<title>鉴定评估</title>
+    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+<title>手表</title>
 </head>
   
 <body>
 	<div class="bg"><img src="bg.jpg" width="100%" /></div>
 	<div class="content apply">
-        <div class="applyMain">
-        	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
-                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+    	<div class="appleTop">
+            <div class="progress" style="position:relative;" id="progressbox">
+                <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%
+                </div>
+                <div class="progressbar" style=" width:1px;"></div>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入品牌" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入直径" class="iptTxt"></div>
-            <div class="btnDiv btnDivDif"><a href="#"><img src="next.png" width="100%" /></a></div>
+            <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+        </div>
+        <div class="applyMain" id="shouone">
+            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt" id="name"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"  id="userName"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt" id="telephone"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入品牌" class="iptTxt" id="brand"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入直径" class="iptTxt" id="diameter"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="stepone()"><img src="next.png" width="100%" /></a></div>
+        </div>
+        <div class="applyMain" id="shoutwo" style="display:none;">
+            <div class="shouTwo" style="margin-bottom:0;"><img src="caizhi.png" width="100%" /></div>
+            <div class="choeckfu">
+            	<ul>
+                    <li class="clearfix" id="materialId">
+                    </li>
+                </ul>
+            </div>
+            <div class="btnDiv btnDivDifent"><a href="javascript:void(0)" onClick="steptwo()"><img src="next.png" width="100%" /></a></div>
+        </div>
+        <div class="applyMain" id="shouthree" style="display:none;">
+            <div class="shouTwo" style="margin-bottom:0;"><img src="gongnegn.png" width="100%" /></div>
+            <div class="choeckfu">
+            	<ul>
+                    <li class="clearfix"  id="functionDescriptionId">
+                    </li>
+                </ul>
+            </div>
+            <div class="btnDiv btnDivDifent"><a href="javascript:void(0)" onClick="stepthree()"><img src="next.png" width="100%" /></a></div>
+        </div>
+        <div class="applyMain" id="shoufour" style="display:none;">
+            <div class="iptDiv"><input type="text" placeholder="请输入系列" class="iptTxt" id="series"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入型号" class="iptTxt" id="model"></div>
+            <div class="iptDiv">
+            	<div class="selectBox">
+                    <p>请选择镶嵌宝石</p>
+                    <select  id="preciousStonesSelectTag">
+                        <option value="">请选择镶嵌宝石</option>
+                    </select>
+                    <span></span>
+                </div>
+            </div>
+            <div class="iptDiv">
+            	<div class="selectBox">
+                    <p>请选择表面镶</p>
+                    <select id="surfaceStonesSelectTag">
+                        <option value="">请选择表面镶</option>
+                    </select>
+                    <span></span>
+                </div>
+            </div>
+            <div class="iptDiv">
+            	<div class="selectBox">
+                    <p>请选择表圈镶</p>
+                    <select id="bezelStonesSelectTag">
+                        <option value="">请选择表圈镶</option>
+                    </select>
+                    <span></span>
+                </div>
+            </div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>请选择表耳镶</p>
+                    <select id="lugStonesSelectTag">
+                        <option value="">请选择表耳镶</option>
+                    </select>
+                    <span></span>
+                </div>
+            </div>
+            <div class="iptDiv">
+                <div class="selectBox">
+                    <p>请选择表带镶</p>
+                    <select id="strapStonesSelectTag">
+                        <option value="">请选择表带镶</option>
+                    </select>
+                    <span></span>
+                </div>
+            </div>
+            <div class="iptDiv"><input type="text" placeholder="请输入物品描述" class="iptTxt"  id="description"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="submitData()"><img src="submitt.png" width="100%" /></a></div>
         </div>
 	</div>
+    <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <script type="text/javascript">
+    	function checkLabelFood(o){
+			if($(o).hasClass('cur')){
+				$(o).removeClass('cur');    
+			}else{
+				$(o).addClass('cur');       
+			}
+		}
+		 $(function(){
+			$('.iptDiv p').css("opacity","0");
+            ProgressAnimate(40);
+            watchMaterialFunctionFillin();
+        })
+		
+		function stepone(){
+            var   name= $.trim($("#name").val());
+            var   userName= $.trim($("#userName").val());
+            var   telephone= $.trim($("#telephone").val());
+            var   brand= $.trim($("#brand").val());
+            var   diameter= $.trim($("#diameter").val());
+            if(name=="")
+            {
+                SubmitAlert('请输入典当物名称！');
+                return false;
+            }
+            if(userName=="")
+            {
+                SubmitAlert('请输入联系人姓名！');
+                return false;
+            }
+            if(telephone=="")
+            {
+                SubmitAlert('请输入联系方式！');
+                return false;
+            }
+            if(brand=="")
+            {
+                SubmitAlert('请输入品牌！');
+                return false;
+            }
+            if(diameter=="")
+            {
+                SubmitAlert('请输入直径！');
+                return false;
+            }
+             ProgressAnimate(60);
+            $("#shouone").hide();
+            $("#shoutwo").show();
+		}		
+		
+		function steptwo(){
+           var material="";
+		    $(".material").each(function(index, element) {
+                if($(this).hasClass('cur')){
+                    material+= $(this).attr("mark")+",";
+                }
+            });
+            //material=material.substring(0,material.length-1);
+            if(material=="")
+            {
+                SubmitAlert('请选择所用材质');
+                return false;
+			}
+            ProgressAnimate(80);
+            $("#shoutwo").hide();
+            $("#shouthree").show();
+		}
+		function stepthree(){
+            var functionDescription="";
+            $(".functionDescription").each(function(index, element) {
+                if($(this).hasClass('cur')){
+                    functionDescription+= $(this).attr("mark")+",";
+                }
+            });
+            //functionDescription=functionDescription.substring(0,functionDescription.length-1);
+            if(functionDescription=="")
+            {
+                SubmitAlert('请选择功能描述');
+                return false;
+            }
+             ProgressAnimate(100);
+            $("#shouthree").hide();
+            $("#shoufour").show();
+		}
+
+        function watchMaterialFunctionFillin()
+        {
+            var jsonarr = {
+                cmd: JSON.stringify({
+                    "route": "watchMaterialFunctionFillin",
+                    "base": {},
+                    "data": {}
+                })
+            };
+            $.ajax({
+                data: jsonarr,
+                type: "POST",
+                dataType: "json",
+                url: url,
+                success: function (msg) {
+                    if (msg.errmsg == "ok") {
+                        watchData = msg.result;
+                        var materialData=watchData.material;
+                        var functionDescriptionData=watchData.function;
+                        var preciousStonesData=watchData.fillinDiamonds;
+                        var surfaceStonesData=watchData.fillinSurface;
+                        var bezelStonesData=watchData.fillinCircle;
+                        var lugStonesData=watchData.fillinEars;
+                        var strapStonesData=watchData.fillinStrap;
+
+                        var materialHtml = "";
+                        var functionDescriptionHtml = "";
+                        var preciousStonesHtml = "";
+                        var surfaceStonesHtml = "";
+                        var bezelStonesHtml = "";
+                        var lugStonesHtml = "";
+                        var strapStonesHtml = "";
+
+                        for (var i = 0; i < materialData.length; i++) {
+                            materialHtml+='<a href="javascript:void(0)" class="checxLaDif  material" onClick="checkLabelFood(this)" mark="'+materialData[i].ValueId+'"><i></i>'+materialData[i].ValueStr+'</a>';
+                        }
+
+                        for (var i = 0; i < functionDescriptionData.length; i++) {
+                            functionDescriptionHtml+='<a href="javascript:void(0)" class="checxLaDif  functionDescription" onClick="checkLabelFood(this)" mark="'+functionDescriptionData[i].ValueId+'"><i></i>'+functionDescriptionData[i].ValueStr+'</a>';
+                        }
+
+                        for (var i = 0; i < preciousStonesData.length; i++) {
+                            preciousStonesHtml+='<option value="'+preciousStonesData[i].ValueId+'">'+preciousStonesData[i].ValueStr+'</option>';
+                        }
+
+                        for (var i = 0; i < surfaceStonesData.length; i++) {
+                            surfaceStonesHtml+='<option value="'+surfaceStonesData[i].ValueId+'">'+surfaceStonesData[i].ValueStr+'</option>';
+                        }
+
+                        for (var i = 0; i < bezelStonesData.length; i++) {
+                            bezelStonesHtml+='<option value="'+bezelStonesData[i].ValueId+'">'+bezelStonesData[i].ValueStr+'</option>';
+                        }
+
+                        for (var i = 0; i < lugStonesData.length; i++) {
+                            lugStonesHtml+='<option value="'+lugStonesData[i].ValueId+'">'+lugStonesData[i].ValueStr+'</option>';
+                        }
+
+                        for (var i = 0; i < strapStonesData.length; i++) {
+                            strapStonesHtml+='<option value="'+strapStonesData[i].ValueId+'">'+strapStonesData[i].ValueStr+'</option>';
+                        }
+
+                        $("#materialId").html(materialHtml);
+                        $("#functionDescriptionId").html(functionDescriptionHtml);
+                        $("#preciousStonesSelectTag").append(preciousStonesHtml);
+                        $("#surfaceStonesSelectTag").append(surfaceStonesHtml);
+                        $("#bezelStonesSelectTag").append(bezelStonesHtml);
+                        $("#lugStonesSelectTag").append(lugStonesHtml);
+                        $("#strapStonesSelectTag").append(strapStonesHtml);
+                    } else {
+                        SubmitAlert('数据加载异常！');
+                    }
+                }
+            });
+        }
+        function submitData()
+        {
+            var   series= $.trim($("#series").val());
+            var   model= $.trim($("#model").val());
+            var   preciousStones= $.trim($("#preciousStonesSelectTag").val());
+            var   surfaceStones= $.trim($("#surfaceStonesSelectTag").val());
+            var   bezelStones= $.trim($("#bezelStonesSelectTag").val());
+            var   lugStones= $.trim($("#lugStonesSelectTag").val());
+            var   strapStones= $.trim($("#strapStonesSelectTag").val());
+            var   description= $.trim($("#description").val());
+            if(series=="")
+            {
+                SubmitAlert('请输入系列！');
+                return false;
+            }
+            if(model=="")
+            {
+                SubmitAlert('请输入型号！');
+                return false;
+            }
+            if(preciousStones=="")
+            {
+                SubmitAlert('请选择镶嵌宝石！');
+                return false;
+            }
+            if(surfaceStones=="")
+            {
+                SubmitAlert('请选择表面镶！');
+                return false;
+            }
+            if(bezelStones=="")
+            {
+                SubmitAlert('请选择表圈镶！');
+                return false;
+            }
+            if(lugStones=="")
+            {
+                SubmitAlert('请选择表耳镶！');
+                return false;
+            }
+            if(strapStones=="")
+            {
+                SubmitAlert('请选择表带镶！');
+                return false;
+            }
+            if(description=="")
+            {
+                SubmitAlert('请输入物品描述！');
+                return false;
+            }
+            var   name= $.trim($("#name").val());
+            var   userName= $.trim($("#userName").val());
+            var   telephone= $.trim($("#telephone").val());
+            var   brand= $.trim($("#brand").val());
+            var   diameter= $.trim($("#diameter").val());
+            var material="";
+            $(".material").each(function(index, element) {
+                if($(this).hasClass('cur')){
+                    material+= $(this).attr("mark")+",";
+                }
+            });
+            material=material.substring(0,material.length-1);
+            var functionDescription="";
+            $(".functionDescription").each(function(index, element) {
+                if($(this).hasClass('cur')){
+                    functionDescription+= $(this).attr("mark")+",";
+                }
+            });
+            functionDescription=functionDescription.substring(0,functionDescription.length-1);
+            var SubmitData = {
+                type:"4",
+                name: encodeURIComponent(name),
+                userName:encodeURIComponent(userName),
+                telephone:encodeURIComponent(telephone),
+                brand:encodeURIComponent(brand),
+                diameter:encodeURIComponent(diameter),
+                material:encodeURIComponent(material),
+                functionDescription:encodeURIComponent(functionDescription),
+                series:encodeURIComponent(series),
+                model:encodeURIComponent(model),
+                preciousStones:encodeURIComponent(preciousStones),
+                surfaceStones:encodeURIComponent(surfaceStones),
+                bezelStones:encodeURIComponent(bezelStones),
+                lugStones:encodeURIComponent(lugStones),
+                strapStones:encodeURIComponent(strapStones),
+                description:encodeURIComponent(description)
+            };
+            console.debug(SubmitData);
+            SubmitToApp('createImpawn', SubmitData)
+        }
+    </script>
 </body>
 </html>

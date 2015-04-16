@@ -1,6 +1,7 @@
 
 #import "ResultViewController.h"
 #import "ReportViewController.h"
+#import "DoneViewController.h"
 
 @interface ResultViewController ()
 
@@ -31,11 +32,75 @@
 {
     [super viewDidLoad];
 
+    [self loadTitle];
+    
     [self initData];
     
     [self performSelector:@selector(adjustFlowView) withObject:nil afterDelay:1];
 
     [self loadWebView];
+}
+
+- (void)loadTitle
+{
+    NSString *titleName = @"";
+    
+    switch ([AppManager instance].babyType) {
+            
+        case JADE_TYPE:
+        {
+            titleName = @"玉石";
+        }
+            break;
+            
+        case ARTWORK_TYPE:
+        {
+            titleName = @"艺术品";
+        }
+            break;
+            
+        case GEM_TYPE:
+        {
+            titleName = @"宝石";
+        }
+            break;
+            
+        case GOLD_TYPE:
+        {
+            titleName = @"素金";
+        }
+            break;
+            
+        case WATCH_TYPE:
+        {
+            titleName = @"手表";
+        }
+            break;
+            
+        case AUTO_TYPE:
+        {
+            titleName = @"机动车";
+        }
+            break;
+            
+        case DIAMOND_TYPE:
+        {
+            titleName = @"钻石";
+        }
+            break;
+            
+        case REAL_ESTATE_TYPE:
+        {
+            titleName = @"房地产";
+        }
+            break;
+            
+        default:
+            titleName = @"";
+            break;
+    }
+    
+    self.titleLabel.text = titleName;
 }
 
 - (void)loadWebView
@@ -44,60 +109,118 @@
     
     NSString *localFileName = @"assessment-baoshi";
     
-    switch ([AppManager instance].babyType) {
-        
-        case JADE_TYPE:
-        {
-            localFileName = @"assessment-yushi";
+    if ([AppManager instance].logicType == JDPG_LOGIC_TYPE) {
+        switch ([AppManager instance].babyType) {
+                
+            case JADE_TYPE:
+            {
+                localFileName = @"assessment-yushi";
+            }
+                break;
+                
+            case ARTWORK_TYPE:
+            {
+                localFileName = @"assessment-artwork";
+            }
+                break;
+                
+            case GEM_TYPE:
+            {
+                localFileName = @"assessment-coloured";
+            }
+                break;
+                
+            case GOLD_TYPE:
+            {
+                localFileName = @"assessment-sujin";
+            }
+                break;
+                
+            case WATCH_TYPE:
+            {
+                localFileName = @"assessment-shoubiao";
+            }
+                break;
+                
+            case AUTO_TYPE:
+            {
+                localFileName = @"assessment-car";
+            }
+                break;
+                
+            case DIAMOND_TYPE:
+            {
+                localFileName = @"assessment-zuanshi";
+            }
+                break;
+                
+            case REAL_ESTATE_TYPE:
+            {
+                localFileName = @"assessment-house";
+            }
+                break;
+                
+            default:
+                localFileName = @"assessment-baoshi";
+                break;
         }
-        break;
-        
-        case ARTWORK_TYPE:
-        {
-            localFileName = @"assessment-artwork";
+    } else if ([AppManager instance].logicType == JRDD_LOGIC_TYPE) {
+        switch ([AppManager instance].babyType) {
+                
+            case JADE_TYPE:
+            {
+                localFileName = @"pawn-yushi";
+            }
+                break;
+                
+            case ARTWORK_TYPE:
+            {
+                localFileName = @"pawn-artwork";
+            }
+                break;
+                
+            case GEM_TYPE:
+            {
+                localFileName = @"pawn-coloured";
+            }
+                break;
+                
+            case GOLD_TYPE:
+            {
+                localFileName = @"pawn-sujin";
+            }
+                break;
+                
+            case WATCH_TYPE:
+            {
+                localFileName = @"pawn-shoubiao";
+            }
+                break;
+                
+            case AUTO_TYPE:
+            {
+                localFileName = @"pawn-car";
+            }
+                break;
+                
+            case DIAMOND_TYPE:
+            {
+                localFileName = @"pawn-zuanshi";
+            }
+                break;
+                
+            case REAL_ESTATE_TYPE:
+            {
+                localFileName = @"pawn-house";
+            }
+                break;
+                
+            default:
+                localFileName = @"assessment-baoshi";
+                break;
         }
-        break;
-        
-        case GEM_TYPE:
-        {
-            localFileName = @"assessment-baoshi";
-        }
-        break;
-        
-        case GOLD_TYPE:
-        {
-            localFileName = @"assessment-sujin";
-        }
-        break;
-        
-        case WATCH_TYPE:
-        {
-            localFileName = @"assessment-shoubiao";
-        }
-        break;
-        
-        case AUTO_TYPE:
-        {
-            localFileName = @"assessment-car";
-        }
-        break;
-        
-        case DIAMOND_TYPE:
-        {
-            localFileName = @"assessment-zuanshi";
-        }
-        break;
-        
-        case REAL_ESTATE_TYPE:
-        {
-            localFileName = @"assessment-house";
-        }
-        break;
-        
-        default:
-            localFileName = @"assessment-baoshi";
-        break;
     }
+    
 
     // 黄色加载
     NSString *urlAddress = [[NSBundle mainBundle] pathForResource:localFileName ofType:@"html"];
@@ -200,6 +323,7 @@
     //处理JavaScript和Objective-C交互
     
     if([[[url scheme] lowercaseString] isEqualToString:@"submit"]) {
+        
         // 得到html5的表单
         NSUInteger offset = [url host].length + 3;
 //        if([[url host] isEqualToString:@"data"])
@@ -213,6 +337,19 @@
                 NSArray *elts = [param componentsSeparatedByString:@"="];
                 if([elts count] < 2) continue;
                 [dataDict setObject:[elts objectAtIndex:1] forKey:[elts objectAtIndex:0]];
+            }
+            
+            if ([AppManager instance].logicType == JRDD_LOGIC_TYPE) {
+                
+                NSMutableArray *mediaArray = [NSMutableArray array];
+                
+                // Media
+                NSMutableDictionary *mediaDict = [[NSMutableDictionary alloc] init];
+                [mediaDict setObject:@"1338" forKey:@"mediaId"];
+                [mediaDict setObject:@"img" forKey:@"mediatype"];
+                [mediaArray addObject:mediaDict];
+                
+                [dataDict setObject:mediaArray forKey:@"media"];
             }
             
             NSLog(@"params = %@", [dataDict description]);
@@ -254,16 +391,41 @@
                                                  NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
                                                  
                                                  if ( [errCodeStr integerValue] == 0 ) {
-
-                                                     NSString *msgStr = [backDic valueForKey:@"result"];
-                                                     NSDictionary *msgDict = [HttpRequestData jsonValue:msgStr];
-                                                     NSLog(@"msgDict = %@", msgDict);
                                                      
-                                                     if (![[msgDict objectForKey:@"marketPrice"] isEqualToString:@""]) {
-                                                         [self goReport:msgDict];
-                                                     } else {
-                                                         [self showTimeAlert:@"提示" message:@"价格为空！"];
+                                                     if ([AppManager instance].logicType == JDPG_LOGIC_TYPE) {
+                                                         
+                                                         // 鉴定评估逻辑处理
+                                                         if ([[backDic objectForKey:@"result"] isKindOfClass:[NSString class]])
+                                                         {
+                                                             [self showHUDWithText:@"返回数据为空!"];
+                                                             return;
+                                                         }
+                                                         
+                                                         NSDictionary *msgDict = [backDic objectForKey:@"result"];
+                                                         
+                                                         NSLog(@"msgDict = %@", msgDict);
+                                                         
+                                                         NSInteger marketPrice = [msgDict objectForKey:@"marketPrice"];
+                                                         if (marketPrice > 0) {
+                                                             
+                                                             [self goReport:msgDict];
+                                                         } else {
+                                                             
+                                                             [self showHUDWithText:[NSString stringWithFormat:@"价格为 %d", marketPrice]];
+                                                         }
+                                                     } else if ([AppManager instance].logicType == JRDD_LOGIC_TYPE) {
+                                                        // 金融典当逻辑处理
+                                                         NSString *resultMsg = [backDic objectForKey:@"result"];
+                                                         
+                                                         [self showHUDWithText:resultMsg];
+                                                         
+                                                         DoneViewController *resultVC = [[DoneViewController alloc] init];
+                                                         [self presentViewController:resultVC animated:YES completion:^{}];
                                                      }
+
+                                                 } else {
+                                                     
+                                                     [self showHUDWithText:[backDic valueForKey:@"errmsg"]];
                                                  }
                                              }
                                          }
@@ -274,20 +436,27 @@
         
         return NO;
     } else if([[[url scheme] lowercaseString] isEqualToString:@"showalert"]) {
+        
+//        if (YES) {
+//            [self goReport:[NSDictionary dictionary]];
+//        }
+        
         // 处理js的alert
         if([[url host] isEqualToString:@"data"])
         {
             
             NSString *showString = [[url resourceSpecifier] substringFromIndex:11];
             
-            NSString *str = [showString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *promptMsg = [showString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            [[[UIAlertView alloc] initWithTitle:str
-                                        message:@""
-                                       delegate:nil
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles:nil
-              ] show];
+            [self showHUDWithText:promptMsg];
+            
+//            [[[UIAlertView alloc] initWithTitle:str
+//                                        message:nil
+//                                       delegate:nil
+//                              cancelButtonTitle:@"OK"
+//                              otherButtonTitles:nil
+//              ] show];
         }
         
         return NO;

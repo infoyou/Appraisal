@@ -226,12 +226,54 @@ static NSBundle *bundle = nil;
     }
 }
 
++ (NSString *)getPathName:(NSString *)dirName {
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSString *pathName = [documentsDirectory stringByAppendingPathComponent:dirName];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:pathName]) {
+        //Create folder
+        [[NSFileManager defaultManager] createDirectoryAtPath:pathName withIntermediateDirectories:NO attributes:nil error:NULL];
+    }
+    
+    return pathName;
+}
+
++ (void)removeDocumentFile:(NSString *)dataPath
+{
+
+    NSFileManager* manager = [[NSFileManager alloc] init];
+    
+    NSError *error = nil;
+    if ([manager fileExistsAtPath:dataPath]) {
+        [manager removeItemAtPath:dataPath error:&error];
+    }
+
+}
+
 + (NSString *)documentsDirectory {
 	return NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 }
 
 + (CGFloat)currentOSVersion {
     return [[[UIDevice currentDevice] systemVersion] floatValue];
+}
+
++ (UIImage *)loadImageFromDocument:(NSString *)pathName file:(NSString *)fileName
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:pathName];
+    NSString  *pngfile = [dataPath stringByAppendingPathComponent:fileName];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:pngfile]) {
+        return [UIImage imageWithData:[NSData dataWithContentsOfFile:pngfile]];
+    } else {
+        
+        return [UIImage imageNamed:@"icon.png"];
+    }
+    
 }
 
 + (UIImage *) createImageWithColor: (UIColor *) color

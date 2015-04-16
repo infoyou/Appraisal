@@ -101,6 +101,8 @@
     PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
 //    [self.navigationController pushViewController:photoViewController animated:YES];
     [self presentViewController:photoViewController animated:YES completion:^{}];
+    
+    [AppManager instance].logicType = JDPG_LOGIC_TYPE;
 }
 
 - (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer

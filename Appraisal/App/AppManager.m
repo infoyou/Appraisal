@@ -47,6 +47,11 @@ static AppManager *shareInstance = nil;
     return shareInstance;
 }
 
+- (void)initLocation
+{
+    [AppManager instance].longitude = @"121.547";
+    [AppManager instance].latitude = @"31.2527";
+}
 
 - (BOOL)loadUser
 {

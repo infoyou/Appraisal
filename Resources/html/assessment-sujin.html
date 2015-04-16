@@ -4,11 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
-<style type="text/css">
-	select{opacity:0; }
-</style>
-<title>鉴定评估</title>
+<script type="text/javascript" src="common.js"></script>
+<title>素金饰品</title>
 </head>
   
 <body>
@@ -16,38 +13,87 @@
 	<div class="content apply">
         <div class="applyMain">
         	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
+            	<div class="progress" style="position:relative;" id="progressbox">
+                    <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%</div>
+                    <div class="progressbar" style=" width:1px;"></div>
+                </div>
                 <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
             </div>
             <div class="tit"><img src="title.png" width="100%" /></div>
             <div class="iptDiv">
                 <div class="selectBox">
-                    <p>请选择类型</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
+                    <p id="diflist">请选择类型</p>
+                    <select id="sulist">
+                        <option value="">请选择</option>
                     </select>
                     <span></span>
                 </div>
        	    </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入质量（克）" class="iptTxt"></div>
-            <div class="btnDiv"><a href="#"><img src="pingu.png" width="100%" /></a></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入质量（克）" class="iptTxt" id="quality"></div>
+            <div class="btnDiv"><a href="javascript:void(0)" onclick="submitsujinData()"><img src="pingu.png" width="100%" /></a></div>
         </div>
 	</div>
+    <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
     <script type="text/javascript" src="jquery-1.7.min.js"></script>
     <script type="text/javascript">
 		//select
 		$(function(){
-			$('p').css("opacity","0");
+			$('.iptDiv p').css("opacity","0");
 			$('.selectBox select').change(function(){
 				$(this).siblings('p').html($(this).val());
 			});
 		})
+		
+	$(function(){
+		ProgressAnimate(75);	
+		nobleMetalType();
+	})
+	 function nobleMetalType() {
+        var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "evaluationNobleMetalType",
+                "base": {},
+                "data": {}
+
+            })
+        };
+        $.ajax({
+            data: jsonarr,
+            type: "POST",
+            dataType: "json",
+            url: url,
+            success: function (msg) {
+                if (msg.errmsg == "ok") {
+                    var data = msg.result;
+                    if(data.length > 0 ){
+						var istring = '';
+						for(var i=0; i< data.length; i++){
+							istring += '<option value="'+data[i]+'">'+data[i]+'</option>';
+						}
+						$("#sulist").append(istring);	
+					}
+                // console.log(data);
+                } 
+            }
+        });
+    }
+	 function submitsujinData() {
+        var sulistlist = $.trim($("#sulist").val());
+        var disquality = $.trim($("#quality").val());
+		if(sulistlist <= 0){
+			SubmitAlert('请选择类别');
+			return false;
+		}
+		
+		var ex = /^\d+$/;
+		if (disquality == "" || !ex.test(disquality)) {
+		SubmitAlert('请输入质量');
+		return false;
+        }
+		
+        var SubmitData = {categoryType:encodeURIComponent(sulistlist), weight:encodeURIComponent(disquality), type: "5"};
+        SubmitToApp('evaluationInfo', SubmitData)
+    }
 	</script>
 </body>
 </html>

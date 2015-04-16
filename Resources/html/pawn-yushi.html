@@ -4,49 +4,141 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
 <title>鉴定评估</title>
 </head>
   
 <body>
 	<div class="bg"><img src="bg.jpg" width="100%" /></div>
 	<div class="content apply">
+    	<div class="appleTop">
+            <div class="progress" style="position:relative;" id="progressbox">
+                <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%
+                </div>
+                <div class="progressbar" style=" width:1px;"></div>
+            </div>
+            <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+        </div>
         <div class="applyMain">
-        	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
-                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
-            </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt"></div>
-            <div class="iptDiv">
-            	<div class="selectBox">
-                            <p>请选择贵金属类别</p>
-                            <select>
-                                <option value="请选择">请选择</option>
-                                <option value="请选择11">请选择11</option>
-                                <option value="请选择22">请选择22</option>
-                                <option value="请选择33">请选择33</option>
-                            </select>
-                            <span></span>
-                        </div>
-            </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入品名" class="iptTxt"></div>
-            <div class="btnDiv btnDivDif"><a href="#"><img src="next.png" width="100%" /></a></div>
+            <div class="iptDiv onePage"><input type="text" id="name" placeholder="请输入典当物名称" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="userName" placeholder="请输入联系人姓名" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="telephone" placeholder="请输入联系方式" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="commodityName" placeholder="请输入品名" class="iptTxt"></div>           
+            <div class="iptDiv onePage"><input type="text" id="weight" placeholder="请输入全重" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="fineness" placeholder="请输入成色" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="size" placeholder="请输入尺寸（长）" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="width" placeholder="请输入宽" class="iptTxt"></div>         
+            <div class="iptDiv twoPage"><input type="text" id="height" placeholder="请输入高" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="qualityDescription" placeholder="请输入宝石品质描述" class="iptTxt"></div>
+            <div class="iptDiv threePage"><input type="text" id="certificate" placeholder="请输入证书出具鉴定机构" class="iptTxt"></div>
+            <div class="iptDiv threePage"><input type="text" id="certificateNo" placeholder="请输入证书编号" class="iptTxt"></div>
+            <div class="iptDiv threePage"><input type="text" id="description" placeholder="请输入物品描述" class="iptTxt"></div>
+            <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onclick="nextPage(this)"><img src="next.png" width="100%" /></a></div>
+            <div class="btnDiv btnSub"><a href="javascript:void(0)" onclick="subPawnYushi()"><img src="submitt.png" width="100%" /></a></div>
         </div>
 	</div>
-     <script type="text/javascript" src="jquery-1.7.min.js"></script>
-    <script type="text/javascript">
-		//select
+	<div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+ <script type="text/javascript">
+    	//select
 		$(function(){
-			$('p').css("opacity","0");
-			$('.selectBox select').change(function(){
-				$(this).siblings('p').html($(this).val());
-			});
+			ProgressAnimate(35);
 		})
+		var numPage = 0;
+		var name,userName,telephone,commodityName,weight,fineness,size,width,height,qualityDescription,certificate,certificateNo,description='';
+		function nextPage(obj){		
+			 name = $.trim($("#name").val());
+			 userName = $.trim($("#userName").val());
+			 telephone = $.trim($("#telephone").val());
+			 commodityName = $.trim($("#commodityName").val());	
+			 weight = $.trim($("#weight").val());
+			 size = $.trim($("#size").val());
+			 width = $.trim($("#width").val());
+			 fineness = $.trim($("#fineness").val());
+			 height = $.trim($("#height").val());	
+			 qualityDescription = $.trim($("#qualityDescription").val());
+			numPage++;
+			if(numPage==1){
+				 if(name == ""){
+						numPage--;
+					 SubmitAlert('请输入典当物名称！');
+							return false;
+				}
+				if(userName == ""){
+					numPage--;
+					SubmitAlert('请输入联系人姓名！');
+						return false;
+				}
+				if(telephone == ""){
+					numPage--;
+					SubmitAlert('请输入联系方式！');
+						return false;
+				}
+				if(commodityName == ""){
+					numPage--;
+					SubmitAlert('请输入品名！');
+						return false;
+				}
+				if(weight == ""){
+					numPage--;
+					SubmitAlert('请输入全重！');
+						return false;
+				}	
+				ProgressAnimate(70);
+				$('.iptDiv').hide();
+				$('.twoPage').show();			
+			}
+			if(numPage==2){
+				if(fineness == ""){
+					numPage--;
+					SubmitAlert('请输入成色！');
+						return false;
+				}
+				if(size == ""){
+					numPage--;
+					SubmitAlert('请输入尺寸！');
+						return false;
+				}		
+				if(width == ""){
+					numPage--;
+					SubmitAlert('请输入宽！');
+						return false;
+				}		
+				if(height == ""){
+					numPage--;
+					SubmitAlert('请输入高！');
+						return false;
+				}	
+				if(qualityDescription == ""){
+					numPage--;
+					SubmitAlert('请输入宝石品质描述！');
+						return false;
+				}	
+				$('.iptDiv').hide();
+				$('.threePage').show();$('.btnSub').show();$(obj).hide();
+			}
+		}
+		function subPawnYushi(){
+			ProgressAnimate(100);
+			 certificate = $.trim($("#certificate").val());
+			 certificateNo = $.trim($("#certificateNo").val());
+			 description = $.trim($("#description").val());
+				if(certificate == ""){
+					SubmitAlert('请输入证书出具鉴定机构！');
+						return false;
+				}	
+				if(certificateNo == ""){
+					SubmitAlert('请输入证书编号！');
+						return false;
+				}	
+				if(description == ""){
+					SubmitAlert('请输入物品描述！');
+						return false;
+				}	
+			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),commodityName:encodeURIComponent(commodityName),weight:encodeURIComponent(weight),fineness:encodeURIComponent(fineness),size:encodeURIComponent(size),width:encodeURIComponent(width),height:encodeURIComponent(height),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"7"};			
+			//console.log(SubmitData); //SubmitAlert
+			SubmitToApp('createImpawn',SubmitData)
+		}
 	</script>
 </body>
 </html>

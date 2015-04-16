@@ -10,7 +10,4 @@
 
 @interface AboutViewController : RootViewController
 
-@property (weak, nonatomic) IBOutlet UITableView *mTableView;
-
-
 @end

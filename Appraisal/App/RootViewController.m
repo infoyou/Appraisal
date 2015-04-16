@@ -7,6 +7,8 @@
 
 @implementation RootViewController
 @synthesize myData;
+@synthesize locationManager;
+@synthesize currentLocation;
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -33,6 +35,7 @@
 
 - (void)loadLocation
 {
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     // Check for iOS 8. Without this guard the code will crash with "unknown selector" on iOS 7.
@@ -265,10 +268,12 @@
                      withImage:(NSString *)imageUrl
                   withVideoUrl:(NSString *)playUrl
 {
+    // Share Image
+    UIImage *shareImg = [CommonUtils loadImageFromDocument:@"/share" file:@"share.png"];
     
     id<ISSContent> content = [ShareSDK content:videoContent
                                 defaultContent:@"分享了一个活动"
-                                         image:[ShareSDK pngImageWithImage:[UIImage imageNamed:@"icon.png"]]
+                                         image:[ShareSDK pngImageWithImage:shareImg]
                                          title:title
                                            url:playUrl
                                    description:nil
@@ -435,7 +440,6 @@
 #pragma mark - CLLocationManagerDelegate method
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    NSLog(@"Locations %@", [locations lastObject]);
     
     self.currentLocation = [locations lastObject];
     
@@ -454,29 +458,6 @@
     NSLog(@"altitude %@",
           [NSString stringWithFormat:@"%gm", self.currentLocation.altitude]);
      */
-}
-
-- (void)requestAlwaysAuthorization
-{
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    
-    // If the status is denied or only granted for when in use, display an alert
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusDenied) {
-        NSString *title;
-        title = (status == kCLAuthorizationStatusDenied) ? @"Location services are off" : @"Background location is not enabled";
-        NSString *message = @"To use background location you must turn on 'Always' in the Location Services Settings";
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                            message:message
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                                  otherButtonTitles:@"Settings", nil];
-        [alertView show];
-    }
-    // The user has not enabled any location services. Request background authorization.
-    else if (status == kCLAuthorizationStatusNotDetermined) {
-        [self.locationManager requestAlwaysAuthorization];
-    }
 }
 
 @end

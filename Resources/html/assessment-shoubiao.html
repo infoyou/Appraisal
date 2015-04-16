@@ -1,73 +1,247 @@
 <!doctype html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
-<link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
-<title>鉴定评估</title>
-</head>
-  
-<body>
-	<div class="bg"><img src="bg.jpg" width="100%" /></div>
-	<div class="content apply">
-        <div class="applyMain">
-        	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
-                <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
-            </div>
-            <div class="tit"><img src="title.png" width="100%" /></div>
-            <div class="iptDiv">
-                <div class="selectBox">
-                    <p>请选择手表品牌</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
-                    </select>
-                    <span></span>
-                </div>
-       	    </div>
-            <div class="iptDiv">
-                <div class="selectBox">
-                    <p>请选择所属系列（选项）</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
-                    </select>
-                    <span></span>
-                </div>
-       	    </div>
-            <div class="iptDiv">
-                <div class="selectBox">
-                    <p>请选择性别</p>
-                    <select>
-                        <option value="请选择">请选择</option>
-                        <option value="请选择11">请选择11</option>
-                        <option value="请选择22">请选择22</option>
-                        <option value="请选择33">请选择33</option>
-                    </select>
-                    <span></span>
-                </div>
-       	    </div>
-            <div class="btnDiv"><a href="#"><img src="pingu.png" width="100%" /></a></div>
-        </div>
-	</div>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0"/>
+    <link href="global.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="jquery-1.7.min.js"></script>
-    <script type="text/javascript">
-		//select
-		$(function(){
-			$('p').css("opacity","0");
-			$('.selectBox select').change(function(){
-				$(this).siblings('p').html($(this).val());
-			});
-		})
-	</script>
+    <script type="text/javascript" src="common.js"></script>
+    <title>手表评估</title>
+</head>
+
+<body>
+<div class="bg"><img src="bg.jpg" width="100%"/></div>
+<div class="content apply">
+    <div class="appleTop">
+        <div class="progress" style="position:relative;" id="progressbox">
+            <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%
+            </div>
+            <div class="progressbar" style=" width:1px;"></div>
+        </div>
+        <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
+    </div>
+    <div class="applyMain" id="outOne">
+        <div class="tit"><img src="title.png" width="100%"/></div>
+        <div class="iptDiv">
+            <div class="selectBox">
+                <p>请选择品牌</p>
+                <select id="BrandNameSelectTag">
+                    <option value="">请选择品牌</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+        <div class="iptDiv">
+            <div class="selectBox">
+                <p>请选择所属系列（选填）</p>
+                <select id="WatchSerialListDataSelectTag">
+                    <option value="">请选择所属系列（选填）</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+        <div class="iptDiv">
+            <div class="selectBox">
+                <p>请选择性别</p>
+                <select id="WatchSexListSelectTag">
+                    <option value="">请选择性别</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+        <div class="btnDiv"><a href="javascript:void(0)" onClick="getWatchFacewarpMaterialImg()"><img src="pingu.png"  width="100%"/></a>
+        </div>
+    </div>
+    <div class="applyMain" id="outTwo" style="display:none;">
+        <div class="shouTwo">
+            <img src="top.png" width="100%"/>
+        </div>
+        <div class="tit" style="margin-top:0;">
+            <img src="title.png" width="100%"/>
+        </div>
+        <div class="iptDiv">
+            <div class="selectBox">
+                <p>请选择表径</p>
+                <select id="facewarpSelectTag">
+                    <option value="">请选择表径</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+        <div class="iptDiv">
+            <div class="selectBox">
+                <p>请选择表壳材料</p>
+                <select id="materialSelectTag">
+                    <option value="">请选择表壳材料</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+        <div class="clickedout"><img src="clicke.png" width="100%"/></div>
+        <div class="bottomImg">
+            <ul class="clearfix" id="bottomImgList">
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+<script type="text/javascript">
+    var watchData = [];
+    var WatchSerialListData = [];
+    var MaterialImgData = [];
+    $(function () {
+        ProgressAnimate(66);
+        watchTypeSeriesSex();
+    })
+    //select
+    $(function () {
+        $('.iptDiv p').css("opacity", "0");
+        $('.selectBox select').change(function () {
+            $(this).siblings('p').html($(this).val());
+        });
+    })
+    function watchTypeSeriesSex() {
+        var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "watchTypeSeriesSex",
+                "base": {},
+                "data": {}
+            })
+        };
+        $.ajax({
+            data: jsonarr,
+            type: "POST",
+            dataType: "json",
+            url: url,
+            success: function (msg) {
+                if (msg.errmsg == "ok") {
+                    watchData = msg.result;
+                    var html = "";
+                    for (var i = 0; i < watchData.length; i++) {
+                        html += '<option value="' + watchData[i].BrandName + '">' + watchData[i].BrandName + '</option>';
+                    }
+                    $("#BrandNameSelectTag").append(html);
+                } else {
+                    SubmitAlert('数据加载异常！');
+                }
+            }
+        });
+        $("#BrandNameSelectTag").change(function () {
+            var BrandNameSelectValue = $("#BrandNameSelectTag").val();
+            for (var i = 0; i < watchData.length; i++) {
+                if (watchData[i].BrandName == BrandNameSelectValue) {
+                    WatchSerialListData = watchData[i].WatchSerialList;
+                }
+            }
+            var html = '<option value="">请选择所属系列（选填）</option>';
+            for (var i = 0; i < WatchSerialListData.length; i++) {
+                html += '<option value="' + WatchSerialListData[i].SerialName + '">' + WatchSerialListData[i].SerialName + '</option>';
+            }
+            $("#WatchSexListSelectTag").html('<option value="">请选择性别</option>');
+            $("#WatchSerialListDataSelectTag").html(html);
+        });
+        $("#WatchSerialListDataSelectTag").change(function () {
+            var WatchSexListData = [];
+            var WatchSerialListSelectValue = $("#WatchSerialListDataSelectTag").val();
+            for (var i = 0; i < WatchSerialListData.length; i++) {
+                if (WatchSerialListData[i].SerialName == WatchSerialListSelectValue) {
+                    WatchSexListData = WatchSerialListData[i].WatchSexList;
+                }
+            }
+            var html = '<option value="">请选择性别</option>';
+            for (var i = 0; i < WatchSexListData.length; i++) {
+                html += '<option value="' + WatchSexListData[i] + '">' + WatchSexListData[i] + '</option>';
+            }
+            $("#WatchSexListSelectTag").html(html);
+        });
+    }
+
+    function getWatchFacewarpMaterialImg() {
+        var watchType = $("#BrandNameSelectTag").val();
+        var watchSeries = $("#WatchSerialListDataSelectTag").val();
+        var watchSex = $("#WatchSexListSelectTag").val();
+        if (watchType == "") {
+            SubmitAlert('请选择品牌');
+            return false;
+        }
+//        if (watchSex == "") {
+//            SubmitAlert('请选择性别');
+//            return false;
+//        }
+        //获取其他信息
+        var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "watchFacewarpMaterialImg",
+                "base": {},
+                "data": {
+                    'watchType': watchType,
+                    'watchSeries': watchSeries,
+                    'watchSex': watchSex
+                }
+            })
+        };
+        $.ajax({
+            data: jsonarr,
+            type: "POST",
+            dataType: "json",
+            url: url,
+            success: function (msg) {
+                if (msg.errmsg == "ok") {
+                    MaterialImgData = msg.result;
+                    if (MaterialImgData.length == 0) {
+                        SubmitAlert('没有对应的数据！');
+                        return false;
+                    }
+                    ProgressAnimate(100);
+                    $("#outOne").hide();
+                    $("#outTwo").show();
+                    var facewarpHtml = '<option value="">请选择表径</option>', materialHtml = '<option value="">请选择表壳材料</option>', bootomImgList = "";
+                    for (var i = 0; i < MaterialImgData.length; i++) {
+                        var wsize = MaterialImgData[i].wsize;
+                        var watchCase = MaterialImgData[i].watchCase;
+                        if (facewarpHtml.indexOf(wsize) < 0) {
+                            facewarpHtml += '<option value="' + wsize + '">' + wsize + '</option>';
+                        }
+                        if (materialHtml.indexOf(watchCase) < 0) {
+                            materialHtml += '<option value="' + watchCase + '">' + watchCase + '</option>';
+                        }
+                        bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+                    }
+                    $("#materialSelectTag").html(materialHtml);
+                    $("#facewarpSelectTag").html(facewarpHtml);
+                    $("#bottomImgList").html(bootomImgList);
+                } else {
+                    SubmitAlert('数据加载异常！');
+                }
+            }
+        });
+    }
+    $("#materialSelectTag").change(function(){
+            var materialValue=$("#materialSelectTag").val();
+            var bootomImgList = "";
+            for (var i = 0; i < MaterialImgData.length; i++) {
+                if(materialValue==MaterialImgData[i].watchCase)
+                {
+                    bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+                }
+            }
+            $("#bottomImgList").html(bootomImgList);
+    });
+    $("#facewarpSelectTag").change(function(){
+        var facewarpValue=$("#facewarpSelectTag").val();
+        var bootomImgList = "";
+        for (var i = 0; i < MaterialImgData.length; i++) {
+            if(facewarpValue==MaterialImgData[i].wsize)
+            {
+                bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+            }
+        }
+        $("#bottomImgList").html(bootomImgList);
+    });
+    function submitEvaluationInfo(id) {
+        var SubmitData = {type: "4", wid: id};
+        SubmitToApp('evaluationInfo', SubmitData)
+    }
+</script>
 </body>
 </html>

@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0" />
 <link href="global.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="jquery-1.7.min.js"></script>
+<script type="text/javascript" src="common.js"></script>
 <title>鉴定评估</title>
 </head>
   
@@ -12,20 +13,96 @@
 	<div class="bg"><img src="bg.jpg" width="100%" /></div>
 	<div class="content apply">
         <div class="applyMain">
-        	<div class="appleTop">
-            	<div class="appmem">75%</div>
-            	<div class="progress">
-                	<div class="progressbar"></div>
-            	</div>
+        	<div class="appleTop">            	
+            	<div class="progress" style="position:relative;" id="progressbox">
+                    <div class="appmem" style="position:absolute; top:-30px; left:0;"><span id="progressNumber">0</span>%</div>
+                        <div class="progressbar" style=" width:1px;"></div>
+                    </div>
                 <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入作者" class="iptTxt"></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入年代" class="iptTxt"></div>
-            <div class="btnDiv btnDivDif"><a href="#"><img src="next.png" width="100%" /></a></div>
-        </div>
+            <div class="iptDiv onePage"><input type="text" id="name" placeholder="请输入典当物名称" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="userName" placeholder="请输入联系人姓名" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="telephone" placeholder="请输入联系方式" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="author" placeholder="请输入作者" class="iptTxt"></div>
+            <div class="iptDiv onePage"><input type="text" id="years" placeholder="请输入年代" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="size" placeholder="请输入尺寸" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="fineness" placeholder="请输入成色" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="otherDescription" placeholder="请输入其他描述" class="iptTxt"></div>
+            <div class="iptDiv twoPage"><input type="text" id="description" placeholder="请输入物品描述" class="iptTxt"></div>
+      		<div class="btnDiv btnDivDif"><a href="javascript:void(0)" onclick="nextPage(this)"><img src="next.png" width="100%" /></a></div>
+            <div class="btnDiv btnSub"><a href="javascript:void(0)" onclick="pawnArtwork()"><img src="submitt.png" width="100%" /></a></div>
+         </div>
 	</div>
+	<div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+<script type="text/javascript">
+$(function(){
+	ProgressAnimate(35);	
+	getCity();
+})
+	var name,userName,telephone,author,years,size,fineness,otherDescription,description = '';
+	function nextPage(obj){
+		 name = $.trim($("#name").val());
+		 userName = $.trim($("#userName").val());
+		 telephone = $.trim($("#telephone").val());
+		 author = $.trim($("#author").val());
+		 years = $.trim($("#years").val());
+		 if(name == ""){
+			 SubmitAlert('请输入典当物名称！');
+					return false;
+			}
+			if(userName == ""){
+				SubmitAlert('请输入联系人姓名！');
+					return false;
+			}
+			if(telephone == ""){
+				SubmitAlert('请输入联系方式！');
+					return false;
+			}
+			if(author == ""){
+				SubmitAlert('请输入作者！');
+					return false;
+			}
+			if(years == ""){
+				SubmitAlert('请输入年代！');
+					return false;
+			}else if(!isNumber(years)){
+				SubmitAlert('请输入正确的年代！');
+				return false;
+				
+			}
+		ProgressAnimate(70);
+		$(obj).hide();
+		$('.onePage').hide();
+		$('.twoPage').show();
+		$('.btnSub').show();
+	}	
+	function pawnArtwork(){		 
+		 size = $.trim($("#size").val());
+		 fineness = $.trim($("#fineness").val());
+		 otherDescription = $.trim($("#otherDescription").val());
+		 description = $.trim($("#description").val());			
+			if(size == ""){
+				SubmitAlert('请输入尺寸！');
+					return false;
+			}
+			if(fineness == ""){
+				SubmitAlert('请输入成色！');
+					return false;
+			}
+			if(otherDescription == ""){
+				SubmitAlert('请输入其他描述！');
+					return false;
+			}
+			if(description == ""){
+				SubmitAlert('请输入物品描述！');
+					return false;
+			}
+			ProgressAnimate(100);
+		var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),author:encodeURIComponent(author),years:encodeURIComponent(years),size:encodeURIComponent(size),fineness:encodeURIComponent(fineness),otherDescription:encodeURIComponent(otherDescription),type:"8"};		
+		//console.log(SubmitData);
+		SubmitToApp('createImpawn',SubmitData)	
+		
+	}
+</script>	
 </body>
 </html>
