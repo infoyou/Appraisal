@@ -97,11 +97,6 @@
 		var carModel = $("#SerialNameList").val();
 		var cardDate = $.trim($("#cardDate").val());
 		var mileage = $.trim($("#mileage").val());
-		
-		if(mileage<=0){
-				SubmitAlert('请正确填写里程(万公里)!');
-				return false;
-		}
 		if(getCity == ""){
 				SubmitAlert('请选择城市！');
 				return false;
@@ -122,7 +117,10 @@
 			SubmitAlert('请选择上牌时间');
 				return false;
 		}
-		
+        if(mileage<=0){
+            SubmitAlert('请正确填写里程(万公里)!');
+            return false;
+        }
 		var SubmitData ={city:encodeURIComponent(getCity),brand:encodeURIComponent(brand),car:encodeURIComponent(car),carModel:encodeURIComponent(carModel),cardDate:encodeURIComponent(cardDate),mileage:mileage,type:"2"};		
 		SubmitToApp('evaluationInfo',SubmitData)	
 	}
@@ -183,6 +181,7 @@
 					$("#SerialName").empty().append('<option value="">请选择车系</option>'+istring);
 				}
 			}
+            $("#SerialNameList").empty().append('<option value="">请选择车型</option>');
 		}		
 	}
 
@@ -205,7 +204,7 @@ function SelectSerialName(o){
 									for(var k=0; k<getSerialNameList.length; k++ ){
 										istring += '<option value="'+getSerialNameList[k]+'">'+getSerialNameList[k]+'</option>';	
 									}
-									$("#SerialNameList").empty().append('<option value="">请选择车系</option>'+istring);
+									$("#SerialNameList").empty().append('<option value="">请选择车型</option>'+istring);
 								}
 						
 						}

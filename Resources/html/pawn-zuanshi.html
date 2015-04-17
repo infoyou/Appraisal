@@ -32,12 +32,12 @@
                             <span></span>
                 </div>
             </div>
-            <div class="iptDiv"><input type="text" placeholder="请输入全重" class="iptTxt" id="weight" onkeyup='checkDecimal(this)'></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入全重" class="iptTxt" id="weight"   onkeyup='checkDecimal(this)'></div>
             <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="stepone()"><img src="next.png" width="100%" /></a></div>
         </div>
         <div class="applyMain" id="zuantwo" style="display: none">
-            <div class="iptDiv"><input type="text" placeholder="请输入大小" class="iptTxt" id="goleSize"  onkeyup='checkDecimal(this)'></div>
-            <div class="iptDiv"><input type="text" placeholder="请输入颜色" class="iptTxt" id="goleColor"></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入大小" class="iptTxt" id="goldSize"  onkeyup='checkDecimal(this)'></div>
+            <div class="iptDiv"><input type="text" placeholder="请输入颜色" class="iptTxt" id="goldColor"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入净度" class="iptTxt" id="cleanliness"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入品名" class="iptTxt" id="commodityName"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入成色" class="iptTxt" id="fineness"></div>
@@ -63,7 +63,7 @@
 			});
 		})
 		$(function () {
-            ProgressAnimate(50);
+            ProgressAnimate(30);
             nobleMetalType();
         })
     	function stepone() {
@@ -97,22 +97,32 @@
                 SubmitAlert("请输入全重");
                 return false;
             }
-            ProgressAnimate(75);
+//            if(!isNumber(weight))
+//            {
+//                SubmitAlert('全重必须为数字');
+//                return false;
+//            }
+//            if(weight>8)
+//            {
+//                SubmitAlert('全重不能超过8');
+//                return false;
+//            }
+            ProgressAnimate(60);
             $("#zuanone").hide();
             $("#zuantwo").show();
 		}
 		function steptwo() {
-            var goleSize=$("#goleSize").val();
-            var goleColor=$("#goleColor").val();
+            var goldSize=$("#goldSize").val();
+            var goldColor=$("#goldColor").val();
             var cleanliness=$("#cleanliness").val();
             var commodityName=$("#commodityName").val();
             var fineness=$("#fineness").val();
-            if(goleSize=="")
+            if(goldSize=="")
             {
                 SubmitAlert("请输入大小");
                 return false;
             }
-            if(goleColor=="")
+            if(goldColor=="")
             {
                 SubmitAlert("请输入颜色");
                 return false;
@@ -132,7 +142,7 @@
                 SubmitAlert("请输入成色");
                 return false;
             }
-            ProgressAnimate(100);
+            ProgressAnimate(80);
             $("#zuantwo").hide();
             $("#zuanthr").show();
 		}
@@ -206,8 +216,8 @@
             var telephone=$("#telephone").val();
             var categoryType=$("#categoryTypeSelectTag").val();
             var weight=$("#weight").val();
-            var goleSize=$("#goleSize").val();
-            var goleColor=$("#goleColor").val();
+            var goldSize=$("#goldSize").val();
+            var goldColor=$("#goldColor").val();
             var cleanliness=$("#cleanliness").val();
             var commodityName=$("#commodityName").val();
             var fineness=$("#fineness").val();
@@ -219,8 +229,8 @@
                 telephone:encodeURIComponent(telephone),
                 categoryType:encodeURIComponent(categoryType),
                 weight:encodeURIComponent(weight),
-                goleSize:encodeURIComponent(goleSize),
-                goleColor:encodeURIComponent(goleColor),
+                goldSize:encodeURIComponent(goldSize),
+                goldColor:encodeURIComponent(goldColor),
                 cleanliness:encodeURIComponent(cleanliness),
                 commodityName:encodeURIComponent(commodityName),
                 fineness:encodeURIComponent(fineness),

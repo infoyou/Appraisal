@@ -43,7 +43,7 @@
  <script type="text/javascript">
     	//select
 		$(function(){
-			ProgressAnimate(35);
+			ProgressAnimate(30);
 		})
 		var numPage = 0;
 		var name,userName,telephone,commodityName,weight,fineness,size,width,height,qualityDescription,certificate,certificateNo,description='';
@@ -85,7 +85,7 @@
 					SubmitAlert('请输入全重！');
 						return false;
 				}	
-				ProgressAnimate(70);
+				ProgressAnimate(60);
 				$('.iptDiv').hide();
 				$('.twoPage').show();			
 			}
@@ -115,12 +115,12 @@
 					SubmitAlert('请输入宝石品质描述！');
 						return false;
 				}	
+				ProgressAnimate(90);
 				$('.iptDiv').hide();
 				$('.threePage').show();$('.btnSub').show();$(obj).hide();
 			}
 		}
 		function subAssessmentYushi(){
-			ProgressAnimate(100);
 			 certificate = $.trim($("#certificate").val());
 			 certificateNo = $.trim($("#certificateNo").val());
 			 description = $.trim($("#description").val());
@@ -136,9 +136,10 @@
 					SubmitAlert('请输入物品描述！');
 						return false;
 				}	
+				ProgressAnimate(100);
 			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),commodityName:encodeURIComponent(commodityName),weight:encodeURIComponent(weight),fineness:encodeURIComponent(fineness),size:encodeURIComponent(size),width:encodeURIComponent(width),height:encodeURIComponent(height),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"7"};			
 			//console.log(SubmitData); //SubmitAlert
-			SubmitToApp('evaluationInfo',SubmitData)
+			SubmitToApp('createImpawn',SubmitData)//【玉石饰品 艺术品 有色宝石】  这三种评估。直接调用我要当的结果。 会返回id的。在典当记录里能看到。在评估记录里看不到后续通过id可以获得评估结果
 		}
 	</script>
 </body>

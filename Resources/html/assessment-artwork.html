@@ -101,7 +101,7 @@ $(function(){
 			ProgressAnimate(100);
 		var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),author:encodeURIComponent(author),years:encodeURIComponent(years),size:encodeURIComponent(size),fineness:encodeURIComponent(fineness),otherDescription:encodeURIComponent(otherDescription),type:"8"};		
 		//console.log(SubmitData);
-		SubmitToApp('evaluationInfo',SubmitData)	
+		SubmitToApp('createImpawn',SubmitData)	//【玉石饰品 艺术品 有色宝石】  这三种评估。直接调用我要当的结果。 会返回id的。在典当记录里能看到。在评估记录里看不到后续通过id可以获得评估结果
 		
 	}
 </script>	

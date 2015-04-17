@@ -106,7 +106,7 @@
 <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
 <script type="text/javascript">
     $(function () {
-        ProgressAnimate(100);
+        ProgressAnimate(80);
         diamondColorCleanlinessMaterial();
     })
     //select
@@ -178,11 +178,21 @@
             SubmitAlert('请选择钻石类型');
             return false;
         }
-        var  goleSize="",goldColor="",cleanliness="",material="",weight="";
-        goleSize=$("#size_"+goldType).val();
-        if(goleSize=="")
+        var  goldSize="",goldColor="",cleanliness="",material="",weight="";
+        goldSize=$("#size_"+goldType).val();
+        if(goldSize=="")
         {
             SubmitAlert('请输入大小');
+            return false;
+        }
+        if(!isNumber(goldSize))
+        {
+            SubmitAlert('大小必须为数字');
+            return false;
+        }
+        if(goldSize>8)
+        {
+            SubmitAlert('大小不能超过8');
             return false;
         }
         goldColor=$(".color_"+goldType).val();
@@ -211,8 +221,18 @@
                 SubmitAlert('请输入重量');
                 return false;
             }
+            if(!isNumber(weight))
+            {
+                SubmitAlert('重量必须为数字');
+                return false;
+            }
+            if(weight>8)
+            {
+                SubmitAlert('重量不能超过8');
+                return false;
+            }
         }
-        var SubmitData = {type:"3",goldType: encodeURIComponent(goldType), goleSize: encodeURIComponent(goleSize), goldColor: encodeURIComponent(goldColor), cleanliness:encodeURIComponent(cleanliness),material:encodeURIComponent(material),weight:encodeURIComponent(weight)};
+        var SubmitData = {type:"3",goldType: encodeURIComponent(goldType), goldSize: encodeURIComponent(goldSize), goldColor: encodeURIComponent(goldColor), cleanliness:encodeURIComponent(cleanliness),material:encodeURIComponent(material),weight:encodeURIComponent(weight)};
         SubmitToApp('evaluationInfo', SubmitData)
     }
 </script>

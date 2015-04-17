@@ -43,6 +43,9 @@
 
 @property (nonatomic, assign) LogicType logicType;
 @property (nonatomic, assign) BabyType babyType;
+// 标的物记录号
+@property (nonatomic, copy) NSString *objectRecordId;
+@property (nonatomic, copy) NSString *objectAttachmentFileName;
 
 @property (nonatomic, copy) NSString *longitude;
 @property (nonatomic, copy) NSString *latitude;

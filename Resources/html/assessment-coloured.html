@@ -52,7 +52,7 @@
     function getMetal(){
     		 var jsonarr = {
                 cmd: JSON.stringify({
-                    "route": "evaluationNobleMetalType",
+                    "route": "nobleMetalType",
     				"base":{},
     				"data":{}
                     
@@ -72,7 +72,7 @@
     					if(data.length > 0 ){
     						var istring = '';
     						for(var i=0; i< data.length; i++){
-    							istring += '<option value="'+data[i]+'">'+data[i]+'</option>';
+    							istring += '<option value="'+data[i].ValueId+'">'+data[i].ValueStr+'</option>';
     						}
     						$("#categoryType").append(istring);	
     					}
@@ -86,10 +86,10 @@
     
     	//select
 		$(function(){
-			ProgressAnimate(35);
+			ProgressAnimate(30);
 			getMetal();
 			$('.selectBox select').change(function(){
-				$(this).siblings('p').html($(this).val());
+				$(this).siblings('p').html($(this).find('option:selected').html());
 			});
 		})
 		var numPage = 0;
@@ -97,8 +97,8 @@
 		function nextPage(obj){		
 			 name = $.trim($("#name").val());
 			 userName = $.trim($("#userName").val());
-			 telephone = $.trim($("#telephone").val());
-			 categoryType = $.trim($("#categoryType").val());	
+			 telephone = $.trim($("#telephone").val());	
+			 categoryType = $.trim($("#categoryType").find('option:selected').val());
 			 weight = $.trim($("#weight").val());
 			 Size = $.trim($("#Size").val());
 			 commodityName = $.trim($("#commodityName").val());
@@ -132,7 +132,7 @@
 					SubmitAlert('请输入品名！');
 						return false;
 				}
-				ProgressAnimate(70);
+				ProgressAnimate(60);
 				$('.iptDiv').hide();
 				$('.twoPage').show();			
 			}
@@ -162,12 +162,12 @@
 					SubmitAlert('请输入宝石品质描述！');
 						return false;
 				}	
+				ProgressAnimate(90);
 				$('.iptDiv').hide();
 				$('.threePage').show();$('.btnSub').show();$(obj).hide();
 			}
 		}
 		function subAssessmentColoured(){
-			ProgressAnimate(100);
 			 certificate = $.trim($("#certificate").val());
 			 certificateNo = $.trim($("#certificateNo").val());
 			 description = $.trim($("#description").val());
@@ -183,9 +183,10 @@
 					SubmitAlert('请输入物品描述！');
 						return false;
 				}	
+				ProgressAnimate(100);
 			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),categoryType:encodeURIComponent(categoryType),weight:encodeURIComponent(weight),Size:encodeURIComponent(Size),commodityName:encodeURIComponent(commodityName),brand:encodeURIComponent(brand),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"6"};	
 			//console.log(SubmitData); //SubmitAlert
-			SubmitToApp('evaluationInfo',SubmitData)
+			SubmitToApp('createImpawn',SubmitData)//【玉石饰品 艺术品 有色宝石】  这三种评估。直接调用我要当的结果。 会返回id的。在典当记录里能看到。在评估记录里看不到后续通过id可以获得评估结果
 		}
 	</script>
 </body>

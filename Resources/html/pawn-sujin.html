@@ -103,9 +103,9 @@
 			SubmitAlert('请输入姓名！');
 			return false;
 		}
-		var ex = /^\d+$/;
-		if (telephone == "" || !ex.test(telephone)) {
-			SubmitAlert('请输入正确的联系人方式');
+		
+		if (telephone == "") {
+			alert('请输入联系人方式');
 			return false;
         }
 		if(categoryType == ""){
@@ -117,7 +117,7 @@
 			return false;
 		}
 	   $(function () {
-            ProgressAnimate(100);
+            ProgressAnimate(80);
 			$("#sujinone").hide();
 			$("#sujintwo").show();
         })
@@ -153,7 +153,7 @@
 		var weight = $.trim($("#pawweight").val());
 		var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),categoryType:encodeURIComponent(categoryType),weight:encodeURIComponent(weight),commodityName:encodeURIComponent(commodityName),fineness:encodeURIComponent(fineness),brand:encodeURIComponent(brand),description:encodeURIComponent(description),type:"5"};		
 		//console.log(SubmitData);
-		SubmitToApp('evaluationInfo',SubmitData);
+		SubmitToApp('createImpawn',SubmitData);
 	}	
 	
 	

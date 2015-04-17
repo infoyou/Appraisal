@@ -4,8 +4,8 @@
 #import "UIWebViewController.h"
 #import "CommonUtils.h"
 
-#import "DDJLHomeViewController.h"
-#import "JDPGJLHomeViewController.h"
+#import "PawnHistoryHomeViewController.h"
+#import "AssessHistoryHomeViewController.h"
 #import "AboutViewController.h"
 
 @interface RightMenuViewController ()
@@ -82,8 +82,8 @@
                                       };
     
     self.paneViewControllerClasses = @{
-                                       @(DDJLVC) : [DDJLHomeViewController class],
-                                       @(JDPGJLVC) : [JDPGJLHomeViewController class],
+                                       @(DDJLVC) : [PawnHistoryHomeViewController class],
+                                       @(JDPGJLVC) : [AssessHistoryHomeViewController class],
                                        @(AboutVC) : [AboutViewController class]
                                        };
 

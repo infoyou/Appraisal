@@ -10,7 +10,7 @@
 #import "FMResultSet.h"
 
 // Business Object
-#import "SurveyObject.h"
+#import "AssessObject.h"
 
 
 @interface FMDBConnection : NSObject
@@ -24,19 +24,16 @@
 - (BOOL)closeDB;
 
 #pragma mark - user
-- (void)insertSurveyObjectDB:(SurveyObject *)surveyInfo;
-- (void)insertAllSurveyObjectDB:(NSArray *)userList;
-- (void)updateRepeatSurveyObjectDB:(SurveyObject *)surveyInfo;
+- (void)insertAssessObjectDB:(AssessObject *)surveyInfo;
+- (void)insertAllAssessObjectDB:(NSArray *)userList;
 
-- (void)updateSurveyStatus:(NSString *)surveyId status:(NSString *)status;
-- (void)recoverySurveyStatus:(NSString *)aProjectcode user:(NSString *)aUser phone:(NSString *)aPhone;
+- (NSMutableArray *)getAssessRecordArrayByLogicType:(NSInteger)logicType;
+- (AssessObject *)getAssessRecordById:(NSString *)assessId;
 
-- (NSMutableArray *)getUserByNameKeyword:(NSString *)keyword;
-- (NSMutableArray *)getUserEmailByKeyword:(NSString *)keyword;
+
 - (void)delUserTable;
-- (void)updateSurveyObjectDB:(SurveyObject *)userInfo;
-- (SurveyObject *)getAllSurveyDataFromDB;
+- (void)updateAssessObjectDB:(AssessObject *)userInfo;
+- (AssessObject *)getAllSurveyDataFromDB;
 - (NSString *)getAvailableSurveyResult;
-- (NSString *)getNeedSubmitSurveyResult;
 
 @end

@@ -87,7 +87,7 @@
     
     	//select
 		$(function(){
-			ProgressAnimate(35);
+			ProgressAnimate(30);
 			getMetal();
 			$('.selectBox select').change(function(){
 				$(this).siblings('p').html($(this).find('option:selected').html());
@@ -133,7 +133,7 @@
 					SubmitAlert('请输入品名！');
 						return false;
 				}
-				ProgressAnimate(70);
+				ProgressAnimate(60);
 				$('.iptDiv').hide();
 				$('.twoPage').show();			
 			}
@@ -163,12 +163,12 @@
 					SubmitAlert('请输入宝石品质描述！');
 						return false;
 				}	
+				ProgressAnimate(90);
 				$('.iptDiv').hide();
 				$('.threePage').show();$('.btnSub').show();$(obj).hide();
 			}
 		}
 		function subPawnColoured(){
-			ProgressAnimate(100);
 			 certificate = $.trim($("#certificate").val());
 			 certificateNo = $.trim($("#certificateNo").val());
 			 description = $.trim($("#description").val());
@@ -184,6 +184,7 @@
 					SubmitAlert('请输入物品描述！');
 						return false;
 				}	
+				  ProgressAnimate(100);
 			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),categoryType:encodeURIComponent(categoryType),weight:encodeURIComponent(weight),Size:encodeURIComponent(Size),commodityName:encodeURIComponent(commodityName),brand:encodeURIComponent(brand),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"6"};	
 			//console.log(SubmitData); //SubmitAlert
 			SubmitToApp('createImpawn',SubmitData)

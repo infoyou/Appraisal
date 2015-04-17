@@ -28,6 +28,7 @@
 #define HOST_URL                    @"http://115.29.161.226:85/weixin/jsonapi"
 
 // ######################### Share Begin #########################
+
 typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
     SYSTEM_SETTING_TYPE,
     VideoSinaAlertType = 20,
@@ -36,8 +37,8 @@ typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
 };
 
 //新浪微博
-#define kSinaAppKey    @"2105826350" //@"2980000350"
-#define kSinaAppSecret @"55d17f68e1145fe152f2f2404c876dbb" //@"0092e8fe7462bfeeeab8cb3744317c39"
+#define kSinaAppKey    @"833420512" //@"2980000350"
+#define kSinaAppSecret @"149e2b750482249ad4195fdeeaa1d035" //@"0092e8fe7462bfeeeab8cb3744317c39"
 
 //QQ&QQ空间
 #define kQQAppKey     @"1103963649"
@@ -49,14 +50,16 @@ typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
 
 //ShareSDK平台
 #define kShareSDK_Key @"6a46cccf1e16"
+
 // ######################### Share End #########################
 
+// 标的物操作模式
 typedef NS_ENUM(NSUInteger, LogicType) {
-    JDPG_LOGIC_TYPE,
-    JRDD_LOGIC_TYPE,
+    ASSESS_LOGIC_TYPE = 0,
+    PAWN_LOGIC_TYPE,
 };
 
-/**
+/** 标的物类型
 玉石
 艺术品
 宝石
@@ -67,7 +70,7 @@ typedef NS_ENUM(NSUInteger, LogicType) {
 房地产
 */
 typedef NS_ENUM(NSUInteger, BabyType) {
-    JADE_TYPE,
+    JADE_TYPE = 0,
     ARTWORK_TYPE,
     GEM_TYPE,
     GOLD_TYPE,
@@ -75,6 +78,11 @@ typedef NS_ENUM(NSUInteger, BabyType) {
     AUTO_TYPE,
     DIAMOND_TYPE,
     REAL_ESTATE_TYPE,
+};
+
+typedef NS_ENUM(NSUInteger, AttachmentType) {
+    INPUT_PHOTO_TYPE = 0,       // 照片模式
+    INPUT_VIDEO_TYPE,           // 摄像模式
 };
 
 @interface GlobalConstants : NSObject {

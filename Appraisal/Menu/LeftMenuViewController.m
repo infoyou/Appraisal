@@ -1,8 +1,8 @@
 
 #import "LeftMenuViewController.h"
 
-#import "JDPGHomeViewController.h"
-#import "JRDDHomeViewController.h"
+#import "AssessHomeViewController.h"
+#import "PawnHomeViewController.h"
 
 #import "UIWebViewController.h"
 #import "CommonUtils.h"
@@ -82,8 +82,8 @@
     };
 
     self.paneViewControllerClasses = @{
-        @(JDPGVC) : [JDPGHomeViewController class],
-        @(JRDDVC) : [JRDDHomeViewController class],
+        @(JDPGVC) : [AssessHomeViewController class],
+        @(JRDDVC) : [PawnHomeViewController class],
         @(UIWebVC) : [UIWebViewController class],
         @(UIWebVC1) : [UIWebViewController class],
         @(UIWebVC2) : [UIWebViewController class]
@@ -250,19 +250,19 @@
             
         case UIWebVC:
         {
-            [AppManager instance].webUrl = @"http://finance.baidu.com/";
+            [AppManager instance].webUrl = @"http://wx.orientalpawn.com/mpawn/hsgy.html";
         }
             break;
             
         case UIWebVC1:
         {
-            [AppManager instance].webUrl = @"http://tech.baidu.com/";
+            [AppManager instance].webUrl = @"http://wx.orientalpawn.com/mpawn/ddlm.html";
         }
             break;
             
         case UIWebVC2:
         {
-            [AppManager instance].webUrl = @"http://internet.baidu.com/";
+            [AppManager instance].webUrl = @"http://wx.orientalpawn.com/mpawn/products.html";
         }
             break;
             

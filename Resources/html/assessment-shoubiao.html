@@ -62,7 +62,7 @@
         <div class="iptDiv">
             <div class="selectBox">
                 <p>请选择表径</p>
-                <select id="facewarpSelectTag">
+                <select id="facewarpSelectTag" onchange="selectChage()">
                     <option value="">请选择表径</option>
                 </select>
                 <span></span>
@@ -71,7 +71,7 @@
         <div class="iptDiv">
             <div class="selectBox">
                 <p>请选择表壳材料</p>
-                <select id="materialSelectTag">
+                <select id="materialSelectTag" onchange="selectChage()">
                     <option value="">请选择表壳材料</option>
                 </select>
                 <span></span>
@@ -90,7 +90,7 @@
     var WatchSerialListData = [];
     var MaterialImgData = [];
     $(function () {
-        ProgressAnimate(66);
+        ProgressAnimate(40);
         watchTypeSeriesSex();
     })
     //select
@@ -128,16 +128,32 @@
         });
         $("#BrandNameSelectTag").change(function () {
             var BrandNameSelectValue = $("#BrandNameSelectTag").val();
-            for (var i = 0; i < watchData.length; i++) {
-                if (watchData[i].BrandName == BrandNameSelectValue) {
-                    WatchSerialListData = watchData[i].WatchSerialList;
+            var html = '<option value="">请选择所属系列（选填）</option>';
+            var sexHtml='<option value="">请选择性别</option>';
+            if(BrandNameSelectValue!="")
+            {
+                for (var i = 0; i < watchData.length; i++) {
+                    if (watchData[i].BrandName == BrandNameSelectValue) {
+                        WatchSerialListData = watchData[i].WatchSerialList;
+                    }
+                }
+                for (var i = 0; i < WatchSerialListData.length; i++) {
+                    if(WatchSerialListData[i].SerialName!="")
+                    {
+                        html += '<option value="' + WatchSerialListData[i].SerialName + '">' + WatchSerialListData[i].SerialName + '</option>';
+                    }
+                }
+                for (var i = 0; i < WatchSerialListData.length; i++) {
+                    for(var j=0;j<WatchSerialListData[i].WatchSexList.length;j++)
+                    {
+                        if(WatchSerialListData[i].WatchSexList[j]!="" && sexHtml.indexOf(WatchSerialListData[i].WatchSexList[j])<0)
+                        {
+                            sexHtml+='<option value="' + WatchSerialListData[i].WatchSexList[j]+ '">' + WatchSerialListData[i].WatchSexList[j] + '</option>';
+                        }
+                    }
                 }
             }
-            var html = '<option value="">请选择所属系列（选填）</option>';
-            for (var i = 0; i < WatchSerialListData.length; i++) {
-                html += '<option value="' + WatchSerialListData[i].SerialName + '">' + WatchSerialListData[i].SerialName + '</option>';
-            }
-            $("#WatchSexListSelectTag").html('<option value="">请选择性别</option>');
+            $("#WatchSexListSelectTag").html(sexHtml);
             $("#WatchSerialListDataSelectTag").html(html);
         });
         $("#WatchSerialListDataSelectTag").change(function () {
@@ -150,7 +166,10 @@
             }
             var html = '<option value="">请选择性别</option>';
             for (var i = 0; i < WatchSexListData.length; i++) {
-                html += '<option value="' + WatchSexListData[i] + '">' + WatchSexListData[i] + '</option>';
+                if(WatchSexListData[i]!="")
+                {
+                    html += '<option value="' + WatchSexListData[i] + '">' + WatchSexListData[i] + '</option>';
+                }
             }
             $("#WatchSexListSelectTag").html(html);
         });
@@ -164,10 +183,10 @@
             SubmitAlert('请选择品牌');
             return false;
         }
-//        if (watchSex == "") {
-//            SubmitAlert('请选择性别');
-//            return false;
-//        }
+        if (watchSex == "") {
+            SubmitAlert('请选择性别');
+            return false;
+        }
         //获取其他信息
         var jsonarr = {
             cmd: JSON.stringify({
@@ -192,7 +211,7 @@
                         SubmitAlert('没有对应的数据！');
                         return false;
                     }
-                    ProgressAnimate(100);
+                    ProgressAnimate(80);
                     $("#outOne").hide();
                     $("#outTwo").show();
                     var facewarpHtml = '<option value="">请选择表径</option>', materialHtml = '<option value="">请选择表壳材料</option>', bootomImgList = "";
@@ -216,30 +235,57 @@
             }
         });
     }
-    $("#materialSelectTag").change(function(){
-            var materialValue=$("#materialSelectTag").val();
-            var bootomImgList = "";
+    function selectChage()
+    {
+        var materialValue=$("#materialSelectTag").val();
+        var facewarpValue=$("#facewarpSelectTag").val();
+        var bootomImgList = "";
+        if(materialValue=="" && facewarpValue==""){
+            for (var i = 0; i < MaterialImgData.length; i++) {
+                bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+            }
+        }
+        if(materialValue=="" && facewarpValue!=""){
+            for (var i = 0; i < MaterialImgData.length; i++) {
+                if(facewarpValue==MaterialImgData[i].wsize)
+                {
+                    bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+                }
+            }
+        }
+        if(materialValue!="" && facewarpValue==""){
             for (var i = 0; i < MaterialImgData.length; i++) {
                 if(materialValue==MaterialImgData[i].watchCase)
                 {
                     bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
                 }
             }
-            $("#bottomImgList").html(bootomImgList);
-    });
-    $("#facewarpSelectTag").change(function(){
-        var facewarpValue=$("#facewarpSelectTag").val();
-        var bootomImgList = "";
-        for (var i = 0; i < MaterialImgData.length; i++) {
-            if(facewarpValue==MaterialImgData[i].wsize)
-            {
-                bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+        }
+        if(materialValue!="" && facewarpValue!=""){
+            for (var i = 0; i < MaterialImgData.length; i++) {
+                if(materialValue==MaterialImgData[i].watchCase && facewarpValue==MaterialImgData[i].wsize )
+                {
+                    bootomImgList += '<li><a href="javascript:void(0)" onclick="submitEvaluationInfo(\'' + MaterialImgData[i].id + '\')"><img src="' + MaterialImgData[i].imgurl + '" width="100%" /></a></li>';
+                }
             }
         }
         $("#bottomImgList").html(bootomImgList);
-    });
+    }
     function submitEvaluationInfo(id) {
-        var SubmitData = {type: "4", wid: id};
+        var watchType = $.trim($("#BrandNameSelectTag").val());
+        var watchSeries = $.trim($("#WatchSerialListDataSelectTag").val());
+        var watchSex = $.trim($("#WatchSexListSelectTag").val());
+        var facewarpValue= $.trim($("#facewarpSelectTag").val());
+        var materialValue= $.trim($("#materialSelectTag").val());
+        var SubmitData = {
+            type: "4",
+            wid: id,
+            watchType: watchType,
+            watchSeries: watchSeries,
+            watchSex: watchSex,
+            facewarp: facewarpValue,
+            material: materialValue
+        };
         SubmitToApp('evaluationInfo', SubmitData)
     }
 </script>

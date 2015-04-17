@@ -29,9 +29,56 @@
         self.webView.backgroundColor = [UIColor blackColor];
         NSURL *url = [NSURL URLWithString:[AppManager instance].webUrl];
         [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:url]];
+        self.webView.delegate = self;
     }
     
     return _webView;
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    UIActivityIndicatorView *actView;
+    for ( id object in webView.subviews ) {
+        if ([object isMemberOfClass:[UIActivityIndicatorView class]]) {
+            actView = (UIActivityIndicatorView*)object;
+        }
+    }
+    NSLog(@"Web view did start loading");
+    [actView startAnimating];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+
+- (void)webViewDidFinishLoad: (UIWebView *)webView
+{
+    UIActivityIndicatorView *actView;
+    for ( id object in webView.subviews ) {
+        if ([object isMemberOfClass:[UIActivityIndicatorView class]]) {
+            actView = (UIActivityIndicatorView*)object;
+        }
+    }
+    NSLog(@"Web view did finish loading");
+    [actView stopAnimating];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    // 禁用用户选择
+    [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitUserSelect='none';"];
+    
+    // 禁用长按弹出框
+    [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout='none';"];
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+//    UIActivityIndicatorView *actView;
+//    for ( id object in webView.subviews ) {
+//        if ([object isMemberOfClass:[UIActivityIndicatorView class]]) {
+//            actView = (UIActivityIndicatorView*)object;
+//        }
+//    }
+//    [actView stopAnimating];
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//    NSString* errorString = [NSString stringWithFormat:@"<html>%@</html>", error.localizedDescription];
+//    [myWebView loadHTMLString:errorString baseURL:nil];
 }
 
 @end

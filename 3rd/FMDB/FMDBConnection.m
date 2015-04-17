@@ -82,60 +82,58 @@ static FMDBConnection *instance = nil;
 	
     BOOL res = NO;
     
-    //-------------------------------survey cache-----------------------------
-    /*
-     qname=BD&qgender=男&qemail=&qdealerprovince=河南&qdealercity=郑州&qdealer=河南天道汽车贸易服务有限公司&importdate=2015-3-18 5:18:11&q1=福特新蒙迪欧&q2=&q3=一年以上&q4=15-20万&q5=否&qknowctcc=&qwhichcity=&qwhichyear=&qwhetherlook=&qwhetherinfo=&qfordinterested2=特翼搏&projectcode=2015ecodriving&q_id=1426627098&qeventname=2015长安福特安全节能驾驶训练营&qmobile=13678987890'&qcity=上海&qpg=F8&status=1
-     */
+    //-------------------------------assess cache-----------------------------
     
-	NSString *createUserTableMsg = @"create table if not exists survey (surveyId TEXT PRIMARY KEY,    user TEXT,     city TEXT,  phone TEXT,     projectcode TEXT,   remark TEXT,    status int)";
+	NSString *createUserTableMsg = @"create table if not exists assess ( assessId TEXT PRIMARY KEY, logicId TEXT, logicType int, assessType int, attachType int, fileName TEXT, pawnPrice TEXT,  marketPrice TEXT,  usedPrice TEXT,  mark1 TEXT,  mark2 TEXT,  mark3 TEXT, mark4 TEXT, mark5 TEXT,  mark6 TEXT,  mark7 TEXT,  mark8 TEXT, mark9 TEXT,  mark10 TEXT )";
     
     res = [self.db executeUpdate:createUserTableMsg];
+    
 	if (!res) {
-        DLog(@"error when creating survey table");
+        DLog(@"error when creating assess table");
     } else {
-        DLog(@"success to creating survey table");
+        DLog(@"success to creating assess table");
     }
 }
-    //------------------------------------------------------------
+//------------------------------------------------------------
 
 // ------------------------ User start -------------------------------
     
-/*
- qname=BD&qgender=男&qemail=&qdealerprovince=河南&qdealercity=郑州&qdealer=河南天道汽车贸易服务有限公司&importdate=2015-3-18 5:18:11&q1=福特新蒙迪欧&q2=&q3=一年以上&q4=15-20万&q5=否&qknowctcc=&qwhichcity=&qwhichyear=&qwhetherlook=&qwhetherinfo=&qfordinterested2=特翼搏&projectcode=2015ecodriving&q_id=1426627098&qeventname=2015长安福特安全节能驾驶训练营&qmobile=13678987890'&qcity=上海&qpg=F8&status=1
- */
-
-//    @property (nonatomic, copy) NSString *surveyId;
-//    @property (nonatomic, copy) NSString *user;
-//    @property (nonatomic, copy) NSString *city;
-//    @property (nonatomic, copy) NSString *phone;
-//    @property (nonatomic, copy) NSString *projectcode;
-//    @property (nonatomic, copy) NSString *remark;
-//    @property (nonatomic, copy) NSString *status;
-    
 #pragma mark - do business action
-- (void)insertSurveyObjectDB:(SurveyObject *)surveyInfo
+- (void)insertAssessObjectDB:(AssessObject *)surveyInfo
 {
     [self.db beginTransaction];
     BOOL isRoolBack = NO;
     
-    static NSString *sql = @"INSERT INTO survey VALUES(?,?,?,?,?,?,?)";
+    static NSString *sql = @"INSERT INTO assess VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)";
     
     @try
     {
-            NSArray *argumentsArray = [[NSArray alloc] initWithObjects:surveyInfo.surveyId,
-                                       surveyInfo.user,
-                                       surveyInfo.city,
-                                       surveyInfo.phone,
-                                       surveyInfo.projectcode,
-                                       surveyInfo.remark,
-                                       surveyInfo.status,
+            NSArray *argumentsArray = [[NSArray alloc] initWithObjects:surveyInfo.assessId,
+                                       surveyInfo.logicId,
+                                       surveyInfo.logicType,
+                                       surveyInfo.assessType,
+                                       surveyInfo.attachType,
+                                       surveyInfo.fileName == nil ? @"" : surveyInfo.fileName,
+                                       surveyInfo.pawnPrice == nil ? @"" : surveyInfo.pawnPrice,
+                                       surveyInfo.marketPrice == nil ? @"" : surveyInfo.marketPrice,
+                                       surveyInfo.usedPrice == nil ? @"" : surveyInfo.usedPrice,
+                                       surveyInfo.mark1 == nil ? @"" : surveyInfo.mark1,
+                                       surveyInfo.mark2 == nil ? @"" : surveyInfo.mark2,
+                                       surveyInfo.mark3 == nil ? @"" : surveyInfo.mark3,
+                                       surveyInfo.mark4 == nil ? @"" : surveyInfo.mark4,
+                                       surveyInfo.mark5 == nil ? @"" : surveyInfo.mark5,
+                                       surveyInfo.mark6 == nil ? @"" : surveyInfo.mark6,
+                                       surveyInfo.mark7 == nil ? @"" : surveyInfo.mark7,
+                                       surveyInfo.mark8 == nil ? @"" : surveyInfo.mark8,
+                                       surveyInfo.mark9 == nil ? @"" : surveyInfo.mark9,
+                                       surveyInfo.mark10 == nil ? @"" : surveyInfo.mark10,
                                        nil];
             
             BOOL res = [self.db executeUpdate:sql
                          withArgumentsInArray:argumentsArray];
             
             if (!res) {
-                DLog(@"insert survey error !");
+                DLog(@"insert assess error !");
             }
     }
     @catch (NSException *exception)
@@ -154,13 +152,13 @@ static FMDBConnection *instance = nil;
 }
 
 #pragma mark - do business action
-- (void)insertAllSurveyObjectDB:(NSArray *)userList
+- (void)insertAllAssessObjectDB:(NSArray *)userList
 {
     [self.db beginTransaction];
     BOOL isRoolBack = NO;
     
-    SurveyObject *surveyInfo = nil;
-    static NSString *sql = @"INSERT INTO survey VALUES(?,?,?,?,?,?,?)";
+    AssessObject *surveyInfo = nil;
+    static NSString *sql = @"INSERT INTO assess VALUES(?,?,?,?,?, ?,?,?,?,?)";
     
     @try
     {
@@ -169,20 +167,27 @@ static FMDBConnection *instance = nil;
             surveyInfo = [userList objectAtIndex:i];
             
             
-            NSArray *argumentsArray = [[NSArray alloc] initWithObjects:surveyInfo.surveyId,
-                                       surveyInfo.user,
-                                       surveyInfo.city,
-                                       surveyInfo.phone,
-                                       surveyInfo.projectcode,
-                                       surveyInfo.remark,
-                                       surveyInfo.status,
+            NSArray *argumentsArray = [[NSArray alloc] initWithObjects:surveyInfo.assessId,
+                                       surveyInfo.logicId,
+                                       surveyInfo.logicType,
+                                       surveyInfo.assessType,
+                                       surveyInfo.mark1,
+                                       surveyInfo.mark2,
+                                       surveyInfo.mark3,
+                                       surveyInfo.mark4,
+                                       surveyInfo.mark5,
+                                       surveyInfo.mark6,
+                                       surveyInfo.mark7,
+                                       surveyInfo.mark8,
+                                       surveyInfo.mark9,
+                                       surveyInfo.mark10,
                                        nil];
             
             BOOL res = [self.db executeUpdate:sql
                          withArgumentsInArray:argumentsArray];
             
             if (!res) {
-                DLog(@"insert survey error !");
+                DLog(@"insert assess error !");
             }
         }
     }
@@ -202,28 +207,30 @@ static FMDBConnection *instance = nil;
 }
 
 #pragma mark - update business action
-- (void)updateSurveyObjectDB:(SurveyObject *)surveyInfo
+- (void)updateAssessObjectDB:(AssessObject *)surveyInfo
 {
     [self.db beginTransaction];
     BOOL isRoolBack = NO;
     
-    static NSString *sql = @"update survey set surveyId=?, user=?, city=?, phone=?, projectcode=?, remark=?, status=? where surveyId = ?";
+    static NSString *sql = @"update assess set assessId=?, user=?, city=?, phone=?, projectcode=?, remark=?, status=? where assessId = ?";
     
     @try
     {
             
         BOOL res = [self.db executeUpdate:sql
-                     withArgumentsInArray:@[surveyInfo.surveyId,
-                                            surveyInfo.user,
-                                            surveyInfo.city,
-                                            surveyInfo.phone,
-                                            surveyInfo.projectcode,
-                                            surveyInfo.remark,
-                                            [NSNumber numberWithInteger:surveyInfo.status],
-                                            surveyInfo.surveyId]];
+                     withArgumentsInArray:@[surveyInfo.assessId,
+                                            surveyInfo.logicId,
+                                            surveyInfo.mark1,
+                                            surveyInfo.mark2,
+                                            surveyInfo.mark3,
+                                            surveyInfo.mark4,
+                                            surveyInfo.mark5,
+                                            surveyInfo.mark6,
+                                            [NSNumber numberWithInteger:surveyInfo.logicType],
+                                            surveyInfo.assessId]];
         
         if (!res) {
-            DLog(@"update survey error!");
+            DLog(@"update assess error!");
         }
     }
     @catch (NSException *exception)
@@ -241,191 +248,55 @@ static FMDBConnection *instance = nil;
     }
 }
 
-- (void)updateRepeatSurveyObjectDB:(SurveyObject *)surveyInfo
+- (AssessObject *)getAllSurveyDataFromDB
 {
-    if ([self getRepeatSurveyNum:surveyInfo] < 2) {
-        
-        NSLog(@"No found repeat data.");
-        return;
-    }
+    AssessObject *AssessObject = nil;
     
-    [self.db beginTransaction];
-    BOOL isRoolBack = NO;
-    
-    static NSString *sql = @"update survey set status=? where projectcode = ? and user = ? and phone = ? and status != 1";
-    
-    @try
-    {
-        
-        BOOL res = [self.db executeUpdate:sql
-                     withArgumentsInArray:@[@"2",
-                                            surveyInfo.projectcode,
-                                            surveyInfo.user,
-                                            surveyInfo.phone]];
-        
-        if (!res) {
-            DLog(@"update survey error!");
-        }
-    }
-    @catch (NSException *exception)
-    {
-        NSLog(@"Exception name=%@",exception.name);
-        NSLog(@"Exception reason=%@",exception.reason);
-        
-        isRoolBack = YES;
-        [self.db rollback];
-    }
-    @finally
-    {
-        if (!isRoolBack) {
-            [self.db commit];
-        }
-    }
-}
-
-- (void)recoverySurveyStatus:(NSString *)aProjectcode user:(NSString *)aUser phone:(NSString *)aPhone
-{
-    if ([self getRepeatSurveyNum:aProjectcode user:aUser phone:aPhone] > 1) {
-        return;
-    }
-    
-    [self.db beginTransaction];
-    BOOL isRoolBack = NO;
-    
-    // 恢复“重”数据状态
-    static NSString *sql = @"update survey set status=? where projectcode = ? and user = ? and phone = ? and status != 1 and status != -1 ";
-    
-    @try
-    {
-        
-        BOOL res = [self.db executeUpdate:sql
-                     withArgumentsInArray:@[@"0",
-                                            aProjectcode,
-                                            aUser,
-                                            aPhone]];
-        
-        if (!res) {
-            DLog(@"update survey error!");
-        }
-    }
-    @catch (NSException *exception)
-    {
-        NSLog(@"Exception name=%@",exception.name);
-        NSLog(@"Exception reason=%@",exception.reason);
-        
-        isRoolBack = YES;
-        [self.db rollback];
-    }
-    @finally
-    {
-        if (!isRoolBack) {
-            [self.db commit];
-        }
-    }
-}
-
-/**
- *
- *  status
- *      -1,删除;  0,未上传;   1,已上传;   2,重复;
- */
-- (void)updateSurveyStatus:(NSString *)surveyId status:(NSString *)status
-{
-    
-    [self.db beginTransaction];
-    BOOL isRoolBack = NO;
-    
-    NSString *sql = @"update survey set status =? where surveyId = ?";
-    
-    int intStatus = [status intValue];
-    if (intStatus == 0) {
-        
-        sql = @"update survey set status=? where surveyId = ? and status != 2";
-    }
-    
-    @try
-    {
-        
-        BOOL res = [self.db executeUpdate:sql
-                     withArgumentsInArray:@[status,
-                                            surveyId]];
-        
-        if (!res) {
-            DLog(@"update survey error!");
-        }
-    }
-    @catch (NSException *exception)
-    {
-        NSLog(@"Exception name=%@",exception.name);
-        NSLog(@"Exception reason=%@",exception.reason);
-        
-        isRoolBack = YES;
-        [self.db rollback];
-    }
-    @finally
-    {
-        if (!isRoolBack) {
-            [self.db commit];
-        }
-    }
-}
-
-- (NSInteger)getRepeatSurveyNum:(SurveyObject *)surveyInfo
-{
-    
-    return [self getRepeatSurveyNum:surveyInfo.projectcode user:surveyInfo.user phone:surveyInfo.phone];
-}
-
-- (NSInteger)getRepeatSurveyNum:(NSString *)aProjectcode user:(NSString *)aUser phone:(NSString *)aPhone
-{
-    
-    NSInteger backVal = 0;
-    
-    NSString *sql = @"select * from survey where projectcode = ? and user = ? and phone = ? and status != -1";
-    FMResultSet *res = [self.db executeQuery:sql, aProjectcode, aUser, aPhone];
+    NSString *sql = @" select * from assess where status != -1 ";
+    FMResultSet *res = [self.db executeQuery:sql];
     
     while ([res next]) {
-        backVal ++;
+        //        AssessObject = [[self parseAssessInfo:res] retain];
+        AssessObject = [self parseAssessInfo:res];
+    }
+    
+    return AssessObject;
+}
+
+- (AssessObject *)getAssessRecordById:(NSString *)assessId {
+    
+    AssessObject *backVal = nil;
+    
+    NSString *sql = [NSString stringWithFormat:@"select * from assess where assessId == '%@'", assessId];
+    FMResultSet *res = [self.db executeQuery:sql];
+    
+    while ([res next]) {
+        backVal = [self parseAssessInfo:res];
     }
     
     return backVal;
 }
 
-- (SurveyObject *)getAllSurveyDataFromDB
-{
-    SurveyObject *surveyObject = nil;
-    
-    NSString *sql = @" select * from survey where status != -1 ";
+- (NSMutableArray *)getAssessRecordArrayByLogicType:(NSInteger)logicType {
+
+    NSMutableArray *assessArray = [NSMutableArray array];
+
+    NSString *sql = [NSString stringWithFormat:@"select * from assess where assessType == %d", logicType];
     FMResultSet *res = [self.db executeQuery:sql];
     
     while ([res next]) {
-        //        surveyObject = [[self parseSurveyInfo:res] retain];
-        surveyObject = [self parseSurveyInfo:res];
+        [assessArray addObject:[self parseAssessInfo:res]];
     }
     
-    return surveyObject;
+    return assessArray;
 }
 
-- (NSMutableArray *)getUserByNameKeyword:(NSString *)keyword {
-
-    NSMutableArray *surveyArray = [NSMutableArray array];
-
-    NSString *sql = [NSString stringWithFormat:@"select * from survey where status != -1"];
-    FMResultSet *res = [self.db executeQuery:sql];
-    
-    while ([res next]) {
-        [surveyArray addObject:[self parseSurveyInfo:res]];
-    }
-    
-    return surveyArray;
-}
-
-- (NSMutableArray *)getUserEmailByKeyword:(NSString *)surveyId {
+- (NSMutableArray *)getUserEmailByKeyword:(NSString *)assessId {
     
     NSMutableArray *surveyArray = [NSMutableArray array];
     
-//    NSString *sql = [NSString stringWithFormat:@"select * from survey where userEmail like '%@%%'", keyword];
-    NSString *sql = [NSString stringWithFormat:@"select * from survey where surveyId like '%@'", surveyId];
+//    NSString *sql = [NSString stringWithFormat:@"select * from assess where userEmail like '%@%%'", keyword];
+    NSString *sql = [NSString stringWithFormat:@"select * from assess where assessId like '%@'", assessId];
     FMResultSet *res = [self.db executeQuery:sql];
     
     while ([res next]) {
@@ -435,97 +306,62 @@ static FMDBConnection *instance = nil;
     return surveyArray;
 }
 
-- (SurveyObject *)parseSurveyInfo:(FMResultSet *)res
+- (AssessObject *)parseAssessInfo:(FMResultSet *)res
 {
     
-    SurveyObject *surveyObject = [[SurveyObject alloc] init];
+    AssessObject *assessInfo = [[AssessObject alloc] init];
     
-    surveyObject.surveyId = [res stringForColumn:@"surveyId"];
-    surveyObject.user = [res stringForColumn:@"user"];
-    surveyObject.city = [res stringForColumn:@"city"];
-    surveyObject.phone = [res stringForColumn:@"phone"];
-    surveyObject.projectcode = [res stringForColumn:@"projectcode"];
-    surveyObject.remark = [res stringForColumn:@"remark"];
-    surveyObject.status = [res intForColumn:@"status"];
+    assessInfo.assessId = [res stringForColumn:@"assessId"];
+    assessInfo.logicId = [res stringForColumn:@"logicId"];
+    assessInfo.logicType = [res intForColumn:@"logicType"];
+    assessInfo.assessType = [res intForColumn:@"assessType"];
     
-    return surveyObject;
+    assessInfo.attachType = [res intForColumn:@"attachType"];
+    assessInfo.fileName = [res stringForColumn:@"fileName"];
+    assessInfo.pawnPrice = [res stringForColumn:@"pawnPrice"];
+    assessInfo.marketPrice = [res stringForColumn:@"marketPrice"];
+    assessInfo.usedPrice = [res stringForColumn:@"usedPrice"];
+    
+    assessInfo.mark1 = [res stringForColumn:@"mark1"];
+    assessInfo.mark2 = [res stringForColumn:@"mark2"];
+    assessInfo.mark3 = [res stringForColumn:@"mark3"];
+    assessInfo.mark4 = [res stringForColumn:@"mark4"];
+    assessInfo.mark5 = [res stringForColumn:@"mark5"];
+    assessInfo.mark6 = [res stringForColumn:@"mark6"];
+    assessInfo.mark7 = [res stringForColumn:@"mark7"];
+    assessInfo.mark8 = [res stringForColumn:@"mark8"];
+    assessInfo.mark9 = [res stringForColumn:@"mark9"];
+    assessInfo.mark10 = [res stringForColumn:@"mark10"];
+    
+    return assessInfo;
 }
 
 - (void)delUserTable {
     
-    NSString *sql = @"delete from survey";
+    NSString *sql = @"delete from assess";
     FMResultSet *res = [self.db executeQuery:sql];
     
     if ([res next]) {
     }
 }
 
-//- (NSString *)getSurveyResult0
-//{
-//    NSArray *resultIdArray = [[self getResultIds] componentsSeparatedByString:@"#"];
-//    
-//    NSUInteger resultCount = [resultIdArray count];
-//    
-//    NSMutableString *totalStr = [NSMutableString string];
-//    for (int i=0; i<resultCount; i++) {
-//        NSString *resultStr = [[NSUserDefaults standardUserDefaults] objectForKey:resultIdArray[i]];
-//        [totalStr appendString:resultStr];
-//        
-//        if (i != resultCount-1) {
-//            [totalStr appendString:@"##"];
-//        }
-//    }
-//    
-//    return totalStr;
-//}
-
 - (NSString *)getAvailableSurveyResult
 {
     
     NSMutableString *totalStr = [NSMutableString string];
     
-    NSString *sql = [NSString stringWithFormat:@"select * from survey where status != -1"];
+    NSString *sql = [NSString stringWithFormat:@"select * from assess where status != -1"];
     FMResultSet *res = [self.db executeQuery:sql];
     NSInteger index = 0;
     
     while ([res next]) {
         
-        SurveyObject *surveyObject = [[SurveyObject alloc] init];
+        AssessObject *assessObject = [[AssessObject alloc] init];
         
-        surveyObject.remark = [res stringForColumn:@"remark"];
-        surveyObject.status = [res intForColumn:@"status"];
-        surveyObject.surveyId = [res stringForColumn:@"surveyId"];
+        assessObject.logicType = [res intForColumn:@"logicType"];
+        assessObject.assessId = [res stringForColumn:@"assessId"];
         
-        [totalStr appendFormat:@"%@&status=%ld&q_id=%@##", surveyObject.remark, (long)surveyObject.status, surveyObject.surveyId];
-        index ++;
-    }
-    
-    if (index > 0) {
-        return totalStr;
-    } else {
-        return @"";
-    }
-    
-    return totalStr;
-}
-
-- (NSString *)getNeedSubmitSurveyResult
-{
-    
-    NSMutableString *totalStr = [NSMutableString string];
-    
-    NSString *sql = [NSString stringWithFormat:@"select * from survey where status == 0 or status == 2"];
-    FMResultSet *res = [self.db executeQuery:sql];
-    NSInteger index = 0;
-    
-    while ([res next]) {
-        
-        SurveyObject *surveyObject = [[SurveyObject alloc] init];
-        
-        surveyObject.remark = [res stringForColumn:@"remark"];
-        surveyObject.surveyId = [res stringForColumn:@"surveyId"];
-        
-        [totalStr appendFormat:@"%@&q_id=%@##", surveyObject.remark, surveyObject.surveyId];
+        [totalStr appendFormat:@"status=%ld&q_id=%@##", (long)assessObject.logicType, assessObject.assessId];
         index ++;
     }
     

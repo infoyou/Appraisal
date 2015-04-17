@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 Adam. All rights reserved.
 //
 
-@interface UIWebViewController : UIViewController
+@interface UIWebViewController : UIViewController  <UIWebViewDelegate>
 
 @property (nonatomic, strong) UIWebView *webView;
 

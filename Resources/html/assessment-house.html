@@ -26,17 +26,17 @@
                 <div class="selectBox">
                     <p>&nbsp;</p>
                     <select id="city"  >
-                        <option value="">请选择</option>    
+                        <option value="">请选择城市</option>
                     </select>
                     <span></span>
                 </div>
        	    </div>
-            <div class="iptDiv" style="position:relative"><input type="text" id="HouseName" placeholder="请输入地区或小区名" class="iptTxt" value="" onKeyUp="SearchFun(this)" onKeyPress="SearchFun(this)" />
+            <div class="iptDiv" style="position:relative"><input type="text" id="HouseName" placeholder="请输入地区或小区名" class="iptTxt" value="" onKeyUp="SearchFun(this)" />
             	
             	<Div class="keywordBox" id="keywordBox" style="display:none;"> 
                 </Div>
             </div>
-            <div class="iptDiv"><input type="number" placeholder="请输入面积（平方米）" class="iptTxt" value="" id="Area"></div>
+            <div class="iptDiv"><input type="number" placeholder="请输入面积（平方米）" class="iptTxt" value="" id="Area" onkeyup='checkDecimal(this)'></div>
             <div class="btnDiv"><a href="javascript:void(0)" onclick="submitAssessmentHouse()"><img src="pingu.png" width="100%" /></a></div>
         </div>
 	</div>
@@ -54,14 +54,14 @@
 				SubmitAlert('请正确输入面积的大小');
 				return false;
 		}
-		if(getCity == ""){
-			SubmitAlert('请选择城市！');
-				return false;
-		}
 		if(district == ""){
 			SubmitAlert('请输入地区或小区名！');
 				return false;
 		}
+        if(getCity == ""){
+            SubmitAlert('请选择城市！');
+            return false;
+        }
 		var SubmitData ={city:encodeURIComponent(getCity),district:encodeURIComponent(district),Area:Area,type:"1"};		
 		SubmitToApp('evaluationInfo',SubmitData)	
 	}

@@ -31,7 +31,6 @@ function getParam(para) {
 
 
 function SubmitAlert(txt){
-	alert(txt)
 	if(getParam("plat") == "android"){
 		window.jsObj.Alert(txt);	
 	}else{
@@ -120,7 +119,7 @@ function SearchFun(o){
 			success:function(msg){
 				if(msg.errmsg == "ok"){
 				//	<option value="">请选择</option>    
-					var data = eval("("+msg.result+")");
+					var data =msg.result;
 					if(data.length > 0 ){
 						$("#keywordBox").show();
 						var istring = '';

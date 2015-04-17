@@ -10,5 +10,19 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "-[AssessHistoryHomeViewController tableView:cellForRowAtIndexPath:]:AssessHistoryHomeViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "iconView.image">
+            </PersistentString>
+            <PersistentString
+               value = "localImage">
+            </PersistentString>
+            <PersistentString
+               value = "[CommonUtils loadImageFromDocument:@&quot;/image&quot; file:assessObject.fileName]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>
