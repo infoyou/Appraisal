@@ -106,6 +106,16 @@
 		0876E66D1AE11FA30003EB82 /* assessPromptNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E66B1AE11FA30003EB82 /* assessPromptNote.png */; };
 		0876E66E1AE11FA30003EB82 /* pawnPromptNote.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E66C1AE11FA30003EB82 /* pawnPromptNote.png */; };
 		0876E6701AE127E80003EB82 /* pawnTop.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E66F1AE127E80003EB82 /* pawnTop.png */; };
+		0876E6791AE149E50003EB82 /* artIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6711AE149E50003EB82 /* artIcon.png */; };
+		0876E67A1AE149E50003EB82 /* carIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6721AE149E50003EB82 /* carIcon.png */; };
+		0876E67B1AE149E50003EB82 /* demandIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6731AE149E50003EB82 /* demandIcon.png */; };
+		0876E67C1AE149E50003EB82 /* goldIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6741AE149E50003EB82 /* goldIcon.png */; };
+		0876E67E1AE149E50003EB82 /* metalIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6761AE149E50003EB82 /* metalIcon.png */; };
+		0876E67F1AE149E50003EB82 /* stoneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6771AE149E50003EB82 /* stoneIcon.png */; };
+		0876E6801AE149E50003EB82 /* watchIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6781AE149E50003EB82 /* watchIcon.png */; };
+		0876E6821AE14A3A0003EB82 /* houseIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6811AE14A3A0003EB82 /* houseIcon.png */; };
+		0876E6861AE14C190003EB82 /* BarCodeResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0876E6841AE14C190003EB82 /* BarCodeResultViewController.m */; };
+		0876E6871AE14C190003EB82 /* BarCodeResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0876E6851AE14C190003EB82 /* BarCodeResultViewController.xib */; };
 		088BAC4D1ACA856E003584F3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 088BAC4C1ACA856E003584F3 /* AVFoundation.framework */; };
 		088BAC641ACAA0AC003584F3 /* PagedFlowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 088BAC631ACAA0AC003584F3 /* PagedFlowView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		08A2DD3A1ACD30A500F4191C /* MSDynamicsDrawerStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A2DD361ACD30A500F4191C /* MSDynamicsDrawerStyler.m */; };
@@ -444,6 +454,17 @@
 		0876E66B1AE11FA30003EB82 /* assessPromptNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = assessPromptNote.png; sourceTree = "<group>"; };
 		0876E66C1AE11FA30003EB82 /* pawnPromptNote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pawnPromptNote.png; sourceTree = "<group>"; };
 		0876E66F1AE127E80003EB82 /* pawnTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pawnTop.png; sourceTree = "<group>"; };
+		0876E6711AE149E50003EB82 /* artIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = artIcon.png; sourceTree = "<group>"; };
+		0876E6721AE149E50003EB82 /* carIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carIcon.png; sourceTree = "<group>"; };
+		0876E6731AE149E50003EB82 /* demandIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demandIcon.png; sourceTree = "<group>"; };
+		0876E6741AE149E50003EB82 /* goldIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goldIcon.png; sourceTree = "<group>"; };
+		0876E6761AE149E50003EB82 /* metalIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metalIcon.png; sourceTree = "<group>"; };
+		0876E6771AE149E50003EB82 /* stoneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stoneIcon.png; sourceTree = "<group>"; };
+		0876E6781AE149E50003EB82 /* watchIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watchIcon.png; sourceTree = "<group>"; };
+		0876E6811AE14A3A0003EB82 /* houseIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = houseIcon.png; sourceTree = "<group>"; };
+		0876E6831AE14C190003EB82 /* BarCodeResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarCodeResultViewController.h; sourceTree = "<group>"; };
+		0876E6841AE14C190003EB82 /* BarCodeResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarCodeResultViewController.m; sourceTree = "<group>"; };
+		0876E6851AE14C190003EB82 /* BarCodeResultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarCodeResultViewController.xib; sourceTree = "<group>"; };
 		088BAC4C1ACA856E003584F3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		088BAC621ACAA0AC003584F3 /* PagedFlowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PagedFlowView.h; sourceTree = "<group>"; };
 		088BAC631ACAA0AC003584F3 /* PagedFlowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PagedFlowView.m; sourceTree = "<group>"; };
@@ -958,6 +979,14 @@
 		082426221AD649C500509122 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0876E6811AE14A3A0003EB82 /* houseIcon.png */,
+				0876E6711AE149E50003EB82 /* artIcon.png */,
+				0876E6721AE149E50003EB82 /* carIcon.png */,
+				0876E6731AE149E50003EB82 /* demandIcon.png */,
+				0876E6741AE149E50003EB82 /* goldIcon.png */,
+				0876E6761AE149E50003EB82 /* metalIcon.png */,
+				0876E6771AE149E50003EB82 /* stoneIcon.png */,
+				0876E6781AE149E50003EB82 /* watchIcon.png */,
 				082426231AD649C500509122 /* about.png */,
 				082426241AD649C500509122 /* imgBoard.png */,
 				082426251AD649C500509122 /* placehold.png */,
@@ -1002,6 +1031,9 @@
 		0876E5FC1AE0A7C20003EB82 /* Assess */ = {
 			isa = PBXGroup;
 			children = (
+				0876E6831AE14C190003EB82 /* BarCodeResultViewController.h */,
+				0876E6841AE14C190003EB82 /* BarCodeResultViewController.m */,
+				0876E6851AE14C190003EB82 /* BarCodeResultViewController.xib */,
 				0876E6021AE0A7C20003EB82 /* AssessHomeViewController.h */,
 				0876E6031AE0A7C20003EB82 /* AssessHomeViewController.m */,
 				0876E6041AE0A7C20003EB82 /* AssessHomeViewController.xib */,
@@ -1714,10 +1746,12 @@
 				082426281AD649C500509122 /* placehold.png in Resources */,
 				08FF92BC1ACD123A0098945A /* img108.png in Resources */,
 				08EECAD11ADF5F2800B15B5E /* top.png in Resources */,
+				0876E67C1AE149E50003EB82 /* goldIcon.png in Resources */,
 				08EECAAB1ADF5F2800B15B5E /* pawn-car.html in Resources */,
 				08FF92A71ACD123A0098945A /* jdpg_sel.png in Resources */,
 				0876E6551AE0A8BF0003EB82 /* jrddHomeTop.png in Resources */,
 				08EECAC01ADF5F2800B15B5E /* pawn15.png in Resources */,
+				0876E6821AE14A3A0003EB82 /* houseIcon.png in Resources */,
 				08EECA8A1ADF5F2800B15B5E /* bio01.png in Resources */,
 				08EECAA61ADF5F2800B15B5E /* member.png in Resources */,
 				08EECAC81ADF5F2800B15B5E /* pawn23.png in Resources */,
@@ -1741,6 +1775,7 @@
 				08EECAA81ADF5F2800B15B5E /* mobiscroll.custom-2.6.2.min.js in Resources */,
 				0876E6401AE0A8BF0003EB82 /* btnPawn.png in Resources */,
 				3A558AC9182B13C400319DA5 /* Assets.xcassets in Resources */,
+				0876E6871AE14C190003EB82 /* BarCodeResultViewController.xib in Resources */,
 				08EECACA1ADF5F2800B15B5E /* pres.png in Resources */,
 				08EECAD31ADF5F2800B15B5E /* wp_icons_light.png in Resources */,
 				08EECA871ADF5F2800B15B5E /* bg.jpg in Resources */,
@@ -1755,6 +1790,7 @@
 				08EECA8C1ADF5F2800B15B5E /* bio03.png in Resources */,
 				08EECAC61ADF5F2800B15B5E /* pawn21.png in Resources */,
 				08EECACB1ADF5F2800B15B5E /* press.png in Resources */,
+				0876E6791AE149E50003EB82 /* artIcon.png in Resources */,
 				085F2B881ACD37F200C5F470 /* RightContentTypeCell.xib in Resources */,
 				08EECA881ADF5F2800B15B5E /* bido.png in Resources */,
 				0876E6461AE0A8BF0003EB82 /* homeTop.png in Resources */,
@@ -1763,6 +1799,7 @@
 				08EECA8B1ADF5F2800B15B5E /* bio02.png in Resources */,
 				0876E61D1AE0A7C20003EB82 /* ProcessViewController.xib in Resources */,
 				08EECACF1ADF5F2800B15B5E /* sucess.html in Resources */,
+				0876E67B1AE149E50003EB82 /* demandIcon.png in Resources */,
 				08EECACE1ADF5F2800B15B5E /* submitt.png in Resources */,
 				08FF92A11ACD123A0098945A /* ddsc_sel.png in Resources */,
 				0876E64E1AE0A8BF0003EB82 /* scan4.png in Resources */,
@@ -1786,6 +1823,7 @@
 				08EECAB91ADF5F2800B15B5E /* pawn08.png in Resources */,
 				08FF92BA1ACD123A0098945A /* img106.png in Resources */,
 				0876E6231AE0A7C20003EB82 /* PawnDoneViewController.xib in Resources */,
+				0876E67E1AE149E50003EB82 /* metalIcon.png in Resources */,
 				08FF92CC1ACD123A0098945A /* video.png in Resources */,
 				08FF92B11ACD123A0098945A /* btnVideo.png in Resources */,
 				08FF92CB1ACD123A0098945A /* title_item8.png in Resources */,
@@ -1826,6 +1864,7 @@
 				08EECAC11ADF5F2800B15B5E /* pawn16.png in Resources */,
 				08EECAB01ADF5F2800B15B5E /* pawn-yushi.html in Resources */,
 				08FF92B61ACD123A0098945A /* img102.png in Resources */,
+				0876E67A1AE149E50003EB82 /* carIcon.png in Resources */,
 				0876E61B1AE0A7C20003EB82 /* PhotoViewController.xib in Resources */,
 				08EECAC41ADF5F2800B15B5E /* pawn19.png in Resources */,
 				08EECAB31ADF5F2800B15B5E /* pawn02.png in Resources */,
@@ -1875,6 +1914,7 @@
 				08FF92B41ACD123A0098945A /* home.png in Resources */,
 				08EECA9C1ADF5F2800B15B5E /* fontsuc.png in Resources */,
 				08EECA841ADF5F2800B15B5E /* assessment-sujin.html in Resources */,
+				0876E6801AE149E50003EB82 /* watchIcon.png in Resources */,
 				08EECA981ADF5F2800B15B5E /* checkdui.png in Resources */,
 				08EECAAD1ADF5F2800B15B5E /* pawn-house.html in Resources */,
 				0876E6601AE0FD590003EB82 /* AssessHistoryListCell.xib in Resources */,
@@ -1885,6 +1925,7 @@
 				08EECAAC1ADF5F2800B15B5E /* pawn-coloured.html in Resources */,
 				08FF92C91ACD123A0098945A /* title_item6.png in Resources */,
 				08FF92BD1ACD123A0098945A /* left.png in Resources */,
+				0876E67F1AE149E50003EB82 /* stoneIcon.png in Resources */,
 				08EECA961ADF5F2800B15B5E /* check01.png in Resources */,
 				0876E64C1AE0A8BF0003EB82 /* scan2.png in Resources */,
 				08FF92CE1ACD123A0098945A /* sweep.png in Resources */,
@@ -1914,6 +1955,7 @@
 				08B6E2151ADCA94600C9755C /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				08B6E20C1ADCA94600C9755C /* AFHTTPRequestOperationManager.m in Sources */,
 				0876E6691AE114E60003EB82 /* PawnReportViewController.m in Sources */,
+				0876E6861AE14C190003EB82 /* BarCodeResultViewController.m in Sources */,
 				0824262F1AD64C5B00509122 /* AboutViewController.m in Sources */,
 				0876E6171AE0A7C20003EB82 /* BarCodeViewController.m in Sources */,
 				0803AD481AC5337F00EEB905 /* FMDatabaseQueue.m in Sources */,

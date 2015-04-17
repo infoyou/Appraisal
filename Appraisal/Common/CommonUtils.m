@@ -260,6 +260,22 @@ static NSBundle *bundle = nil;
     return [[[UIDevice currentDevice] systemVersion] floatValue];
 }
 
++ (NSString *)loadImagePath:(NSString *)pathName file:(NSString *)fileName
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:pathName];
+    NSString *pngfile = [dataPath stringByAppendingPathComponent:fileName];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:pngfile]) {
+        return pngfile;
+    } else {
+        
+        return nil;
+    }
+    
+}
+
 + (UIImage *)loadImageFromDocument:(NSString *)pathName file:(NSString *)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

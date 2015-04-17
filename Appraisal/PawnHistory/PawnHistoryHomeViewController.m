@@ -6,7 +6,12 @@
 
 @interface PawnHistoryHomeViewController () 
 
+@property (nonatomic, retain) NSMutableDictionary *imageArray;
+
 @end
+
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+//#define kBgQueue dispatch_queue_create("com.company.app.imageQueue", NULL)
 
 @implementation PawnHistoryHomeViewController
 {
@@ -15,6 +20,7 @@
 }
 
 @synthesize mTableView;
+@synthesize imageArray;
 
 #pragma mark - UIViewController
 
@@ -31,6 +37,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    imageArray = [NSMutableDictionary dictionary];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -89,22 +97,79 @@
     title.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark1, assessObject.mark2];
     desc.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark3, assessObject.mark4];
     
-    UIImage *localImage = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
-    listIconView.image = localImage;
+    switch (assessObject.logicType) {
+        case 1:// 房地产
+            listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+            break;
+        
+        case 2:// 汽车
+            listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+            break;
+            
+        case 3:// 钻石
+            listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+            break;
+            
+        case 4:// 手表
+            listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+            break;
+            
+        case 5:// 素金
+            listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+            break;
+            
+        case 6:// 有色宝石
+            listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+            break;
+            
+        case 7:// 玉石饰品
+            listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+            break;
+            
+        case 8:// 艺术品
+            listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+            break;
+            
+        default:
+            break;
+    }
+//    listIconView.image = [UIImage imageNamed:@"icon.png"];
     
-    listIconView.image = [UIImage imageNamed:@"icon.png"];
     /*
-    NSString *imageUrl = [backDataArr[indexPath.row] valueForKey:@"thumbnail_url"];
-     
-    [iconView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:imageUrl] andPlaceholderImage:[UIImage imageNamed:@"placehold.png"] options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        //Nothing.
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        //Nothing.
-    }];
+    UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
+    if (userImage) { // if the dictionary of images has it just display it
+        cell.imageView.image = userImage;
+    }
+    else {
+        cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
+        NSString *filePath = [CommonUtils loadImagePath:@"/image" file:assessObject.fileName];
+        
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSData *imageData = nil;
+            if (fileExists){
+                imageData = [NSData dataWithContentsOfFile:filePath];
+            }
+            
+            if (imageData){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // UIKit, which includes UIImage warns about not being thread safe
+                    // So we switch to main thread to instantiate image
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [self.imageArray setObject:image forKey:[NSNumber numberWithInt:row]];
+                    
+                    UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
+                    UIImageView *iconView = (UIImageView *)[lookedUpCell viewWithTag:99];
+                    
+                    if (lookedUpCell){
+                        iconView.image = image;
+                        [lookedUpCell setNeedsLayout];
+                    }
+                }); 
+            }
+        });
+    }
     */
-    
-//    bgView.layer.cornerRadius = 4;
-//    bgView.layer.masksToBounds = YES;
     
 //    cell.backgroundColor = HEX_COLOR(VIEW_BG_COLOR);
     

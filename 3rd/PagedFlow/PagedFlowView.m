@@ -446,7 +446,8 @@
         [pageControl setCurrentPage:pageIndex];
     }
     
-    if ([_delegate respondsToSelector:@selector(didScrollToPage:inFlowView:)] && _currentPageIndex != pageIndex) {
+    // 第一次当_currentPageIndex 和 pageIndex都为0时，向前滑没有响应
+    if ([_delegate respondsToSelector:@selector(didScrollToPage:inFlowView:)] /*&& _currentPageIndex != pageIndex*/) {
         [_delegate didScrollToPage:pageIndex inFlowView:self];
     }
     

@@ -122,6 +122,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         isFirst = YES;
     }
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
     if ([AppManager instance].logicType == ASSESS_LOGIC_TYPE) {
         
         self.titleLabel.text = @"鉴定评估";
@@ -130,11 +136,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         self.titleLabel.text = @"金融典当";
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
     [self loadTypeResource];
     

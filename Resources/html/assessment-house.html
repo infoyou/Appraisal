@@ -50,16 +50,16 @@
 		var getCity = $.trim($("#city").val());
 		var district = $.trim($("#HouseName").val());
 		var Area = $.trim($("#Area").val());
-		if(Area<=0){
-				SubmitAlert('请正确输入面积的大小');
-				return false;
-		}
-		if(district == ""){
-			SubmitAlert('请输入地区或小区名！');
-				return false;
-		}
         if(getCity == ""){
             SubmitAlert('请选择城市！');
+            return false;
+        }
+        if(Area<=0){
+            SubmitAlert('请正确输入面积的大小');
+            return false;
+        }
+        if(district == ""){
+            SubmitAlert('请输入地区或小区名！');
             return false;
         }
 		var SubmitData ={city:encodeURIComponent(getCity),district:encodeURIComponent(district),Area:Area,type:"1"};		

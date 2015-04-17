@@ -1,7 +1,7 @@
 
 #import "BarCodeViewController.h"
 
-#import "ReportViewController.h"
+#import "BarCodeResultViewController.h"
 
 @interface BarCodeViewController ()
 
@@ -61,6 +61,15 @@
     [self addTapGestureRecognizer:backImg];
 }
 
+- (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
+{
+    UIView *view = (UIView*)[gestureRecognizer view];
+    int viewTag = view.tag;
+    
+    DLog(@"%d is touched", viewTag);
+    [self doBackAction:nil];
+}
+
 - (void) readerView: (ZBarReaderView*) readerView
      didReadSymbols: (ZBarSymbolSet*) symbols
           fromImage: (UIImage*) image
@@ -73,9 +82,14 @@
         if (result && result.length > 0) {
             
             NSLog(@"bar code result = %@", result);
-            [self showAlert:result];
+//            [self showAlert:result];
             
-            [self performSelector:@selector(goReport) withObject:nil afterDelay:1];
+            if ([result hasPrefix:@"http://"] || [result hasPrefix:@"https://"]) {
+                [AppManager instance].webUrl = result;
+            }
+            
+            [self goReport];
+//            [self performSelector:@selector(goReport) withObject:nil afterDelay:1];
         } else {
             [self showAlert:@"无效二维码"];
         }
@@ -85,10 +99,10 @@
 
 - (void)goReport
 {
-    ReportViewController *reportVC = [[ReportViewController alloc] init];
-    
-    [self.navigationController pushViewController:reportVC animated:YES];
 
+    BarCodeResultViewController *resultVC = [[BarCodeResultViewController alloc] init];
+    [self.navigationController pushViewController:resultVC animated:YES];
+//    [self presentViewController:resultVC animated:YES completion:^{}];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) orient
@@ -124,17 +138,9 @@
 
 - (void)doBackAction:(id)sender {
     
-    [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
-{
-    UIView *view = (UIView*)[gestureRecognizer view];
-    int viewTag = view.tag;
+    [self.navigationController popViewControllerAnimated:YES];
     
-    DLog(@"%d is touched",viewTag);
-    
-    [self.navigationController popToRootViewControllerAnimated:YES];
+//    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end

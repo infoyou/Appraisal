@@ -98,11 +98,12 @@
 - (void)goPhotoVC
 {
     
+    [AppManager instance].logicType = ASSESS_LOGIC_TYPE;
+    
     PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
 //    [self.navigationController pushViewController:photoViewController animated:YES];
     [self presentViewController:photoViewController animated:YES completion:^{}];
     
-    [AppManager instance].logicType = ASSESS_LOGIC_TYPE;
 }
 
 - (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
@@ -123,6 +124,7 @@
         BarCodeViewController *barCodeVC = [[BarCodeViewController alloc] init];
         
         [self.navigationController pushViewController:barCodeVC animated:YES];
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //        [self presentViewController:barCodeVC animated:YES completion:^{}];
     }
 }

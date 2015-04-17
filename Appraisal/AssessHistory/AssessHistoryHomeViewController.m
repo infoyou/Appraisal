@@ -95,11 +95,45 @@
     pawnPrice.text = assessObject.pawnPrice;
     
     // Object Image
-//    iconView.image = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
-    UIImage *localImage = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
-    listIconView.image = localImage;
-    listIconView.image = [UIImage imageNamed:@"icon.png"];
+//    UIImage *localImage = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
     
+    switch (assessObject.logicType) {
+        case 1:// 房地产
+            listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+            break;
+            
+        case 2:// 汽车
+            listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+            break;
+            
+        case 3:// 钻石
+            listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+            break;
+            
+        case 4:// 手表
+            listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+            break;
+            
+        case 5:// 素金
+            listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+            break;
+            
+        case 6:// 有色宝石
+            listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+            break;
+            
+        case 7:// 玉石饰品
+            listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+            break;
+            
+        case 8:// 艺术品
+            listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+            break;
+            
+        default:
+            break;
+    }
+
     /*
     NSString *imageUrl = [backDataArr[indexPath.row] valueForKey:@"thumbnail_url"];
      

@@ -59,25 +59,16 @@ typedef NS_ENUM(NSUInteger, LogicType) {
     PAWN_LOGIC_TYPE,
 };
 
-/** 标的物类型
-玉石
-艺术品
-宝石
-金饰品
-手表
-机动车
-钻石
-房地产
-*/
+// 标的物类型
 typedef NS_ENUM(NSUInteger, BabyType) {
-    JADE_TYPE = 0,
-    ARTWORK_TYPE,
-    GEM_TYPE,
-    GOLD_TYPE,
-    WATCH_TYPE,
-    AUTO_TYPE,
-    DIAMOND_TYPE,
-    REAL_ESTATE_TYPE,
+    JADE_TYPE = 0, //玉石
+    ARTWORK_TYPE, //艺术品
+    GEM_TYPE,//宝石
+    GOLD_TYPE,//金饰品
+    WATCH_TYPE,//手表
+    AUTO_TYPE,//机动车
+    DIAMOND_TYPE,//钻石
+    REAL_ESTATE_TYPE,//房地产
 };
 
 typedef NS_ENUM(NSUInteger, AttachmentType) {

@@ -243,6 +243,8 @@
 - (IBAction)doBackAction:(id)sender {
     
     [self dismissViewControllerAnimated:NO completion:nil];
+    
+    [((AppDelegate *)APP_DELEGATE).window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)doHomeAction:(id)sender {

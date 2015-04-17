@@ -86,10 +86,14 @@
 		}
 		
 		var ex = /^\d+$/;
-		if (disquality == "" || !ex.test(disquality)) {
+		if (disquality == "") {
 		SubmitAlert('请输入质量');
 		return false;
         }
+         if (!ex.test(disquality)) {
+             SubmitAlert('请输入数字');
+             return false;
+         }
 		
         var SubmitData = {categoryType:encodeURIComponent(sulistlist), weight:encodeURIComponent(disquality), type: "5"};
         SubmitToApp('evaluationInfo', SubmitData)

@@ -183,11 +183,12 @@
 - (void)goPhotoVC
 {
     
+    [AppManager instance].logicType = PAWN_LOGIC_TYPE;
+    
     PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
     //    [self.navigationController pushViewController:photoViewController animated:YES];
     [self presentViewController:photoViewController animated:YES completion:^{}];
     
-    [AppManager instance].logicType = PAWN_LOGIC_TYPE;
 }
 
 - (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
@@ -204,7 +205,7 @@
     } else if ([view isEqual:self.tapScanningView]) {
         
         BarCodeViewController *barCodeVC = [[BarCodeViewController alloc] init];
-        
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         [self.navigationController pushViewController:barCodeVC animated:YES];
 //        [self presentViewController:barCodeVC animated:YES completion:^{}];
     }
