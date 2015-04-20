@@ -12,9 +12,14 @@
 
 @property (nonatomic, strong) UIImageView *windowBackground;
 
+@property (nonatomic, strong) LeftMenuViewController *leftMenuVC;
+@property (nonatomic, strong) RightMenuViewController *rightMenuVC;
+
 @end
 
 @implementation AppDelegate
+@synthesize leftMenuVC;
+@synthesize rightMenuVC;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -28,12 +33,12 @@
     [self.dynamicsDrawerViewController addStylersFromArray:@[[MSDynamicsDrawerParallaxStyler styler]] forDirection:MSDynamicsDrawerDirectionRight];
     
     // Left
-    LeftMenuViewController *leftMenuVC = [[LeftMenuViewController alloc] init];
+    leftMenuVC = [[LeftMenuViewController alloc] init];
     leftMenuVC.dynamicsDrawerViewController = self.dynamicsDrawerViewController;
     [self.dynamicsDrawerViewController setDrawerViewController:leftMenuVC forDirection:MSDynamicsDrawerDirectionLeft];
     
     // Right
-    RightMenuViewController *rightMenuVC = [[RightMenuViewController alloc] init];
+    rightMenuVC = [[RightMenuViewController alloc] init];
     rightMenuVC.dynamicsDrawerViewController = self.dynamicsDrawerViewController;
     [self.dynamicsDrawerViewController setDrawerViewController:rightMenuVC forDirection:MSDynamicsDrawerDirectionRight];
     
@@ -159,6 +164,17 @@
         _windowBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Window Background"]];
     }
     return _windowBackground;
+}
+
+#pragma mark - 选中左侧菜单，取消右侧选中菜单；反之亦然。
+- (void)resetRightMenuState
+{
+    [rightMenuVC updateCellStateToNormal];
+}
+
+- (void)resetLeftMenuState
+{
+    [leftMenuVC updateCellStateToNormal];
 }
 
 @end

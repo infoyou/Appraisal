@@ -47,6 +47,7 @@
 {
     [super viewDidLoad];
     
+    self.title = @"典当报告";
 }
 
 - (void)loadLogicDataFromServer

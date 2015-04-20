@@ -55,6 +55,7 @@
 + (CGFloat)currentOSVersion;
 
 + (NSString *)loadImagePath:(NSString *)pathName file:(NSString *)fileName;
++ (UIImage *)loadImageFromDocument:(NSString *)targetFilePath;
 + (UIImage *) loadImageFromDocument:(NSString *)pathName file:(NSString *)fileName;
 + (UIImage *)createImageWithColor:(UIColor *)color;
 + (UIImage *)createImageWithColor:(UIColor *)color withRect:(CGRect )rect;

@@ -70,7 +70,7 @@
             
         case GOLD_TYPE:
         {
-            titleName = @"素金";
+            titleName = @"素金饰品";
         }
             break;
             

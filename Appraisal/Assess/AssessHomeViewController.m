@@ -125,8 +125,9 @@
         
         BarCodeViewController *barCodeVC = [[BarCodeViewController alloc] init];
         
-        [self.navigationController pushViewController:barCodeVC animated:YES];
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [self pushViewController:barCodeVC];
+//        [self.navigationController pushViewController:barCodeVC animated:YES];
+//        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //        [self presentViewController:barCodeVC animated:YES completion:^{}];
     }
 }

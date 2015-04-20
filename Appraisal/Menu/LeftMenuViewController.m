@@ -55,6 +55,8 @@
 {
     [super viewDidLoad];
     
+//    selIndex = -1;
+    
     menuIconArray = @[@"jdpg.png", @"jrdd.png", @"hsgy.png", @"dfddlm.png", @"ddsc.png"];
     menuIconSelArray = @[@"jdpg_sel.png", @"jrdd_sel.png", @"hsgy_sel.png", @"dfddlm_sel.png", @"ddsc_sel.png"];
     
@@ -279,6 +281,9 @@
     
     [self.tableView reloadData];
     
+    // 取消Right选中状态
+    [(AppDelegate *)APP_DELEGATE resetRightMenuState];
+    
     /*
     double delayInSeconds = 0.3;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -294,6 +299,30 @@
 {
     // Ensure that the pane's table view can scroll to top correctly
     self.tableView.scrollsToTop = (state == MSDynamicsDrawerPaneStateOpen);
+}
+
+- (void)updateCellStateToNormal
+{
+    if (selIndex < 0) {
+        return;
+    }
+    
+    NSIndexPath *selIndexPath = [NSIndexPath indexPathForRow:selIndex inSection:0];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:selIndexPath];
+    
+    UIImageView *iconView = (UIImageView *)[cell viewWithTag:10];
+    UILabel *typeName = (UILabel*)[cell viewWithTag:11];
+    
+    iconView.image = [UIImage imageNamed:menuIconArray[selIndex]];
+    typeName.textColor = [CommonUtils colorWithHexString:@"ffffff"];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    if (selIndex == 2) {
+        iconView.frame = CGRectMake(40, 12, 20, 25);
+    } else if (selIndex == 3) {
+        iconView.frame = CGRectMake(35, 15, 29, 20);
+    }
+    
 }
 
 @end

@@ -28,6 +28,4 @@
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
 
 
-- (void)updateData:(NSDictionary *)msgDict;
-
 @end

@@ -276,6 +276,18 @@ static NSBundle *bundle = nil;
     
 }
 
++ (UIImage *)loadImageFromDocument:(NSString *)targetFilePath
+{
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:targetFilePath]) {
+        return [UIImage imageWithData:[NSData dataWithContentsOfFile:targetFilePath]];
+    } else {
+        
+        return [UIImage imageNamed:@"icon.png"];
+    }
+    
+}
+
 + (UIImage *)loadImageFromDocument:(NSString *)pathName file:(NSString *)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -341,13 +353,18 @@ static NSBundle *bundle = nil;
 
 + (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage {
     
-    if (sourceImage.size.width < ORIGINAL_MAX_WIDTH) return sourceImage;
+    if (sourceImage.size.width < ORIGINAL_MAX_WIDTH)
+        return sourceImage;
+    
     CGFloat btWidth = 0.0f;
     CGFloat btHeight = 0.0f;
+    
     if (sourceImage.size.width > sourceImage.size.height) {
+        
         btHeight = ORIGINAL_MAX_WIDTH;
         btWidth = sourceImage.size.width * (ORIGINAL_MAX_WIDTH / sourceImage.size.height);
     } else {
+        
         btWidth = ORIGINAL_MAX_WIDTH;
         btHeight = sourceImage.size.height * (ORIGINAL_MAX_WIDTH / sourceImage.size.width);
     }
@@ -390,6 +407,7 @@ static NSBundle *bundle = nil;
             thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
         }
     }
+    
     UIGraphicsBeginImageContext(targetSize); // this will crop
     CGRect thumbnailRect = CGRectZero;
     thumbnailRect.origin = thumbnailPoint;

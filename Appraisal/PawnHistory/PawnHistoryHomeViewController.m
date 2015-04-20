@@ -102,79 +102,85 @@
     title.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark1, assessObject.mark2];
     desc.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark3, assessObject.mark4];
     
-    switch (assessObject.logicType) {
-        case 1:// 房地产
-            listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
-            break;
+    if ([assessObject.fileName length] > 0)
+    {
         
-        case 2:// 汽车
-            listIconView.image = [UIImage imageNamed:@"carIcon.png"];
-            break;
+        UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
+        if (userImage) { // if the dictionary of images has it just display it
+            cell.imageView.image = userImage;
+        } else {
             
-        case 3:// 钻石
-            listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
-            break;
+            //            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
+            NSString *filePath = [CommonUtils loadImagePath:@"/image" file:assessObject.fileName];
             
-        case 4:// 手表
-            listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
-            break;
-            
-        case 5:// 素金
-            listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
-            break;
-            
-        case 6:// 有色宝石
-            listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
-            break;
-            
-        case 7:// 玉石饰品
-            listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
-            break;
-            
-        case 8:// 艺术品
-            listIconView.image = [UIImage imageNamed:@"artIcon.png"];
-            break;
-            
-        default:
-            break;
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                NSData *imageData = nil;
+                if (fileExists){
+                    imageData = [NSData dataWithContentsOfFile:filePath];
+                }
+                
+                if (imageData){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // UIKit, which includes UIImage warns about not being thread safe
+                        // So we switch to main thread to instantiate image
+                        UIImage *tempImage = [UIImage imageWithData:imageData];
+                        
+                        UIImage *image = [CommonUtils imageScaleToSize:tempImage size:CGSizeMake(86, 91)];
+                        
+                        [self.imageArray setObject:image forKey:[NSNumber numberWithInt:row]];
+                        
+                        UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
+                        UIImageView *iconView = (UIImageView *)[lookedUpCell viewWithTag:99];
+                        
+                        if (lookedUpCell){
+                            iconView.image = image;
+                            [lookedUpCell setNeedsLayout];
+                        }
+                    });
+                }
+            });
+        }
+    } else {
+        // 默认图片
+        switch (assessObject.logicType) {
+            case 1:// 房地产
+                listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+                break;
+                
+            case 2:// 汽车
+                listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+                break;
+                
+            case 3:// 钻石
+                listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+                break;
+                
+            case 4:// 手表
+                listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+                break;
+                
+            case 5:// 素金
+                listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+                break;
+                
+            case 6:// 有色宝石
+                listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+                break;
+                
+            case 7:// 玉石饰品
+                listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+                break;
+                
+            case 8:// 艺术品
+                listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+                break;
+                
+            default:
+                break;
+        }
     }
-//    listIconView.image = [UIImage imageNamed:@"icon.png"];
-    
-    /*
-    UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
-    if (userImage) { // if the dictionary of images has it just display it
-        cell.imageView.image = userImage;
-    }
-    else {
-        cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
-        NSString *filePath = [CommonUtils loadImagePath:@"/image" file:assessObject.fileName];
-        
-        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSData *imageData = nil;
-            if (fileExists){
-                imageData = [NSData dataWithContentsOfFile:filePath];
-            }
-            
-            if (imageData){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // UIKit, which includes UIImage warns about not being thread safe
-                    // So we switch to main thread to instantiate image
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [self.imageArray setObject:image forKey:[NSNumber numberWithInt:row]];
-                    
-                    UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
-                    UIImageView *iconView = (UIImageView *)[lookedUpCell viewWithTag:99];
-                    
-                    if (lookedUpCell){
-                        iconView.image = image;
-                        [lookedUpCell setNeedsLayout];
-                    }
-                }); 
-            }
-        });
-    }
-    */
     
 //    cell.backgroundColor = HEX_COLOR(VIEW_BG_COLOR);
     
@@ -185,19 +191,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    ProductDetailViewController *productVC = [[ProductDetailViewController alloc] init];
-//    productVC.productId = [backDataArr[indexPath.row] valueForKey:@"product_id"];;
-//    self.navigationController.visibleViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"团购" style:0 target:nil action:nil];
-//    [self.navigationController pushViewController:productVC animated:YES];
     
     NSInteger row = [indexPath row];
     AssessObject *assessObject = (AssessObject *)recordArray[row];
     [AppManager instance].objectRecordId = assessObject.assessId;
     
     PawnReportViewController *reportVC = [[PawnReportViewController alloc] init];
-    
-    //    [self.navigationController pushViewController:reportVC animated:YES];
-    [self presentViewController:reportVC animated:YES completion:^{}];
+    [self pushViewController:reportVC];
 
 }
 

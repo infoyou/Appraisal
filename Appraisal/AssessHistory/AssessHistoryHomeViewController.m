@@ -7,6 +7,8 @@
 
 @interface AssessHistoryHomeViewController () 
 
+@property (nonatomic, retain) NSMutableDictionary *imageArray;
+
 @end
 
 @implementation AssessHistoryHomeViewController
@@ -16,6 +18,7 @@
 }
 
 @synthesize mTableView;
+@synthesize imageArray;
 
 #pragma mark - UIViewController
 
@@ -32,6 +35,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    imageArray = [NSMutableDictionary dictionary];
 }
 
 - (void)viewWillAppear:(BOOL)animated;
@@ -100,46 +105,86 @@
     usedPrice.text = assessObject.usedPrice;
     pawnPrice.text = assessObject.pawnPrice;
     
-    // Object Image
-//    UIImage *localImage = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
-    
-    switch (assessObject.logicType) {
-        case 1:// 房地产
-            listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
-            break;
+    if ([assessObject.fileName length] > 0)
+    {
+        
+        UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
+        if (userImage) { // if the dictionary of images has it just display it
+            cell.imageView.image = userImage;
+        } else {
             
-        case 2:// 汽车
-            listIconView.image = [UIImage imageNamed:@"carIcon.png"];
-            break;
+//            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
+            NSString *filePath = [CommonUtils loadImagePath:@"/image" file:assessObject.fileName];
             
-        case 3:// 钻石
-            listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
-            break;
-            
-        case 4:// 手表
-            listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
-            break;
-            
-        case 5:// 素金
-            listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
-            break;
-            
-        case 6:// 有色宝石
-            listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
-            break;
-            
-        case 7:// 玉石饰品
-            listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
-            break;
-            
-        case 8:// 艺术品
-            listIconView.image = [UIImage imageNamed:@"artIcon.png"];
-            break;
-            
-        default:
-            break;
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                NSData *imageData = nil;
+                if (fileExists){
+                    imageData = [NSData dataWithContentsOfFile:filePath];
+                }
+                
+                if (imageData){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // UIKit, which includes UIImage warns about not being thread safe
+                        // So we switch to main thread to instantiate image
+                        UIImage *tempImage = [UIImage imageWithData:imageData];
+                        
+                        UIImage *image = [CommonUtils imageScaleToSize:tempImage size:CGSizeMake(86, 91)];
+                        
+                        [self.imageArray setObject:image forKey:[NSNumber numberWithInt:row]];
+                        
+                        UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
+                        UIImageView *iconView = (UIImageView *)[lookedUpCell viewWithTag:99];
+                        
+                        if (lookedUpCell){
+                            iconView.image = image;
+                            [lookedUpCell setNeedsLayout];
+                        }
+                    });
+                }
+            });
+        }
+    } else {
+        // 默认图片
+        switch (assessObject.logicType) {
+            case 1:// 房地产
+                listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+                break;
+                
+            case 2:// 汽车
+                listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+                break;
+                
+            case 3:// 钻石
+                listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+                break;
+                
+            case 4:// 手表
+                listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+                break;
+                
+            case 5:// 素金
+                listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+                break;
+                
+            case 6:// 有色宝石
+                listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+                break;
+                
+            case 7:// 玉石饰品
+                listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+                break;
+                
+            case 8:// 艺术品
+                listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+                break;
+                
+            default:
+                break;
+        }
     }
-
+    
     /*
     NSString *imageUrl = [backDataArr[indexPath.row] valueForKey:@"thumbnail_url"];
      
@@ -149,9 +194,6 @@
         //Nothing.
     }];
     */
-    
-//    bgView.layer.cornerRadius = 4;
-//    bgView.layer.masksToBounds = YES;
     
 //    cell.backgroundColor = HEX_COLOR(VIEW_BG_COLOR);
     

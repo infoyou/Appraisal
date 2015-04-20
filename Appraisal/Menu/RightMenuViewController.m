@@ -98,7 +98,7 @@
 //        paneViewControllerType = ([self.tableViewSectionBreaks[(indexPath.section - 1)] integerValue] + indexPath.row);
     }
     
-    NSAssert(paneViewControllerType < MSPaneViewControllerTypeCount, @"Invalid Index Path");
+    NSAssert(paneViewControllerType < MSLeftPaneViewControllerTypeCount, @"Invalid Index Path");
     return paneViewControllerType;
 }
 
@@ -258,6 +258,9 @@
     
     [self.tableView reloadData];
     
+    // 取消Left选中状态
+    [(AppDelegate *)APP_DELEGATE resetLeftMenuState];
+    
     /*
     double delayInSeconds = 0.3;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -273,6 +276,28 @@
 {
     // Ensure that the pane's table view can scroll to top correctly
     self.tableView.scrollsToTop = (state == MSDynamicsDrawerPaneStateOpen);
+}
+
+- (void)updateCellStateToNormal
+{
+    if (selIndex < 0) {
+        return;
+    }
+    
+    NSIndexPath *selIndexPath = [NSIndexPath indexPathForRow:selIndex inSection:0];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:selIndexPath];
+    
+    UIImageView *iconView = (UIImageView *)[cell viewWithTag:10];
+    UILabel *typeName = (UILabel*)[cell viewWithTag:11];
+    
+    iconView.image = [UIImage imageNamed:menuIconArray[selIndex]];
+    typeName.textColor = [CommonUtils colorWithHexString:@"ffffff"];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    if (selIndex == 2) {
+        iconView.frame = CGRectMake(107, 12, 20, 25);
+    }
+
 }
 
 @end

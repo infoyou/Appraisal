@@ -284,9 +284,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     imageView.image = [UIImage imageNamed:[typeImgArray objectAtIndex:index]];
-    //    imageView.frame = CGRectMake(45, 30, 233, 328);
-    //    imageView.contentMode =  UIViewContentModeScaleAspectFit;
-    //    [imageView sizeToFit];
     return imageView;
 }
 
@@ -1115,7 +1112,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     // add image data
-    NSData *imageData = UIImageJPEGRepresentation(imageToPost, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation(imageToPost, 0.7);
     if (imageData) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];

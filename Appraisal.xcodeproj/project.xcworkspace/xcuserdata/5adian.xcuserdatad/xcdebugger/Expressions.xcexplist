@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[LeftMenuViewController updateCellStateToNormal]:LeftMenuViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "iconView.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[RootViewController sendShareVideoWithType:withTitle:withContent:withImage:withVideoUrl:]:RootViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -17,10 +25,10 @@
                value = "iconView.image">
             </PersistentString>
             <PersistentString
-               value = "localImage">
+               value = "[CommonUtils loadImageFromDocument:@&quot;/image&quot; file:assessObject.fileName]">
             </PersistentString>
             <PersistentString
-               value = "[CommonUtils loadImageFromDocument:@&quot;/image&quot; file:assessObject.fileName]">
+               value = "localImage">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

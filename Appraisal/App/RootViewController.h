@@ -56,5 +56,8 @@
 
 - (void)initAllSharePlat;
 
+#pragma mark - push view controller
+- (void)pushViewController:(UIViewController *)targetVC;
+
 @end
 

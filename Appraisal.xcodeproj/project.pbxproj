@@ -1031,6 +1031,8 @@
 		0876E5FC1AE0A7C20003EB82 /* Assess */ = {
 			isa = PBXGroup;
 			children = (
+				0876E6001AE0A7C20003EB82 /* BarCodeViewController.h */,
+				0876E6011AE0A7C20003EB82 /* BarCodeViewController.m */,
 				0876E6831AE14C190003EB82 /* BarCodeResultViewController.h */,
 				0876E6841AE14C190003EB82 /* BarCodeResultViewController.m */,
 				0876E6851AE14C190003EB82 /* BarCodeResultViewController.xib */,
@@ -1040,8 +1042,6 @@
 				0876E5FD1AE0A7C20003EB82 /* AssessDoneViewController.h */,
 				0876E5FE1AE0A7C20003EB82 /* AssessDoneViewController.m */,
 				0876E5FF1AE0A7C20003EB82 /* AssessDoneViewController.xib */,
-				0876E6001AE0A7C20003EB82 /* BarCodeViewController.h */,
-				0876E6011AE0A7C20003EB82 /* BarCodeViewController.m */,
 				0876E6051AE0A7C20003EB82 /* PhotoViewController.h */,
 				0876E6061AE0A7C20003EB82 /* PhotoViewController.m */,
 				0876E6071AE0A7C20003EB82 /* PhotoViewController.xib */,

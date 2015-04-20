@@ -29,4 +29,7 @@
 
 - (void)loadLogicView;
 
+- (void)resetRightMenuState;
+- (void)resetLeftMenuState;
+
 @end

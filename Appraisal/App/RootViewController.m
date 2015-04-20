@@ -460,4 +460,11 @@
      */
 }
 
+#pragma mark - push view controller
+- (void)pushViewController:(UIViewController *)targetVC
+{
+    [self.navigationController pushViewController:targetVC animated:YES];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+}
+
 @end
