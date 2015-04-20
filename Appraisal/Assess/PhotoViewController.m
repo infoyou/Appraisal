@@ -20,7 +20,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface PhotoViewController () <PagedFlowViewDelegate, PagedFlowViewDataSource, AVCaptureFileOutputRecordingDelegate>
+@interface PhotoViewController () <PagedFlowViewDelegate, PagedFlowViewDataSource, AVCaptureFileOutputRecordingDelegate, UIWebViewDelegate>
 
 // Session management.
 @property (nonatomic) dispatch_queue_t sessionQueue; // Communicate with the session and other session objects on this queue.
@@ -372,46 +372,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
 //        [self postVideoMehtod];
     }
-}
-
-- (void)postVideoMehtod
-{
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
-    NSString *typeName = @"image";
-    
-    // Local dir
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    
-    // video
-//    typeName = @"video";
-//    NSDictionary *parameters = @{@"fileName": @"test.mov"};
-//    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
-//    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"test" stringByAppendingPathExtension:@"mov"]];
-    
-    // photo
-    NSDictionary *parameters = @{@"fileName": @"1428661887.png"};
-    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/image"];
-    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"1428661887" stringByAppendingPathExtension:@"png"]];
-    
-    NSLog(@"dataFilePath = %@", dataFilePath);
-    
-    NSURL *filePath = [NSURL fileURLWithPath:dataFilePath];
-    
-    [manager POST:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileURL:filePath name:@"image" error:nil];
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Success: %@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
-    
-    
-//    NSString *videoURL = [[NSBundle mainBundle] pathForResource:@"myVideo" ofType:@"mov"];
-//    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath: videoURL]];
-
 }
 
 - (void)clearData
@@ -904,6 +864,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 // 绑定图片名称
                 [AppManager instance].objectAttachmentFileName = [NSString stringWithFormat:@"%@.png", dateId];
                 
+                if ([AppManager instance].logicType == PAWN_LOGIC_TYPE) {
+                    
+                    [self postImageMehtod:image];
+                }
+                
                 if (type != INPUT_VIDEO_TYPE) {
 
                     // 保存到内存
@@ -1119,6 +1084,170 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 //    _convertTime.text = [NSString stringWithFormat:@"%.2f s", duration];
 //    _mp4Size.text = [NSString stringWithFormat:@"%d kb", [self getFileSize:_mp4Path]];
 //    _hasMp4 = YES;
+}
+
+- (void)postImageMehtod:(UIImage *)imageToPost
+{
+    
+    NSString *BoundaryConstant = @"BoundaryConstant";
+    NSString *FileParamConstant = @"BoundaryConstant";
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:@"POST"];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    NSDictionary *params = @{@"fileName": [AppManager instance].objectAttachmentFileName};
+    // add params (all params are strings)
+    for (NSString *param in params) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    // add image data
+    NSData *imageData = UIImageJPEGRepresentation(imageToPost, 1.0);
+    if (imageData) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" ]];
+
+    //建立连接（异步的response在专门的代理协议中实现）
+    [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+- (void)postVideoMehtod
+{
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    NSString *typeName = @"image";
+    
+    // Local dir
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    
+    // video
+    //    typeName = @"video";
+    //    NSDictionary *parameters = @{@"fileName": @"test.mov"};
+    //    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
+    //    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"test" stringByAppendingPathExtension:@"mov"]];
+    
+    // photo
+    NSDictionary *parameters = @{@"fileName": @"1428661887.png"};
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/image"];
+    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"1428661887" stringByAppendingPathExtension:@"png"]];
+    
+    NSLog(@"dataFilePath = %@", dataFilePath);
+    
+    NSURL *filePath = [NSURL fileURLWithPath:dataFilePath];
+    
+    [manager POST:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:filePath name:@"image" error:nil];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Success: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+    
+    //    NSString *videoURL = [[NSBundle mainBundle] pathForResource:@"myVideo" ofType:@"mov"];
+    //    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath: videoURL]];
+    
+}
+
+#pragma mark -
+#pragma mark - URLConnectionDataDelegate 异步加载数据需要下面几个方法常用的有四个方法
+//接受服务器响应－－接收到服务器回应的时候会执行该方法
+-(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    
+    DLog(@"服务器响应");
+    
+    self.myData = [NSMutableData dataWithCapacity:5000];
+}
+
+//接收服务器数据－－接收服务器传输数据的时候会调用，会根据数据量的大小，多次执行
+-(void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    DLog(@"服务器返回数据");
+    
+    //将返回数据放入缓存区
+    [self.myData appendData:data];
+}
+
+//显示数据，直到所有的数据接收完毕
+-(void) connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    DLog(@"数据接受完毕");
+    NSString *backMsg = [[NSString alloc] initWithData:self.myData encoding:NSUTF8StringEncoding];
+    DLog(@"backMsg=%@", backMsg);
+    
+    NSDictionary* backDic = [HttpRequestData jsonValue:backMsg];
+    NSLog(@"requestStr = %@", backDic);
+    
+    if (backDic != nil) {
+        
+        NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
+        
+        if ( [errCodeStr integerValue] == 0 ) {
+            
+            NSDictionary *msgDict = [backDic objectForKey:@"result"];
+            
+            NSString *resultMsg = @"";
+            
+            if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSNumber class]]) {
+                
+                resultMsg = [NSString stringWithFormat:@"%@", [msgDict objectForKey:@"Id"]];
+            } else if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSString class]]) {
+                
+                resultMsg = [msgDict objectForKey:@"Id"];
+            }
+            
+            if (resultMsg && resultMsg.length > 0) {
+                NSLog(@"resultId = %@", resultMsg);
+                NSLog(@"FileUrl = %@", [msgDict objectForKey:@"FileUrl"]);
+                
+                [AppManager instance].objectUploadImgId = resultMsg;
+            } else {
+                NSLog(@"无效的id");
+            }
+        }
+    }
+    
+    /*
+     {"errcode":0,"errmsg":"ok","result":{"Id":1715,"FileUrl":"http://115.29.161.226:85/Upload/weixin/Images/37b72286-1c8c-4921-a6ea-2af355acb6ab.jpg"}}
+     */
+    
+}
+
+//接受失败的时候调用的方法（断网或者是连接超时）
+-(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    DLog(@"数据接受失败，失败原因：%@", [error localizedDescription]);
 }
 
 @end

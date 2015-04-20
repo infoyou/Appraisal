@@ -357,7 +357,7 @@
                 
                 // Media
                 NSMutableDictionary *mediaDict = [[NSMutableDictionary alloc] init];
-                [mediaDict setObject:@"1338" forKey:@"mediaId"];
+                [mediaDict setObject:[AppManager instance].objectUploadImgId forKey:@"mediaId"];
                 [mediaDict setObject:@"img" forKey:@"mediatype"];
                 [mediaArray addObject:mediaDict];
                 

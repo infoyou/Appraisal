@@ -45,6 +45,8 @@
     self.tapPhotoView.hidden = YES;
     self.tapScanningView.hidden = YES;
     
+    ballLayer.hidden = NO;
+    
     //设置默认参数
     [self performSelector:@selector(doPhotoAnmation) withObject:nil afterDelay:1];
     [self performSelector:@selector(doLayoutAnimation) withObject:nil afterDelay:1];
