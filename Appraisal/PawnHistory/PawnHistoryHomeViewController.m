@@ -51,14 +51,19 @@
     } else {
         self.promptLabel.hidden = NO;
     }
+    
+    // add additional scroll area arround content
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        const CGRect navBarFrame = self.navigationController.navigationBar.frame;
+        const CGFloat blankVerticalSpace = navBarFrame.origin.y + navBarFrame.size.height;
+        mTableView.contentInset = UIEdgeInsetsMake(blankVerticalSpace, 0, 0, 0);
+    }
 }
 
 - (void)adjustView
 {
 
-    mTableView.frame = CGRectMake(0, 64, SCREEN_WIDTH, SCREEN_HEIGHT - 65);
-    
-    NSLog(@"SCREEN_HEIGHT = %f", SCREEN_HEIGHT);
+    mTableView.frame = (CGRect){CGPointZero, self.view.frame.size};
     
     mTableView.backgroundColor = [UIColor clearColor];
 }

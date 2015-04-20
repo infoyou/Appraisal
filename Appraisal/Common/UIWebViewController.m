@@ -10,7 +10,7 @@
 {
     [super viewDidLoad];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.webView.frame = (CGRect){CGPointZero, self.view.frame.size};
+    self.webView.frame = (CGRect){/*CGPointMake(0, 65)*/ CGPointZero, self.view.frame.size};
     [self.view addSubview:self.webView];
 }
 

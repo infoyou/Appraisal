@@ -246,6 +246,13 @@
 {
     [super viewWillAppear:animated];
     
+    // add additional scroll area arround content
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        const CGRect navBarFrame = self.navigationController.navigationBar.frame;
+        const CGFloat blankVerticalSpace = navBarFrame.origin.y + navBarFrame.size.height;
+
+        self.mWebView.scrollView.contentInset = UIEdgeInsetsMake(64 /*blankVerticalSpace*/, 0, 0, 0);
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -255,6 +262,8 @@
 
 - (void)adjustView
 {
+    
+    self.mWebView.frame = (CGRect){CGPointZero, self.view.frame.size};
     
     if (SCREEN_HEIGHT < 568) {
         
