@@ -73,7 +73,7 @@
     [UIView commitAnimations];
     //结束;
     
-    [[AppManager instance] initLocation];
+    [[AppManager instance] prepareData];
     
     [self performSelector:@selector(loadLogicView) withObject:nil afterDelay:2.5];
     

@@ -46,7 +46,7 @@
 // 标的物记录号
 @property (nonatomic, copy) NSString *objectRecordId;
 @property (nonatomic, copy) NSString *objectAttachmentFileName;
-@property (nonatomic, copy) NSString *objectUploadImgId;
+@property (nonatomic, retain) NSMutableArray *objectUploadImgIdArray;
 
 @property (nonatomic, copy) NSString *longitude;
 @property (nonatomic, copy) NSString *latitude;
@@ -68,6 +68,6 @@
 - (void)saveQuestionData:(NSString *)resultId resultMsg:(NSString *)resultMsg;
 - (void)saveQuestionDataIndex:(NSString *)result;
 - (NSString *)getResultIds;
-- (void)initLocation;
+- (void)prepareData;
 
 @end

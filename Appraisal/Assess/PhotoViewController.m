@@ -374,6 +374,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         if (inputType == INPUT_PHOTO_TYPE) {
             
+            // 清理所有图片
+            [[AppManager instance].objectUploadImgIdArray removeAllObjects];
+            
             // 开始拍照
             [self takePhoto:INPUT_PHOTO_TYPE];
         } else if (inputType == INPUT_VIDEO_TYPE) {
@@ -1291,7 +1294,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 NSLog(@"resultId = %@", resultMsg);
                 NSLog(@"FileUrl = %@", [msgDict objectForKey:@"FileUrl"]);
                 
-                [AppManager instance].objectUploadImgId = resultMsg;
+                [[AppManager instance].objectUploadImgIdArray addObject:resultMsg];
             } else {
                 NSLog(@"无效的id");
             }

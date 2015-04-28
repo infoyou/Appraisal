@@ -47,6 +47,13 @@ static AppManager *shareInstance = nil;
     return shareInstance;
 }
 
+- (void)prepareData
+{
+    [AppManager instance].objectUploadImgIdArray = [NSMutableArray array];
+    
+    [self initLocation];
+}
+
 - (void)initLocation
 {
     [AppManager instance].longitude = @"121.547";

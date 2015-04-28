@@ -369,9 +369,18 @@
                 
                 // Media
                 NSMutableDictionary *mediaDict = [[NSMutableDictionary alloc] init];
-                [mediaDict setObject:[AppManager instance].objectUploadImgId forKey:@"mediaId"];
-                [mediaDict setObject:@"img" forKey:@"mediatype"];
-                [mediaArray addObject:mediaDict];
+                
+                NSUInteger uploadImageCount = [[AppManager instance].objectUploadImgIdArray count];
+                
+                if (uploadImageCount > 0) {
+                    
+                    for (NSUInteger imageIndex = 0; imageIndex < uploadImageCount; imageIndex ++) {
+                        
+                        [mediaDict setObject:[AppManager instance].objectUploadImgIdArray[imageIndex] forKey:@"mediaId"];
+                        [mediaDict setObject:@"img" forKey:@"mediatype"];
+                        [mediaArray addObject:mediaDict];
+                    }
+                }
                 
                 [dataDict setObject:mediaArray forKey:@"media"];
             }
