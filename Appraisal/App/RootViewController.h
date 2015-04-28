@@ -24,6 +24,7 @@
 #import "UIViewController+ToastMessage.h"
 
 #import "CommonUtils.h"
+#import "StringCategory.h"
 
 @interface RootViewController : UIViewController <UIGestureRecognizerDelegate>
 {

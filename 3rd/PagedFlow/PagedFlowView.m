@@ -25,7 +25,7 @@
 #pragma mark -
 #pragma mark Private Methods
 
-- (void)initialize{
+- (void)initialize {
     self.clipsToBounds = YES;
     
     _needsReload = YES;
@@ -93,11 +93,13 @@
     if (_minimumPageAlpha == 1.0 && _minimumPageScale == 1.0) {
         return;//无需更新
     }
+    
     switch (orientation) {
         case PagedFlowViewOrientationHorizontal:{
             CGFloat offset = _scrollView.contentOffset.x;
             
             for (int i = _visibleRange.location; i < _visibleRange.location + _visibleRange.length; i++) {
+                
                 UIView *cell = [_cells objectAtIndex:i];
                 CGFloat origin = cell.frame.origin.x;
                 CGFloat delta = fabs(origin - offset);
@@ -105,18 +107,32 @@
                 CGRect originCellFrame = CGRectMake(_pageSize.width * i, 0, _pageSize.width, _pageSize.height);//如果没有缩小效果的情况下的本该的Frame
                 
                 [UIView beginAnimations:@"CellAnimation" context:nil];
+                
                 if (delta < _pageSize.width) {
+                    
                     cell.alpha = 1 - (delta / _pageSize.width) * (1 - _minimumPageAlpha);
                     
                     CGFloat inset = (_pageSize.width * (1 - _minimumPageScale)) * (delta / _pageSize.width)/2.0;
                     cell.frame = UIEdgeInsetsInsetRect(originCellFrame, UIEdgeInsetsMake(inset, inset, inset, inset));
                 } else {
+                    
                     cell.alpha = _minimumPageAlpha;
                     CGFloat inset = _pageSize.width * (1 - _minimumPageScale) / 2.0 ;
                     cell.frame = UIEdgeInsetsInsetRect(originCellFrame, UIEdgeInsetsMake(inset, inset, inset, inset));
                 }
+                
+                NSLog(@"No.%d alpha = %f _currentPageIndex = %d", (NSInteger)cell.frame.origin.x/52, cell.alpha, _currentPageIndex);
+                
                 [UIView commitAnimations];
+                
+                // 为什么不是第一个选中，他的alpha还是1
+                // hack alpha
+                if ((NSInteger)cell.frame.origin.x/52 == 0 && _currentPageIndex != 0) {
+                    cell.alpha = 0.3;
+                }
+                
             }
+            
             break;   
         }
         case PagedFlowViewOrientationVertical:{
@@ -140,13 +156,13 @@
                     CGFloat inset = _pageSize.height * (1 - _minimumPageScale) / 2.0 ;
                     cell.frame = UIEdgeInsetsInsetRect(originCellFrame, UIEdgeInsetsMake(inset, inset, inset, inset));
                 }
+                
                 [UIView commitAnimations];
             }
         }
         default:
             break;
     }
-
 }
 
 - (void)setPageAtIndex:(NSInteger)pageIndex{
@@ -178,8 +194,7 @@
     }
 }
 
-
-- (void)setPagesAtContentOffset:(CGPoint)offset{
+- (void)setPagesAtContentOffset:(CGPoint)offset {
     //计算_visibleRange
     CGPoint startPoint = CGPointMake(offset.x - _scrollView.frame.origin.x, offset.y - _scrollView.frame.origin.y);
     CGPoint endPoint = CGPointMake(startPoint.x + self.bounds.size.width, startPoint.y + self.bounds.size.height);
@@ -224,6 +239,7 @@
             }
             break;
         }
+            
         case PagedFlowViewOrientationVertical:{
             NSInteger startIndex = 0;
             for (int i =0; i < [_cells count]; i++) {
@@ -358,7 +374,7 @@
     
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark PagedFlowView API
 
@@ -391,6 +407,7 @@
                 [_scrollView setContentOffset:CGPointMake(0, _pageSize.height * pageNumber) animated:YES];
                 break;
         }
+        
         [self setPagesAtContentOffset:_scrollView.contentOffset];
         [self refreshVisibleCellAppearance];
     }
@@ -425,10 +442,9 @@
     [self refreshVisibleCellAppearance];
 }
 
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    //如果有PageControl，计算出当前页码，并对pageControl进行更新
     
+    //如果有PageControl，计算出当前页码，并对pageControl进行更新
     NSInteger pageIndex;
     
     switch (orientation) {

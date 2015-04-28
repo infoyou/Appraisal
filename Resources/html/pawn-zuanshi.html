@@ -20,7 +20,7 @@
             </div>
             <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
         </div>
-        <div class="applyMain" id="zuanone">
+        <div class="applyMain" id="zuanone" style="position:relative; left:0;">
             <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt" id="name"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt" id="username"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt" id="telephone"></div>
@@ -35,7 +35,7 @@
             <div class="iptDiv"><input type="text" placeholder="请输入全重" class="iptTxt" id="weight"   onkeyup='checkDecimal(this)'></div>
             <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="stepone()"><img src="next.png" width="100%" /></a></div>
         </div>
-        <div class="applyMain" id="zuantwo" style="display: none">
+        <div class="applyMain" id="zuantwo" style=" position:relative; left:100%; display:none;">
             <div class="iptDiv"><input type="text" placeholder="请输入大小" class="iptTxt" id="goldSize"  onkeyup='checkDecimal(this)'></div>
             <div class="iptDiv"><input type="text" placeholder="请输入颜色" class="iptTxt" id="goldColor"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入净度" class="iptTxt" id="cleanliness"></div>
@@ -43,7 +43,7 @@
             <div class="iptDiv"><input type="text" placeholder="请输入成色" class="iptTxt" id="fineness"></div>
             <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="steptwo()"><img src="next.png" width="100%" /></a></div>
         </div>
-        <div class="applyMain" id="zuanthr" style="display: none">
+        <div class="applyMain" id="zuanthr" style=" position:relative; left:100%; display:none;">
             <div class="iptDiv"><input type="text" placeholder="请输入品牌" class="iptTxt" id="brand"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入切工" class="iptTxt" id="cut"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入钻石4C品质" class="iptTxt" id="diamondQuality"></div>
@@ -54,8 +54,23 @@
         </div>
 	</div>
     <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <div class="loading" >
+        <div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>
+    </div>
     <script type="text/javascript">
 		//select
+        var numTime = 1000;
+        var time10 = setInterval(function(){
+            numTime--;
+            if(numTime==0){
+                SubmitAlert('网络异常  请稍后！');
+                clearInterval(time10);
+            }
+            if($('#categoryTypeSelectTag option').length>1){
+                $('.loading').hide();
+                clearInterval(time10);
+            }
+        },10);
 		$(function(){
 			$('.iptDiv p').css("opacity","0");
 			$('.selectBox select').change(function(){
@@ -108,9 +123,15 @@
 //                return false;
 //            }
             ProgressAnimate(60);
-            $("#zuanone").hide();
-            $("#zuantwo").show();
+			NextFun();
 		}
+		function NextFun(){
+			$("#zuanone").addClass("lightSpeedOut animated");
+			$("#zuanone").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#zuantwo").show().animate({left:0},1200,function(){});	
+			})
+		}	
 		function steptwo() {
             var goldSize=$("#goldSize").val();
             var goldColor=$("#goldColor").val();
@@ -143,9 +164,15 @@
                 return false;
             }
             ProgressAnimate(80);
-            $("#zuantwo").hide();
-            $("#zuanthr").show();
+			NextFunone();
 		}
+		function NextFunone(){
+			$("#zuantwo").addClass("lightSpeedOut animated");
+			$("#zuantwo").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#zuanthr").show().animate({left:0},1200,function(){});	
+			})
+		}	
         function nobleMetalType()
         {
             var jsonarr = {
@@ -160,7 +187,11 @@
                 type: "POST",
                 dataType: "json",
                 url: url,
+                beforeSend:function(){
+                    $(".loading").show();
+                },
                 success: function (msg) {
+                    $(".loading").hide();
                     if (msg.errmsg == "ok") {
                        var  MetalType = msg.result;
                         var html = '<option value="">请选择贵金属类别</option>';
@@ -215,19 +246,20 @@
             var username=$("#username").val();
             var telephone=$("#telephone").val();
             var categoryType=$("#categoryTypeSelectTag").val();
+            var categoryTypeText= $.trim($("#categoryTypeSelectTag  option:selected").text())
             var weight=$("#weight").val();
             var goldSize=$("#goldSize").val();
             var goldColor=$("#goldColor").val();
             var cleanliness=$("#cleanliness").val();
             var commodityName=$("#commodityName").val();
             var fineness=$("#fineness").val();
-
             var SubmitData = {
                 type:"3",
                 name: encodeURIComponent(name),
                 username:encodeURIComponent(username),
                 telephone:encodeURIComponent(telephone),
                 categoryType:encodeURIComponent(categoryType),
+                categoryTypeText:encodeURIComponent(categoryTypeText),
                 weight:encodeURIComponent(weight),
                 goldSize:encodeURIComponent(goldSize),
                 goldColor:encodeURIComponent(goldColor),
@@ -241,7 +273,6 @@
                 certificateNo:encodeURIComponent(certificateNo),
                 description:encodeURIComponent(description)
             };
-//            console.debug(SubmitData);
             SubmitToApp('createImpawn', SubmitData)
         }
 	</script>

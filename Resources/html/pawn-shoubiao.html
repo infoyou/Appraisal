@@ -20,7 +20,7 @@
             </div>
             <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
         </div>
-        <div class="applyMain" id="shouone">
+        <div class="applyMain" id="shouone" style="position:relative; left:0;">
             <div class="iptDiv"><input type="text" placeholder="请输入典当物名称" class="iptTxt" id="name"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入联系人姓名" class="iptTxt"  id="userName"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入联系方式" class="iptTxt" id="telephone"></div>
@@ -28,7 +28,7 @@
             <div class="iptDiv"><input type="text" placeholder="请输入直径" class="iptTxt" id="diameter"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></div>
             <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onClick="stepone()"><img src="next.png" width="100%" /></a></div>
         </div>
-        <div class="applyMain" id="shoutwo" style="display:none;">
+        <div class="applyMain" id="shoutwo" style=" position:relative; left:100%; display:none;">
             <div class="shouTwo" style="margin-bottom:0;"><img src="caizhi.png" width="100%" /></div>
             <div class="choeckfu">
             	<ul>
@@ -38,7 +38,7 @@
             </div>
             <div class="btnDiv btnDivDifent"><a href="javascript:void(0)" onClick="steptwo()"><img src="next.png" width="100%" /></a></div>
         </div>
-        <div class="applyMain" id="shouthree" style="display:none;">
+        <div class="applyMain" id="shouthree" style=" position:relative; left:100%; display:none;">
             <div class="shouTwo" style="margin-bottom:0;"><img src="gongnegn.png" width="100%" /></div>
             <div class="choeckfu">
             	<ul>
@@ -48,7 +48,7 @@
             </div>
             <div class="btnDiv btnDivDifent"><a href="javascript:void(0)" onClick="stepthree()"><img src="next.png" width="100%" /></a></div>
         </div>
-        <div class="applyMain" id="shoufour" style="display:none;">
+        <div class="applyMain" id="shoufour" style=" position:relative; left:100%; display:none;">
             <div class="iptDiv"><input type="text" placeholder="请输入系列" class="iptTxt" id="series"></div>
             <div class="iptDiv"><input type="text" placeholder="请输入型号" class="iptTxt" id="model"></div>
             <div class="iptDiv">
@@ -101,7 +101,22 @@
         </div>
 	</div>
     <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <div class="loading" >
+        <div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>
+    </div>
     <script type="text/javascript">
+        var numTime = 1000;
+        var time10 = setInterval(function(){
+            numTime--;
+            if(numTime==0){
+                SubmitAlert('网络异常  请稍后！');
+                clearInterval(time10);
+            }
+            if($('#materialId a').length>0){
+                $('.loading').hide();
+                clearInterval(time10);
+            }
+        },10);
     	function checkLabelFood(o){
 			if($(o).hasClass('cur')){
 				$(o).removeClass('cur');    
@@ -147,9 +162,15 @@
                 return false;
             }
              ProgressAnimate(50);
-            $("#shouone").hide();
-            $("#shoutwo").show();
+			 NextFun();
 		}		
+		function NextFun(){
+			$("#shouone").addClass("lightSpeedOut animated");
+			$("#shouone").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#shoutwo").show().animate({left:0},1200,function(){});	
+			})
+		}	
 		
 		function steptwo(){
            var material="";
@@ -165,9 +186,15 @@
                 return false;
 			}
             ProgressAnimate(70);
-            $("#shoutwo").hide();
-            $("#shouthree").show();
+			NextFuntwo();
 		}
+		function NextFuntwo(){
+			$("#shoutwo").addClass("lightSpeedOut animated");
+			$("#shoutwo").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#shouthree").show().animate({left:0},1200,function(){});	
+			})
+		}	
 		function stepthree(){
             var functionDescription="";
             $(".functionDescription").each(function(index, element) {
@@ -182,10 +209,16 @@
                 return false;
             }
              ProgressAnimate(80);
-            $("#shouthree").hide();
-            $("#shoufour").show();
+			 NextFunthr();
 		}
 
+			function NextFunthr(){
+			$("#shouthree").addClass("lightSpeedOut animated");
+			$("#shouthree").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$("#shoufour").show().animate({left:0},1200,function(){});	
+			})
+		}	
         function watchMaterialFunctionFillin()
         {
             var jsonarr = {
@@ -200,7 +233,11 @@
                 type: "POST",
                 dataType: "json",
                 url: url,
+                beforeSend:function(){
+                    $(".loading").show();
+                },
                 success: function (msg) {
+                    $(".loading").hide();
                     if (msg.errmsg == "ok") {
                         watchData = msg.result;
                         var materialData=watchData.material;
@@ -265,10 +302,15 @@
             var   series= $.trim($("#series").val());
             var   model= $.trim($("#model").val());
             var   preciousStones= $.trim($("#preciousStonesSelectTag").val());
+            var preciousStonesText= $.trim($("#preciousStonesSelectTag  option:selected").text())
             var   surfaceStones= $.trim($("#surfaceStonesSelectTag").val());
+            var surfaceStonesText= $.trim($("#surfaceStonesSelectTag  option:selected").text())
             var   bezelStones= $.trim($("#bezelStonesSelectTag").val());
+            var bezelStonesText= $.trim($("#bezelStonesSelectTag  option:selected").text())
             var   lugStones= $.trim($("#lugStonesSelectTag").val());
+            var lugStonesText= $.trim($("#lugStonesSelectTag  option:selected").text())
             var   strapStones= $.trim($("#strapStonesSelectTag").val());
+            var strapStonesText= $.trim($("#strapStonesSelectTag  option:selected").text())
             var   description= $.trim($("#description").val());
             if(series=="")
             {
@@ -315,20 +357,26 @@
             var   telephone= $.trim($("#telephone").val());
             var   brand= $.trim($("#brand").val());
             var   diameter= $.trim($("#diameter").val());
-            var material="";
+            var material="",materialText="";
             $(".material").each(function(index, element) {
                 if($(this).hasClass('cur')){
+
                     material+= $(this).attr("mark")+",";
+                    materialText+= $(this).text()+",";
                 }
             });
             material=material.substring(0,material.length-1);
-            var functionDescription="";
+            materialText=materialText.substring(0,materialText.length-1);
+            var functionDescription="",functionDescriptionText="";
             $(".functionDescription").each(function(index, element) {
                 if($(this).hasClass('cur')){
                     functionDescription+= $(this).attr("mark")+",";
+                    functionDescriptionText+= $(this).text()+",";
                 }
             });
+
             functionDescription=functionDescription.substring(0,functionDescription.length-1);
+            functionDescriptionText=functionDescriptionText.substring(0,functionDescriptionText.length-1);
             var SubmitData = {
                 type:"4",
                 name: encodeURIComponent(name),
@@ -337,14 +385,21 @@
                 brand:encodeURIComponent(brand),
                 diameter:encodeURIComponent(diameter),
                 material:encodeURIComponent(material),
+                materialText:encodeURIComponent(materialText),
                 functionDescription:encodeURIComponent(functionDescription),
+                functionDescriptionText:encodeURIComponent(functionDescriptionText),
                 series:encodeURIComponent(series),
                 model:encodeURIComponent(model),
                 preciousStones:encodeURIComponent(preciousStones),
+                preciousStonesText:encodeURIComponent(preciousStonesText),
                 surfaceStones:encodeURIComponent(surfaceStones),
+                surfaceStonesText:encodeURIComponent(surfaceStonesText),
                 bezelStones:encodeURIComponent(bezelStones),
+                bezelStonesText:encodeURIComponent(bezelStonesText),
                 lugStones:encodeURIComponent(lugStones),
+                lugStonesText:encodeURIComponent(lugStonesText),
                 strapStones:encodeURIComponent(strapStones),
+                strapStonesText:encodeURIComponent(strapStonesText),
                 description:encodeURIComponent(description)
             };
             console.debug(SubmitData);

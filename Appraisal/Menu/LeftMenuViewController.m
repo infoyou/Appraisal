@@ -57,8 +57,8 @@
     
 //    selIndex = -1;
     
-    menuIconArray = @[@"jdpg.png", @"jrdd.png", @"hsgy.png", @"dfddlm.png", @"ddsc.png"];
-    menuIconSelArray = @[@"jdpg_sel.png", @"jrdd_sel.png", @"hsgy_sel.png", @"dfddlm_sel.png", @"ddsc_sel.png"];
+    menuIconArray = @[@"jdpg.png", @"jrdd.png", @"hsgy.png", @"dfddlm.png", @"ddsc.png", @"menu_club.png"];
+    menuIconSelArray = @[@"jdpg_sel.png", @"jrdd_sel.png", @"hsgy_sel.png", @"dfddlm_sel.png", @"ddsc_sel.png", @"menu_club_sel.png"];
     
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [UIColor clearColor];
@@ -80,7 +80,8 @@
         @(JRDDVC) : @"金融典当",
         @(UIWebVC) : @"海上谷韵",
         @(UIWebVC1) : @"东方典当联盟",
-        @(UIWebVC2) : @"典当商城"
+        @(UIWebVC2) : @"典当商城",
+        @(UIWebVC3) : @"互融club"
     };
 
     self.paneViewControllerClasses = @{
@@ -88,7 +89,8 @@
         @(JRDDVC) : [PawnHomeViewController class],
         @(UIWebVC) : [UIWebViewController class],
         @(UIWebVC1) : [UIWebViewController class],
-        @(UIWebVC2) : [UIWebViewController class]
+        @(UIWebVC2) : [UIWebViewController class],
+        @(UIWebVC3) : [UIWebViewController class]
     };
     
 }
@@ -153,11 +155,15 @@
 
 - (void)dynamicsDrawerRevealLeftBarButtonItemTapped:(id)sender
 {
+    DLog(@"Left Bar Button Item Tapped @ Left Menu");
+    
     [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:YES allowUserInterruption:YES completion:nil];
 }
 
 - (void)dynamicsDrawerRevealRightBarButtonItemTapped:(id)sender
 {
+    DLog(@"Right Bar Button Item Tapped @ Left Menu");
+    
     [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionRight animated:YES allowUserInterruption:YES completion:nil];
 }
 
@@ -170,7 +176,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return [self.paneViewControllerTitles count];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -227,6 +233,8 @@
         iconView.frame = CGRectMake(40, 12, 20, 25);
     } else if (row == 3) {
         iconView.frame = CGRectMake(35, 15, 29, 20);
+    } else if (row == 5) {
+        iconView.frame = CGRectMake(40, 15, 21.66f, 20);
     }
     
     return cell;
@@ -265,6 +273,12 @@
         case UIWebVC2:
         {
             [AppManager instance].webUrl = @"http://wx.orientalpawn.com/mpawn/products.html";
+        }
+            break;
+            
+        case UIWebVC3:
+        {
+            [AppManager instance].webUrl = @"http://www.hurongclub.com/MClub/Index/Index";
         }
             break;
             
@@ -321,6 +335,8 @@
         iconView.frame = CGRectMake(40, 12, 20, 25);
     } else if (selIndex == 3) {
         iconView.frame = CGRectMake(35, 15, 29, 20);
+    } else if (selIndex == 5) {
+        iconView.frame = CGRectMake(40, 15, 21.66f, 20);
     }
     
 }

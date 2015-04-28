@@ -2,7 +2,7 @@
 //  CommonUtils.m
 //  Project
 //
-//  Created by Peter on 13-9-26.
+//  Created by Adam on 15-4-16.
 //  Copyright (c) 2013年 com.jit. All rights reserved.
 //
 

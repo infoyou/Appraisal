@@ -94,8 +94,8 @@
                 </div>
             </div>
         </div>
-        <!--<div class="foun"><a href="#">GIA查询</a>-->
-        <!--</div>-->
+        <div class="foun"><a href="javascript:void(0)" onclick="locationTogiasele()">GIA查询</a>
+        </div>
         <div class="btnDiv btnDivDif">
                 <a href="javascript:void(0)" onclick="submitZuanshiData()">
                 <img src="pingu.png" width="100%"/>
@@ -104,7 +104,22 @@
     </div>
 </div>
 <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+<div class="loading" >
+    <div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>
+</div>
 <script type="text/javascript">
+    var numTime = 1000;
+    var time10 = setInterval(function(){
+        numTime--;
+        if(numTime==0){
+            SubmitAlert('网络异常  请稍后！');
+            clearInterval(time10);
+        }
+        if($('.colorSelectTag option').length>1){
+            $('.loading').hide();
+            clearInterval(time10);
+        }
+    },10);
     $(function () {
         ProgressAnimate(80);
         diamondColorCleanlinessMaterial();
@@ -138,7 +153,11 @@
             type: "POST",
             dataType: "json",
             url: url,
+            beforeSend:function(){
+                $(".loading").show();
+            },
             success: function (msg) {
+                $(".loading").hide();
                 if (msg.errmsg == "ok") {
                     var data = msg.result;
                     var dataColor = data.color;
@@ -160,7 +179,7 @@
                     $(".cleanlinessSelectTag").append(cleanlinesshtml);
                     $(".materialSelectTag").append(materialhtml);
                 } else {
-                    SubmitAlert('数据加载异常！');
+                    SubmitAlert('数据加载异常  请稍后！');
                 }
             }
         });
@@ -234,6 +253,11 @@
         }
         var SubmitData = {type:"3",goldType: encodeURIComponent(goldType), goldSize: encodeURIComponent(goldSize), goldColor: encodeURIComponent(goldColor), cleanliness:encodeURIComponent(cleanliness),material:encodeURIComponent(material),weight:encodeURIComponent(weight)};
         SubmitToApp('evaluationInfo', SubmitData)
+    }
+    function locationTogiasele()
+    {
+        var plat=getParam("plat");
+        location.href="giasele.html?plat="+plat;
     }
 </script>
 </body>

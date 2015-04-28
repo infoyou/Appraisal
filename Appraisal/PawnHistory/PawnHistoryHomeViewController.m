@@ -11,7 +11,6 @@
 @end
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-//#define kBgQueue dispatch_queue_create("com.company.app.imageQueue", NULL)
 
 @implementation PawnHistoryHomeViewController
 {
@@ -63,7 +62,7 @@
 - (void)adjustView
 {
 
-    mTableView.frame = (CGRect){CGPointZero, self.view.frame.size};
+    mTableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     mTableView.backgroundColor = [UIColor clearColor];
 }
@@ -91,16 +90,23 @@
     
     UITableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"PawnHistoryListCell" owner:self options:nil] lastObject];
     
-    UIImageView *listIconView = (UIImageView *)[cell viewWithTag:99];
+    UIImageView *iconBackView = (UIImageView *)[cell viewWithTag:98];
+    DLog(@"iconView.frame = %@", NSStringFromCGRect(iconBackView.frame));
+    
+    UIImageView *iconView = (UIImageView *)[cell viewWithTag:99];
     
     UILabel *title = (UILabel *)[cell viewWithTag:100];
-    UILabel *desc = (UILabel *)[cell viewWithTag:101];
-
+    UILabel *title1 = (UILabel *)[cell viewWithTag:101];
+    UILabel *title2 = (UILabel *)[cell viewWithTag:102];
+    UILabel *title3 = (UILabel *)[cell viewWithTag:103];
+    
     NSInteger row = [indexPath row];
     AssessObject *assessObject = (AssessObject *)recordArray[row];
     
-    title.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark1, assessObject.mark2];
-    desc.text = [NSString stringWithFormat:@"%@ %@", assessObject.mark3, assessObject.mark4];
+    title.text = [NSString stringWithFormat:@"%@", assessObject.mark1];
+    title1.text = [NSString stringWithFormat:@"%@", assessObject.mark2];
+    title2.text = [NSString stringWithFormat:@"%@", assessObject.mark3];
+    title3.text = [NSString stringWithFormat:@"%@", assessObject.mark4];
     
     if ([assessObject.fileName length] > 0)
     {
@@ -132,10 +138,12 @@
                         [self.imageArray setObject:image forKey:[NSNumber numberWithInt:row]];
                         
                         UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
-                        UIImageView *iconView = (UIImageView *)[lookedUpCell viewWithTag:99];
+                        UIImageView *updateIconView = (UIImageView *)[lookedUpCell viewWithTag:99];
+                        
+                        DLog(@"updateIconView.frame = %@", NSStringFromCGRect(updateIconView.frame));
                         
                         if (lookedUpCell){
-                            iconView.image = image;
+                            updateIconView.image = image;
                             [lookedUpCell setNeedsLayout];
                         }
                     });
@@ -146,35 +154,35 @@
         // 默认图片
         switch (assessObject.logicType) {
             case 1:// 房地产
-                listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+                iconView.image = [UIImage imageNamed:@"houseIcon.png"];
                 break;
                 
             case 2:// 汽车
-                listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+                iconView.image = [UIImage imageNamed:@"carIcon.png"];
                 break;
                 
             case 3:// 钻石
-                listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+                iconView.image = [UIImage imageNamed:@"demandIcon.png"];
                 break;
                 
             case 4:// 手表
-                listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+                iconView.image = [UIImage imageNamed:@"watchIcon.png"];
                 break;
                 
             case 5:// 素金
-                listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+                iconView.image = [UIImage imageNamed:@"goldIcon.png"];
                 break;
                 
             case 6:// 有色宝石
-                listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+                iconView.image = [UIImage imageNamed:@"metalIcon.png"];
                 break;
                 
             case 7:// 玉石饰品
-                listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+                iconView.image = [UIImage imageNamed:@"stoneIcon.png"];
                 break;
                 
             case 8:// 艺术品
-                listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+                iconView.image = [UIImage imageNamed:@"artIcon.png"];
                 break;
                 
             default:

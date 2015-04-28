@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width,  maximum-scale=1.0, minimum-scale=1.0"/>
+    <link href="global.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    <title>GIA查询</title>
+</head>
+
+<body>
+<div class="bg">
+    <img src="bg.jpg" width="100%"/>
+</div>
+<div class="content apply zuanshiOne" style="position:relative; left:0;">
+    <div class="applyMain">
+        <div class="outMain">
+            <div class="diamond">
+                <div style="padding-top:22px"><img src="zheng.png" width="52"/></div>
+                <div class="iptDiv" style="margin-top:5px;">
+                    <input type="text" placeholder="请输入证书号" class="iptTxt" id="sulists">
+                </div>
+            </div>
+        </div>
+        <div class="btnDiv">
+            <a href="javascript:void(0)" onClick="getGIAByGIAcode()">
+                <img src="find.png" width="100%"/>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="content apply zuanshiTwo"  style="height:95%;-webkit-overflow-scrolling: touch;overflow-y:scroll;display:none;position:relative; left:100%; ">
+    <p class="reportTop"><img src="tit.png" width="100%"/></p>
+
+    <div class="reportCont">
+        <p class="reportp">GIA钻石档案</p>
+        <ul id="oneid">
+            <li class="firRepo">圆形</li>
+        </ul>
+        <ul class="reportDif" id="twoid">
+            <li class="firRepo">比例</li>
+        </ul>
+        <ul class="reportDif" id="threid">
+            <li class="firRepo">切工</li>
+        </ul>
+    </div>
+</div>
+<div id="isLoadComplete"  style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+
+<script type="text/javascript">
+    function getGIAByGIAcode() {
+        var disquality = $.trim($("#sulists").val());
+        var ex = /^\d+$/;
+        if (disquality == "") {
+            SubmitAlert('请输入证书号');
+            return false;
+        }
+        var jsonarr = {
+            cmd: JSON.stringify({
+                "route": "getGIAByGIAcode",
+                "base": {},
+                "data": {'gia': disquality}
+
+            })
+        };
+        $.ajax({
+            data: jsonarr,
+            type: "POST",
+            dataType: "json",
+            url: url,
+            success: function (msg) {
+                if (msg.errmsg == "ok") {
+					NextFun();
+                    var data = msg.result;
+						var istringOne = '';
+						 istringOne+="<li>尺寸:"+data.gsize+"</li><li>重量:"+data.gweight+"</li><li>颜色:"+data.gcolor+"</li><li>净度:"+data.gClarity+"</li><li>切工:"+data.gcut+"</li>";
+						 
+						 var istringTwo = '';
+						 istringTwo+="<li>全深比:"+data.gDepth+"</li><li>台宽比:"+data.gTable+"</li><li>冠角:"+data.gCrownAngle+"</li><li>冠高比:"+data.gCrownHeight+"</li><li>亭角:"+data.gPavilionAngle+"</li><li>亭深比:"+data.gPavilionDepth+"</li><li>星小面比:"+data.gStarLength+"</li><li>下腰小面比:"+data.gLowerHalf+"</li><li>腰棱:"+data.gGirdle+"</li><li>底尖:"+data.gCulet+"</li>";
+						 
+						 var istringThe = '';
+						 istringThe+="<li>抛光:"+data.gPolish+"</li><li>对称:"+data.gSymmetry+"</li><li>荧光:"+data.gFluorescence+"</li><li>净度:"+data.gClarityCharacteristics+"</li><li>腰码:"+data.giacode+"</li>";
+						
+						$("#oneid").append(istringOne);
+						$("#twoid").append(istringTwo);
+						$("#threid").append(istringThe);
+               //console.log(data);
+                }
+				else{
+					SubmitAlert('请输入正确的证书号');
+					return false;	
+				}
+            }
+        })
+		function NextFun(){
+			$(".zuanshiOne").addClass("lightSpeedOut animated");
+			$(".zuanshiOne").animate({left:'-100%'},1200,function(){
+				$(this).hide();
+				$(".zuanshiTwo").show().animate({left:0},1200,function(){});	
+			})
+		}	
+    }
+	
+</script>
+</body>
+
+</html>

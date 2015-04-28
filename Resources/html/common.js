@@ -79,7 +79,23 @@ function getCity(){
 			//jsonp:'jsonp_callback',
 			dataType:"json",
 			url:url,
+            beforeSend:function(){
+                $(".loading").show();
+                var numTime = 1000;
+                var time10 = setInterval(function(){
+                    numTime--;
+                    if(numTime==0){
+                        SubmitAlert('网络异常  请稍后！');
+                        clearInterval(time10);
+                    }
+                    if($('#city option').length>1){
+                        $('.loading').hide();
+                        clearInterval(time10);
+                    }
+                },10);
+            },
 			success:function(msg){
+                $(".loading").hide();
 				if(msg.errmsg == "ok"){
 				//	<option value="">请选择</option>    
 					var data = msg.result;
@@ -190,6 +206,19 @@ function isNumber(s){
    else {
        return false;
    }
+}
+/**
+ 中文 英文大小写 数字 中划线 下划线 空格 全角
+ */
+function isChinaOrNumbOrLett(s){
+    var regu = "^[0-9a-zA-Z\u4e00-\u9fa5\uFE30-\uFFA0\-_\. ]+$";
+    var re = new RegExp(regu);
+    if (re.test(s)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 

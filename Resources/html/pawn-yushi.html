@@ -21,19 +21,29 @@
             <p style="text-align:center;padding-top:10px;">还差一小步就完成啦！</p>
         </div>
         <div class="applyMain">
-            <div class="iptDiv onePage"><input type="text" id="name" placeholder="请输入典当物名称" class="iptTxt"></div>
-            <div class="iptDiv onePage"><input type="text" id="userName" placeholder="请输入联系人姓名" class="iptTxt"></div>
-            <div class="iptDiv onePage"><input type="text" id="telephone" placeholder="请输入联系方式" class="iptTxt"></div>
-            <div class="iptDiv onePage"><input type="text" id="commodityName" placeholder="请输入品名" class="iptTxt"></div>           
-            <div class="iptDiv onePage"><input type="text" id="weight" placeholder="请输入全重" class="iptTxt"></div>
-            <div class="iptDiv twoPage"><input type="text" id="fineness" placeholder="请输入成色" class="iptTxt"></div>
-            <div class="iptDiv twoPage"><input type="text" id="size" placeholder="请输入尺寸（长）" class="iptTxt"></div>
-            <div class="iptDiv twoPage"><input type="text" id="width" placeholder="请输入宽" class="iptTxt"></div>         
-            <div class="iptDiv twoPage"><input type="text" id="height" placeholder="请输入高" class="iptTxt"></div>
-            <div class="iptDiv twoPage"><input type="text" id="qualityDescription" placeholder="请输入宝石品质描述" class="iptTxt"></div>
-            <div class="iptDiv threePage"><input type="text" id="certificate" placeholder="请输入证书出具鉴定机构" class="iptTxt"></div>
-            <div class="iptDiv threePage"><input type="text" id="certificateNo" placeholder="请输入证书编号" class="iptTxt"></div>
-            <div class="iptDiv threePage"><input type="text" id="description" placeholder="请输入物品描述" class="iptTxt"></div>
+            <div class="iptDivs">
+	            <ul class="iptDivsUl">
+	            	<li> 
+			            <div class="iptDiv onePage"><input type="text" id="name" placeholder="请输入典当物名称" class="iptTxt"></div>
+			            <div class="iptDiv onePage"><input type="text" id="userName" placeholder="请输入联系人姓名" class="iptTxt"></div>
+			            <div class="iptDiv onePage"><input type="text" id="telephone" placeholder="请输入联系方式" class="iptTxt"></div>
+			            <div class="iptDiv onePage"><input type="text" id="commodityName" placeholder="请输入品名" class="iptTxt"></div>           
+			            <div class="iptDiv onePage"><input type="text" id="weight" placeholder="请输入全重" class="iptTxt"></div>
+		            </li>
+		            <li>
+			            <div class="iptDiv twoPage"><input type="text" id="fineness" placeholder="请输入成色" class="iptTxt"></div>
+			            <div class="iptDiv twoPage"><input type="text" id="size" placeholder="请输入尺寸（长）" class="iptTxt"></div>
+			            <div class="iptDiv twoPage"><input type="text" id="width" placeholder="请输入宽" class="iptTxt"></div>         
+			            <div class="iptDiv twoPage"><input type="text" id="height" placeholder="请输入高" class="iptTxt"></div>
+			            <div class="iptDiv twoPage"><input type="text" id="qualityDescription" placeholder="请输入宝石品质描述" class="iptTxt"></div>
+		            </li>
+		            <li>
+			            <div class="iptDiv threePage"><input type="text" id="certificate" placeholder="请输入证书出具鉴定机构" class="iptTxt"></div>
+			            <div class="iptDiv threePage"><input type="text" id="certificateNo" placeholder="请输入证书编号" class="iptTxt"></div>
+			            <div class="iptDiv threePage"><input type="text" id="description" placeholder="请输入物品描述" class="iptTxt"></div>
+		            </li>
+		        </ul>
+            </div>
             <div class="btnDiv btnDivDif"><a href="javascript:void(0)" onclick="nextPage(this)"><img src="next.png" width="100%" /></a></div>
             <div class="btnDiv btnSub"><a href="javascript:void(0)" onclick="subPawnYushi()"><img src="submitt.png" width="100%" /></a></div>
         </div>
@@ -43,6 +53,7 @@
     	//select
 		$(function(){
 			ProgressAnimate(30);
+			$('.iptDivsUl li').css('width',$('body').width()-20+'px');
 		})
 		var numPage = 0;
 		var name,userName,telephone,commodityName,weight,fineness,size,width,height,qualityDescription,certificate,certificateNo,description='';
@@ -85,8 +96,7 @@
 						return false;
 				}	
 				ProgressAnimate(60);
-				$('.iptDiv').hide();
-				$('.twoPage').show();			
+				$('.iptDivsUl').animate({'margin-left':-($('body').width()-20)+'px'},1000);			
 			}
 			if(numPage==2){
 				if(fineness == ""){
@@ -115,8 +125,8 @@
 						return false;
 				}	
 				ProgressAnimate(90);
-				$('.iptDiv').hide();
-				$('.threePage').show();$('.btnSub').show();$(obj).hide();
+				$('.iptDivsUl').animate({'margin-left':-($('body').width()-20)*2+'px'},1000);	
+				$('.btnSub').show();$(obj).hide();
 			}
 		}
 		function subPawnYushi(){

@@ -34,8 +34,27 @@
         </div>
 	</div>
     <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <div class="loading" >
+   		 <div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>
+    </div>
     <script type="text/javascript" src="jquery-1.7.min.js"></script>
     <script type="text/javascript">
+	  var numTime = 1000;
+      var time10 = setInterval(function(){
+        numTime--;
+        if(numTime==0){
+            SubmitAlert('网络异常  请稍后！');
+            clearInterval(time10);
+        }
+        if($('#sulist option').length>1){
+            $('.loading').hide();
+            clearInterval(time10);
+        }
+    },10);
+    $(function () {
+        ProgressAnimate(80);
+        diamondColorCleanlinessMaterial();
+    })
 		//select
 		$(function(){
 			$('.iptDiv p').css("opacity","0");
@@ -62,7 +81,11 @@
             type: "POST",
             dataType: "json",
             url: url,
+			beforeSend:function(){
+                $(".loading").show();
+            },
             success: function (msg) {
+				 $(".loading").hide();
                 if (msg.errmsg == "ok") {
                     var data = msg.result;
                     if(data.length > 0 ){

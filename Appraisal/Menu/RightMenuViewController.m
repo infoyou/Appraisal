@@ -38,6 +38,7 @@
     if (self) {
         [self initialize];
     }
+    
     return self;
 }
 
@@ -49,7 +50,16 @@
     if (self) {
         [self initialize];
     }
+    
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+
+    [super viewWillAppear:animated];
+    
+    DLog(@"viewWillAppear method");
 }
 
 - (void)viewDidLoad
@@ -91,6 +101,8 @@
 
 - (MSPaneRightViewControllerType)paneViewControllerTypeForIndexPath:(NSIndexPath *)indexPath
 {
+    DLog(@"paneViewControllerTypeForIndexPath method");
+    
     MSPaneRightViewControllerType paneViewControllerType;
     if (indexPath.section == 0) {
         paneViewControllerType = indexPath.row;
@@ -104,6 +116,9 @@
 
 - (void)transitionToViewController:(MSPaneRightViewControllerType)paneViewControllerType
 {
+    
+    DLog(@"transitionToViewController method");
+    
     /*
     // Close pane if already displaying that pane view controller
     if (paneViewControllerType == self.paneViewControllerType) {
@@ -145,17 +160,20 @@
     [paneNavigationViewController.navigationBar setBackgroundImage:[UIImage imageNamed:@"naviBg.png"] forBarMetrics:UIBarMetricsDefault];
     [paneNavigationViewController.navigationBar setBarStyle:UIBarStyleBlack];
     
-    
     self.paneViewControllerType = paneViewControllerType;
 }
 
 - (void)dynamicsDrawerRevealLeftBarButtonItemTapped:(id)sender
 {
+    DLog(@"Left Bar Button Item Tapped @ Right Menu");
+    
     [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionLeft animated:YES allowUserInterruption:YES completion:nil];
 }
 
 - (void)dynamicsDrawerRevealRightBarButtonItemTapped:(id)sender
 {
+    DLog(@"Right Bar Button Item Tapped @ Right Menu");
+    
     [self.dynamicsDrawerViewController setPaneState:MSDynamicsDrawerPaneStateOpen inDirection:MSDynamicsDrawerDirectionRight animated:YES allowUserInterruption:YES completion:nil];
 }
 
@@ -168,7 +186,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return [self.paneViewControllerTitles count];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -206,6 +224,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    DLog(@"cellForRowAtIndexPath method");
+    
     UITableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"RightContentTypeCell" owner:self options:nil] lastObject];
     
     UIImageView *iconView = (UIImageView *)[cell viewWithTag:10];
@@ -280,7 +301,7 @@
 
 - (void)updateCellStateToNormal
 {
-    if (selIndex < 0) {
+    if (selIndex < 0 || menuIconArray == nil) {
         return;
     }
     

@@ -70,6 +70,9 @@
         </div>
 	</div>
    <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
+    <div class="loading" >
+        <div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>
+    </div>
     <script type="text/javascript">
 			$(function(){
 				var opt = {
@@ -143,7 +146,23 @@
 			//jsonp:'jsonp_callback',
 			dataType:"json",
 			url:url,
+            beforeSend:function(){
+                $(".loading").show();
+                var numTime = 1000;
+                var time10 = setInterval(function(){
+                    numTime--;
+                    if(numTime==0){
+                        SubmitAlert('网络异常  请稍后！');
+                        clearInterval(time10);
+                    }
+                    if($('#BrandName option').length>1){
+                        $('.loading').hide();
+                        clearInterval(time10);
+                    }
+                },10);
+            },
 			success:function(msg){
+                $(".loading").hide();
 			//	console.log(msg);
 				if(msg.errmsg == "ok"){
 				//	<option value="">请选择</option>    
@@ -159,7 +178,7 @@
 					}
 				//	console.log(data);
 				}
-			},
+			}
 		});	
 	}
 	function SelectBrandName(o){

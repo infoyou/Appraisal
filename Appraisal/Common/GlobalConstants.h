@@ -8,7 +8,7 @@
 
 #define VERSION         @"1.0.1"
 
-#define UMENG_ANALYS_APP_KEY        @"5515104ffd98c502c70005e1"
+#define UMENG_ANALYS_APP_KEY        @"553f311be0f55ae580000585"
 
 #define PROJECT_DB_NAME             @"ProjectDB"
 
@@ -45,8 +45,8 @@ typedef NS_ENUM(NSUInteger, VideoShareAlertType) {
 #define kQQAppSecret  @"PRziCk9p4qJR1seI"
 
 //微信
-#define kWeiXinKey    @"wx786e4023e0972b2e"
-#define kWeiXinSecret @"845408466861c80e84276323fa3ccce3"
+#define kWeiXinKey    @"wxac751dc9c48e9c89" //@"wx786e4023e0972b2e"
+#define kWeiXinSecret @"1df4db79d42e8e5423ac40b080804d39" //@"845408466861c80e84276323fa3ccce3"
 
 //ShareSDK平台
 #define kShareSDK_Key @"6a46cccf1e16"

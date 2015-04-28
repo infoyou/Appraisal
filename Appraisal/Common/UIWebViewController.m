@@ -26,7 +26,7 @@
     if (!_webView) {
         self.webView = [UIWebView new];
         self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        self.webView.backgroundColor = [UIColor blackColor];
+        self.webView.backgroundColor = [UIColor whiteColor];
         NSURL *url = [NSURL URLWithString:[AppManager instance].webUrl];
         [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:url]];
         self.webView.delegate = self;

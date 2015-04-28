@@ -62,7 +62,7 @@
 - (void)adjustView
 {
 
-    mTableView.frame = (CGRect){CGPointZero, self.view.frame.size};
+    mTableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     mTableView.backgroundColor = [UIColor clearColor];
 }

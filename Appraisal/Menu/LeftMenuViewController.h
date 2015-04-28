@@ -13,6 +13,7 @@ typedef NS_ENUM(NSUInteger, MSPaneLeftViewControllerType) {
     UIWebVC,
     UIWebVC1,
     UIWebVC2,
+    UIWebVC3,
     MSPaneViewControllerTypeCount,
 };
 

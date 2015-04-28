@@ -54,9 +54,9 @@
 
 - (void)initLayer
 {
-    ballLayer=[CALayer layer];
-    ballLayer.bounds = CGRectMake(0, 0, 200, 191);
-    ballLayer.position = CGPointMake(159, 400);
+    ballLayer = [CALayer layer];
+    ballLayer.bounds = CGRectMake(0, 0, 168, 151);
+    ballLayer.position = CGPointMake(159, 358);
     ballLayer.contents = (id)[UIImage imageNamed:@"jrddHomeCenter.png"].CGImage;
     ballLayer.anchorPoint = CGPointMake(0.5, 1.0);
     [self.view.layer addSublayer:ballLayer];

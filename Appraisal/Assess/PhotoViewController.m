@@ -9,6 +9,8 @@
 
 #define SCROLL_UNIT_WIDTH       65.f
 #define MAXIMUM_DURATION        40
+#define PHOTO_OFFSET            10000
+#define DEL_PHOTO_OFFSET        20000
 
 typedef enum {
     INPUT_FIRST_SCREEN = 0,     // 第一屏幕
@@ -63,6 +65,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // 第一次加载
     BOOL isFirst;
+    
+    BOOL isFullScreen;
+    CGRect prevFrame;
+    
+    UIView *selBigImgBG;
 }
 
 @synthesize session;
@@ -205,10 +212,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.photoScrollView.contentSize = CGSizeMake(SCROLL_UNIT_WIDTH * localSize, 50);
     
     for (int i=0; i<localSize; i++) {
-        
-        
+
         UIImageView *scrollUnitView = [[UIImageView alloc] initWithFrame:CGRectMake(SCROLL_UNIT_WIDTH*i, 4, 64, 64)];
         scrollUnitView.image = [UIImage imageNamed:@"photoBoard.png"];
+        scrollUnitView.userInteractionEnabled = YES;
         UIImageView *localImgView = [[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 56, 56)];
         
         // 1，加载本地图片
@@ -216,11 +223,21 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         // localImgView.image = [UIImage imageWithData:imageData];
         // 2，读取内存
         localImgView.image = localImgArray[i];
+        localImgView.tag = PHOTO_OFFSET + i;
         
+        [self addTapGestureRecognizer:localImgView];
         [scrollUnitView addSubview:localImgView];
-        
         [self.photoScrollView addSubview:scrollUnitView];
+        
+        // 删除按钮
+        UIImageView *delImgView = [[UIImageView alloc] initWithFrame:CGRectMake(SCROLL_UNIT_WIDTH*i + 40, 0, 30, 30)];
+        delImgView.image = [UIImage imageNamed:@"delete_photo.png"];
+        delImgView.tag = DEL_PHOTO_OFFSET + i;
+        [self addTapGestureRecognizer:delImgView];
+        [self.photoScrollView addSubview:delImgView];
+        
     }
+    
 }
 
 - (void)adjustView
@@ -300,6 +317,52 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     UIView *view = (UIView*)[gestureRecognizer view];
     
+    if (view.tag >= DEL_PHOTO_OFFSET) {
+        // 删除图片
+        NSInteger imgIndex = view.tag - DEL_PHOTO_OFFSET;
+        [localImgArray removeObjectAtIndex:imgIndex];
+        
+        // 删除现有显示
+        NSArray *viewsToRemove = [self.photoScrollView subviews];
+        for (UIView *v in viewsToRemove)
+            [v removeFromSuperview];
+        
+//        [self.photoScrollView removeFromSuperview];
+        
+        [self loadLocalImageScroll];
+        
+        return;
+    }
+    
+    if (view.tag == PHOTO_OFFSET - 1) {
+        // 隐藏大图
+        [selBigImgBG removeFromSuperview];
+        return;
+    }
+    
+    if (view.tag >= PHOTO_OFFSET) {
+        // 显示大图
+        NSInteger imgIndex = view.tag - PHOTO_OFFSET;
+        UIImage *selImg = localImgArray[imgIndex];
+        
+        selBigImgBG = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        selBigImgBG.userInteractionEnabled = YES;
+        UIImageView *showSelBigImgView = [[UIImageView alloc] initWithFrame:selBigImgBG.frame];
+        showSelBigImgView.image = selImg;
+        showSelBigImgView.tag = PHOTO_OFFSET - 1;
+        showSelBigImgView.userInteractionEnabled = YES;
+        [selBigImgBG addSubview:showSelBigImgView];
+        
+        [self addTapGestureRecognizer:showSelBigImgView];
+        
+        [self.view addSubview:selBigImgBG];
+        
+//        [self imgToFullScreen:(UIImageView*)view selBigImgView:showSelBigImgView];
+        
+        return;
+    }
+    
+    // 按钮操作
     if ([view isEqual:self.takePhotoBtn]) {
         
         // 隐藏Action View, 进入Result View
@@ -861,8 +924,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 // 绑定图片名称
                 [AppManager instance].objectAttachmentFileName = [NSString stringWithFormat:@"%@.png", dateId];
                 
-                if ([AppManager instance].logicType == PAWN_LOGIC_TYPE) {
-                    
+                if ([AppManager instance].logicType == PAWN_LOGIC_TYPE || [AppManager instance].babyType < 3) {
+                
                     [self postImageMehtod:image];
                 }
                 
@@ -1245,6 +1308,35 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 -(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     DLog(@"数据接受失败，失败原因：%@", [error localizedDescription]);
+}
+
+#pragma mark - image to full screen
+- (void)imgToFullScreen:(UIImageView *)selImgView selBigImgView:(UIImageView *)selBigImgView
+{
+    
+    if (!isFullScreen) {
+        [UIView animateWithDuration:0.5 delay:0 options:0 animations:^{
+            //save previous frame
+            prevFrame = selImgView.frame;
+            [self.view addSubview:selBigImgView];
+            
+        } completion:^(BOOL finished){
+            isFullScreen = true;
+        }];
+        
+        return;
+    } else {
+        [UIView animateWithDuration:0.5 delay:0 options:0 animations:^{
+            
+            [selBigImgView removeFromSuperview];
+            [selImgView setFrame:prevFrame];
+            
+        } completion:^(BOOL finished){
+            isFullScreen = false;
+        }];
+        
+        return;
+    }
 }
 
 @end

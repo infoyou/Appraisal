@@ -12,6 +12,7 @@
 
 @implementation ProcessViewController
 {
+    LogicType logicType;
 }
 
 #pragma mark - UIViewController
@@ -23,6 +24,7 @@
     if (self) {
         // Custom initialization
     }
+    
     return self;
 }
 
@@ -34,6 +36,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    logicType = [AppManager instance].logicType;
 
     [self loadTitle];
     
@@ -227,7 +231,6 @@
         }
     }
     
-
     // 黄色加载
     NSString *urlAddress = [[NSBundle mainBundle] pathForResource:localFileName ofType:@"html"];
     
@@ -295,11 +298,13 @@
 
 - (IBAction)doBackAction:(id)sender {
     
+    [AppManager instance].logicType = logicType;
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)doHomeAction:(id)sender {
     
+    [AppManager instance].logicType = logicType;
     [self dismissViewControllerAnimated:NO completion:nil];
     
     [((AppDelegate *)APP_DELEGATE).window.rootViewController dismissViewControllerAnimated:YES completion:nil];
@@ -309,9 +314,6 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)aWebView
 {
-    //    [[aWebView windowScriptObject] evaluateWebScript:@"function fun(x) {return x;}"];
-    
-    //    [aWebView stringByEvaluatingJavaScriptFromString:@"alert('登录成功!')"];
     
     NSLog(@"webViewDidStartLoad");
 }
@@ -327,7 +329,7 @@
     [aWebView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout='none';"];
     
     // 防止拖动后产生白屏
-    self.mWebView.backgroundColor = [UIColor blackColor];
+    self.mWebView.backgroundColor = [UIColor clearColor];
     [(UIScrollView *)[[self.mWebView subviews] objectAtIndex:0] setBounces:NO];
     
 }
@@ -342,7 +344,6 @@
     NSURL *url = [request URL];
     
     // 处理JavaScript和Objective-C交互
-    
     if([[[url scheme] lowercaseString] isEqualToString:@"submit"]) {
         
         // 得到html5的表单
@@ -356,8 +357,10 @@
             NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
             for (NSString *param in [parmString componentsSeparatedByString:@"&"]) {
                 NSArray *elts = [param componentsSeparatedByString:@"="];
-                if([elts count] < 2) continue;
-                [dataDict setObject:[elts objectAtIndex:1] forKey:[elts objectAtIndex:0]];
+                if([elts count] < 2)
+                    continue;
+                
+                [dataDict setObject:[[elts objectAtIndex:1] stringByReplacingPercentEscapes] forKey:[elts objectAtIndex:0]];
             }
             
             if ([AppManager instance].logicType == PAWN_LOGIC_TYPE) {
@@ -478,10 +481,6 @@
         return NO;
     } else if([[[url scheme] lowercaseString] isEqualToString:@"showalert"]) {
         
-//        if (YES) {
-//            [self goReport:[NSDictionary dictionary]];
-//        }
-        
         // 处理js的alert
         if([[url host] isEqualToString:@"data"])
         {
@@ -553,10 +552,10 @@
             {
                 // 素金
                 NSString *categoryType = [requestDict objectForKey:@"categoryType"]; //类别
-                NSString *weight = [requestDict objectForKey:@"weight"]; //重量
+                NSString *weight = [requestDict objectForKey:@"weight"]; //全重
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"类别: %@", categoryType];
-                assessInfo.mark2 = [NSString stringWithFormat:@"重量: %@", weight];
+                assessInfo.mark2 = [NSString stringWithFormat:@"全重: %@", weight];
                 
             }
                 break;
@@ -640,34 +639,37 @@
             {
                 // 玉石饰品
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *categoryType = [requestDict objectForKey:@"categoryType"]; //贵金属类别
-                NSString *weight = [requestDict objectForKey:@"weight"]; //重量
-                NSString *brand = [requestDict objectForKey:@"brand"]; //品牌
+                NSString *weight = [requestDict objectForKey:@"weight"]; //全重
+                NSString *size = [requestDict objectForKey:@"size"]; //尺寸
+                NSString *width = [requestDict objectForKey:@"width"]; //宽
+                NSString *height = [requestDict objectForKey:@"height"]; //高
                 NSString *commodityName = [requestDict objectForKey:@"commodityName"]; //品名
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
-                assessInfo.mark2 = [NSString stringWithFormat:@"贵金属类别: %@", categoryType];
-                assessInfo.mark3 = [NSString stringWithFormat:@"重量: %@", weight];
-                assessInfo.mark4 = [NSString stringWithFormat:@"品牌: %@", brand];
-                assessInfo.mark5 = [NSString stringWithFormat:@"品名: %@", commodityName];
+                assessInfo.mark2 = [NSString stringWithFormat:@"全重: %@", weight];
+                assessInfo.mark3 = [NSString stringWithFormat:@"尺寸: %@", size];
+                assessInfo.mark4 = [NSString stringWithFormat:@"宽: %@", width];
+                assessInfo.mark5 = [NSString stringWithFormat:@"高: %@", height];
+                assessInfo.mark6 = [NSString stringWithFormat:@"品名: %@", commodityName];
                 
             }
                 break;
 
             case 8:
             {
+                
                 // 艺术品
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *categoryType = [requestDict objectForKey:@"categoryType"]; //贵金属类别
-                NSString *weight = [requestDict objectForKey:@"weight"]; //重量
-                NSString *brand = [requestDict objectForKey:@"brand"]; //品牌
-                NSString *commodityName = [requestDict objectForKey:@"commodityName"]; //品名
+                NSString *author = [requestDict objectForKey:@"author"]; //作者
+                NSString *years = [requestDict objectForKey:@"years"]; //年代
+                NSString *size = [requestDict objectForKey:@"size"]; //尺寸
+                NSString *fineness = [requestDict objectForKey:@"fineness"]; //成色
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
-                assessInfo.mark2 = [NSString stringWithFormat:@"贵金属类别: %@", categoryType];
-                assessInfo.mark3 = [NSString stringWithFormat:@"重量: %@", weight];
-                assessInfo.mark4 = [NSString stringWithFormat:@"品牌: %@", brand];
-                assessInfo.mark5 = [NSString stringWithFormat:@"品名: %@", commodityName];
+                assessInfo.mark2 = [NSString stringWithFormat:@"作者: %@", author];
+                assessInfo.mark3 = [NSString stringWithFormat:@"年代: %@", years];
+                assessInfo.mark4 = [NSString stringWithFormat:@"尺寸: %@", size];
+                assessInfo.mark5 = [NSString stringWithFormat:@"成色: %@", fineness];
                 
             }
                 break;
@@ -677,14 +679,14 @@
             {
                 // 有色宝石
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *categoryType = [requestDict objectForKey:@"categoryType"]; //贵金属类别
+                NSString *categoryType = [requestDict objectForKey:@"categoryTypeText"]; //贵金属类别
                 NSString *weight = [requestDict objectForKey:@"weight"]; //全重
                 NSString *brand = [requestDict objectForKey:@"brand"]; //品牌
                 NSString *commodityName = [requestDict objectForKey:@"commodityName"]; //品名
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
-                assessInfo.mark2 = [NSString stringWithFormat:@"贵金属类别: %@", categoryType];
-                assessInfo.mark3 = [NSString stringWithFormat:@"重量: %@", weight];
+                assessInfo.mark2 = [NSString stringWithFormat:@"类别: %@", categoryType];
+                assessInfo.mark3 = [NSString stringWithFormat:@"全重: %@", weight];
                 assessInfo.mark4 = [NSString stringWithFormat:@"品牌: %@", brand];
                 assessInfo.mark5 = [NSString stringWithFormat:@"品名: %@", commodityName];
                 
@@ -695,14 +697,14 @@
             {
                 // 素金
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *categoryType = [requestDict objectForKey:@"categoryType"]; //贵金属类别
+                NSString *categoryType = [requestDict objectForKey:@"categoryTypeText"]; //贵金属类别
                 NSString *weight = [requestDict objectForKey:@"weight"]; //全重
                 NSString *brand = [requestDict objectForKey:@"brand"]; //品牌
                 NSString *commodityName = [requestDict objectForKey:@"commodityName"]; //品名
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
-                assessInfo.mark2 = [NSString stringWithFormat:@"贵金属类别: %@", categoryType];
-                assessInfo.mark3 = [NSString stringWithFormat:@"重量: %@", weight];
+                assessInfo.mark2 = [NSString stringWithFormat:@"类别: %@", categoryType];
+                assessInfo.mark3 = [NSString stringWithFormat:@"全重: %@", weight];
                 assessInfo.mark4 = [NSString stringWithFormat:@"品牌: %@", brand];
                 assessInfo.mark5 = [NSString stringWithFormat:@"品名: %@", commodityName];
 
@@ -717,7 +719,6 @@
                 NSString *series = [requestDict objectForKey:@"series"]; //系列
                 NSString *model = [requestDict objectForKey:@"model"];//型号
                 NSString *preciousStones = [requestDict objectForKey:@"preciousStones"];//镶嵌宝石
-
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
                 assessInfo.mark2 = [NSString stringWithFormat:@"品牌: %@", brand];
@@ -753,7 +754,7 @@
             {
                 // 钻石
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *categoryType = [requestDict objectForKey:@"categoryType"];//贵金属类别
+                NSString *categoryType = [requestDict objectForKey:@"categoryTypeText"];//贵金属类别
                 NSString *weight = [requestDict objectForKey:@"weight"];//全重
                 NSString *brand = [requestDict objectForKey:@"brand"];//品牌
                 NSString *goldSize = [requestDict objectForKey:@"goldSize"];//大小
@@ -761,8 +762,8 @@
                 NSString *cleanliness = [requestDict objectForKey:@"cleanliness"];//净度
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"名称: %@", name];
-                assessInfo.mark2 = [NSString stringWithFormat:@"贵金属类别: %@", categoryType];
-                assessInfo.mark3 = [NSString stringWithFormat:@"重量: %@", weight];
+                assessInfo.mark2 = [NSString stringWithFormat:@"类别: %@", categoryType];
+                assessInfo.mark3 = [NSString stringWithFormat:@"全重: %@", weight];
                 assessInfo.mark4 = [NSString stringWithFormat:@"品牌: %@", brand];
                 assessInfo.mark5 = [NSString stringWithFormat:@"大小: %@", goldSize];
                 assessInfo.mark6 = [NSString stringWithFormat:@"颜色: %@", goldColor];
@@ -774,7 +775,7 @@
             {
                 // 房地产
                 NSString *name = [requestDict objectForKey:@"name"]; //典当物名称
-                NSString *houseLocated = [requestDict objectForKey:@"houseLocated"];//房屋坐落
+                NSString *houseLocated = [requestDict objectForKey:@"houseLocatedText"];//房屋坐落
                 NSString *coveredArea = [requestDict objectForKey:@"coveredArea"];//建筑面积
                 NSString *propertyName = [requestDict objectForKey:@"propertyName"];//物业名称
                 NSString *detailedAddress = [requestDict objectForKey:@"detailedAddress"];//详细地址
