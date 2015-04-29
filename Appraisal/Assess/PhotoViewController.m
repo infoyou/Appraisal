@@ -6,9 +6,10 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 #import "AFHTTPRequestOperationManager.h"
+#import "ASIFormDataRequest.h"
 
 #define SCROLL_UNIT_WIDTH       65.f
-#define MAXIMUM_DURATION        40
+#define MAXIMUM_DURATION        30
 #define PHOTO_OFFSET            10000
 #define DEL_PHOTO_OFFSET        20000
 
@@ -46,9 +47,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
     // 标的物种类
     NSArray *typeImgArray;
+    
     // 本地图片
     NSMutableArray *localImgArray;
-    NSMutableArray *localImgPathArray;
+    NSMutableArray *localImgNameArray;
+    NSString *videoScreenShotName;
+    
     NSInteger screenType;
     NSInteger inputType;
     
@@ -88,7 +92,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)initData
 {
-    [AppManager instance].objectAttachmentFileName = @"";
+    [[AppManager instance].objectAttachmentFileNameArray removeAllObjects];
     
     screenType = INPUT_FIRST_SCREEN;
     inputType = INPUT_PHOTO_TYPE;
@@ -98,7 +102,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.timeLabel.hidden = YES;
     
     localImgArray = [NSMutableArray array];
-    localImgPathArray = [NSMutableArray array];
+    localImgNameArray = [NSMutableArray array];
     
     if ([AppManager instance].logicType == ASSESS_LOGIC_TYPE) {
         self.promptNoteImg.image = [UIImage imageNamed:@"assessPromptNote.png"];
@@ -116,6 +120,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self loadCameraResource];
     
     isFirst = NO;
+    
+    [AppManager instance].objectVideoId = nil;
+    
 }
 
 - (void)adjustFlowView
@@ -126,6 +133,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
         [self.typeFlowView scrollToPage:2];
         [AppManager instance].babyType = 2;
+        
+        [self updateObjectTitle];
+        
         isFirst = YES;
     }
     
@@ -202,11 +212,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.photoScrollView.showsVerticalScrollIndicator = NO;
     self.photoScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    // 加载方式
-    // 1，读取本地文件
-    // NSUInteger localSize = [localImgPathArray count];
-    
-    // 2，读取内存
     NSUInteger localSize = [localImgArray count];
     
     self.photoScrollView.contentSize = CGSizeMake(SCROLL_UNIT_WIDTH * localSize, 50);
@@ -218,10 +223,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         scrollUnitView.userInteractionEnabled = YES;
         UIImageView *localImgView = [[UIImageView alloc] initWithFrame:CGRectMake(4, 4, 56, 56)];
         
-        // 1，加载本地图片
-        // NSData *imageData = [NSData dataWithContentsOfFile:localImgPathArray[i]];
-        // localImgView.image = [UIImage imageWithData:imageData];
-        // 2，读取内存
+        // 从内存读取图片
         localImgView.image = localImgArray[i];
         localImgView.tag = PHOTO_OFFSET + i;
         
@@ -258,6 +260,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // result
     [self addTapGestureRecognizer:self.resultTakePhoto];
     [self addTapGestureRecognizer:self.resultDoneBtn];
+    
+    // video screen shot
+    [self addTapGestureRecognizer:self.delVideoScreenShotView];
+    [self hideVideoScreenShotView];
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -265,7 +271,22 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)updateObjectTitle
+{
+    NSInteger pageNumber = [AppManager instance].babyType;
+    
+    NSString *imgName = @"";
+    
+    if ([AppManager instance].logicType == ASSESS_LOGIC_TYPE) {
+        imgName = [NSString stringWithFormat:@"title_item%d.png", pageNumber+1];
+    } else if ([AppManager instance].logicType == PAWN_LOGIC_TYPE) {
+        imgName = [NSString stringWithFormat:@"title_item%d.png", pageNumber+11];
+    }
+    
+    self.resultTextImg.image = [UIImage imageNamed:imgName];
+    self.resultTextImg.frame = CGRectMake(self.resultTextImg.frame.origin.x, self.resultTextImg.frame.origin.y, self.resultTextImg.image.size.width/2, self.resultTextImg.image.size.height/2);
+}
+
 #pragma mark -
 #pragma mark PagedFlowView Delegate
 - (CGSize)sizeForPageInFlowView:(PagedFlowView *)flowView;{
@@ -277,9 +298,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     [AppManager instance].babyType = pageNumber;
     
-    NSString *imgName = [NSString stringWithFormat:@"title_item%d.png", pageNumber+1];
-    self.resultTextImg.image = [UIImage imageNamed:imgName];
-    self.resultTextImg.frame = CGRectMake(self.resultTextImg.frame.origin.x, self.resultTextImg.frame.origin.y, self.resultTextImg.image.size.width/2, self.resultTextImg.image.size.height/2);
+    [self updateObjectTitle];
+    
 }
 
 #pragma mark -
@@ -310,6 +330,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 //    [self.typeFlowView scrollToPage:pageControl.currentPage];
 }
 
+- (void)showVideoScreenShotView
+{
+    self.videoScreenShotView.hidden = NO;
+    self.delVideoScreenShotView.hidden = NO;
+    self.videoScreenShotBoardView.hidden = NO;
+}
+
+- (void)hideVideoScreenShotView
+{
+    self.videoScreenShotView.hidden = YES;
+    self.delVideoScreenShotView.hidden = YES;
+    self.videoScreenShotBoardView.hidden = YES;
+}
+
 #pragma mark -
 #pragma mark handle action
 - (void)imageviewTouchEvents:(UIGestureRecognizer *)gestureRecognizer
@@ -317,16 +351,28 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     UIView *view = (UIView*)[gestureRecognizer view];
     
+    if ([view isEqual:self.delVideoScreenShotView]) {
+        // 删除视频
+        self.videoScreenShotView.image = nil;
+        [self hideVideoScreenShotView];
+    }
+    
     if (view.tag >= DEL_PHOTO_OFFSET) {
         // 删除图片
         NSInteger imgIndex = view.tag - DEL_PHOTO_OFFSET;
         [localImgArray removeObjectAtIndex:imgIndex];
+        [localImgNameArray removeObjectAtIndex:imgIndex];
+        
+        [CommonUtils removeDocumentFile:@"/image" fileName:localImgNameArray[imgIndex] typeName:@"png"];
         
         // 删除现有显示
         NSArray *viewsToRemove = [self.photoScrollView subviews];
-        for (UIView *v in viewsToRemove)
+        for (UIView *v in viewsToRemove) {
             [v removeFromSuperview];
+        }
         
+        // 删除需要存储的图片名称
+        [[AppManager instance].objectAttachmentFileNameArray removeObjectAtIndex:imgIndex];
 //        [self.photoScrollView removeFromSuperview];
         
         [self loadLocalImageScroll];
@@ -389,7 +435,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
     } else if ([view isEqual:self.doneBtn]) {
 
-        if (![[AppManager instance].objectAttachmentFileName isEqualToString:@""]) {
+        if ([[AppManager instance].objectAttachmentFileNameArray count] > 0) {
 
             ProcessViewController *resultVC = [[ProcessViewController alloc] init];
             [self presentViewController:resultVC animated:YES completion:^{}];
@@ -424,7 +470,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
     } else if ([view isEqual:self.resultDoneBtn]) {
         
-        if (![[AppManager instance].objectAttachmentFileName isEqualToString:@""]) {
+        if ([[AppManager instance].objectAttachmentFileNameArray count] > 0) {
             
             ProcessViewController *resultVC = [[ProcessViewController alloc] init];
             [self presentViewController:resultVC animated:YES completion:^{}];
@@ -447,6 +493,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     [localImgArray removeAllObjects];
+    [localImgNameArray removeAllObjects];
+    
     [self.photoScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
@@ -474,7 +522,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [((AppDelegate *)APP_DELEGATE).window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)doSwitchType:(id)sender {
+- (IBAction)doSwitchInputType:(id)sender {
     
     if (screenType == INPUT_FIRST_SCREEN) {
 
@@ -488,9 +536,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.resultRightImg.hidden = YES;
             self.resultLeftImg.hidden = YES;
             self.photoScrollView.hidden = YES;
-            self.photoView.hidden = NO;
+            
+            if (self.videoScreenShotView.image != nil) {
+                
+                [self showVideoScreenShotView];
+            }
             
         } else if (inputType == INPUT_VIDEO_TYPE) {
+            
+            // 如果正在拍摄，停止时间
+            if (!self.timeLabel.isHidden) {
+                [self clearPlayState];
+                self.videoScreenShotView.image = nil;
+            }
             
             inputType = INPUT_PHOTO_TYPE;
             self.takePhotoBtn.image = [UIImage imageNamed:@"btnTakePhoto.png"];
@@ -500,8 +558,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.resultRightImg.hidden = NO;
             self.resultLeftImg.hidden = NO;
             self.photoScrollView.hidden = NO;
-            self.photoView.hidden = YES;
+            
+            [self hideVideoScreenShotView];
         }
+        
     } else if (screenType == INPUT_SECOND_SCREEN) {
         
         if (inputType == INPUT_PHOTO_TYPE) {
@@ -514,9 +574,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.resultRightImg.hidden = YES;
             self.resultLeftImg.hidden = YES;
             self.photoScrollView.hidden = YES;
-            self.photoView.hidden = NO;
+            
+            if (self.videoScreenShotView.image != nil) {
+
+                [self showVideoScreenShotView];
+            }
             
         } else if (inputType == INPUT_VIDEO_TYPE) {
+            
+            // 如果正在拍摄，停止时间
+            if (!self.timeLabel.isHidden) {
+                [self clearPlayState];
+                self.videoScreenShotView.image = nil;
+            }
             
             inputType = INPUT_PHOTO_TYPE;
             self.resultTakePhoto.image = [UIImage imageNamed:@"btnTakePhoto.png"];
@@ -526,7 +596,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.resultRightImg.hidden = NO;
             self.resultLeftImg.hidden = NO;
             self.photoScrollView.hidden = NO;
-            self.photoView.hidden = YES;
+            
+            [self hideVideoScreenShotView];
         }
     }
 }
@@ -813,17 +884,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 //                [[self cameraButton] setEnabled:YES];
 //                [[self recordButton] setEnabled:YES];
 //                [[self stillButton] setEnabled:YES];
-            }
-            else
-            {
+            } else {
 //                [[self cameraButton] setEnabled:NO];
 //                [[self recordButton] setEnabled:NO];
 //                [[self stillButton] setEnabled:NO];
             }
         });
-    }
-    else
-    {
+    } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
@@ -849,12 +916,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             
             // Turning OFF flash for video recording
             [PhotoViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
-            
-            /*
-            // Start recording to a temporary file.
-            NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie2" stringByAppendingPathExtension:@"mov"]];
-            [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
-            */
 
             /*
             // 生成视频名称
@@ -863,22 +924,23 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
             */
             
+            [CommonUtils removeDocumentFile:@"/video" fileName:@"video" typeName:@"mov"];
+            
             // 保存到文件目录
             NSString *pathName = [CommonUtils getPathName:@"/video"];
-            
             NSString *movieFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
             NSLog(@"movieFilePath = %@", movieFilePath);
-            [CommonUtils removeDocumentFile:movieFilePath];
             
             [[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:movieFilePath] recordingDelegate:self];
 
         } else {
             
             [self takePhoto:INPUT_VIDEO_TYPE];
+            
             // 停止录制
             [[self movieFileOutput] stopRecording];
             // 转码
-            [self doEncodeVideoPre];
+//            [self doEncodeVideoPre];
         }
     });
 }
@@ -908,7 +970,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 // 生成图片
                 NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
                 NSTimeInterval a=[dat timeIntervalSince1970];
-                NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+                NSString *fileName = [NSString stringWithFormat:@"%.0f", a];
 
                 // 保存到文件目录
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -919,53 +981,37 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                     [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:NULL]; //Create folder
                 }
 
-                NSString *photoFilePath = [dataPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", dateId]]; //Add the file name
+                NSString *photoName = [NSString stringWithFormat:@"%@.png", fileName];
+                NSString *photoFilePath = [dataPath stringByAppendingPathComponent:photoName]; //Add the file name
                 
                 // 存储图片
                 [imageData writeToFile:photoFilePath atomically:YES]; //Write the file
                 
                 // 绑定图片名称
-                [AppManager instance].objectAttachmentFileName = [NSString stringWithFormat:@"%@.png", dateId];
+                [[AppManager instance].objectAttachmentFileNameArray addObject:photoName];
                 
                 if ([AppManager instance].logicType == PAWN_LOGIC_TYPE || [AppManager instance].babyType < 3) {
                 
-                    [self postImageMehtod:image];
+                    [self postImageMehtod:image imgNamePath:photoName];
                 }
                 
                 if (type != INPUT_VIDEO_TYPE) {
 
                     // 保存到内存
                     [localImgArray addObject:image];
+                    [localImgNameArray addObject:fileName];
                     // 加载到页面
                     [self loadLocalImageScroll];
                     // 显示照片
                     [self turnPage];
-                    
-                    /*
-                     // 保存照片到文件
-                     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                     
-                     // If you go to the folder below, you will find those pictures
-                     NSLog(@"%@",docDir);
-                     
-                     NSLog(@"saving png");
-                     
-                     NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-                     NSTimeInterval a=[dat timeIntervalSince1970];
-                     NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
-                     
-                     NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@.png", docDir, dateId];
-                     NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(image)];
-                     [data1 writeToFile:pngFilePath atomically:YES];
-                     
-                     // 保存文件地址
-                     [localImgPathArray addObject:pngFilePath];
-                     NSLog(@"saving image done");
-                     */
 
                 } else {
-                    self.photoView.hidden = NO;
-                    self.photoView.image = image;
+                    
+                    if (inputType == INPUT_VIDEO_TYPE) {
+                        // 显示视频截图
+                        self.videoScreenShotView.image = image;
+                        [self showVideoScreenShotView];
+                    }
                 }
             }
         }];
@@ -1045,7 +1091,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.timeLabel.text = showMessage;
     
     if (s > MAXIMUM_DURATION) {
-        // 最多拍摄40s
+        // 最多拍摄30s
         [self clearPlayState];
     }
 }
@@ -1061,15 +1107,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)doEncodeVideoPre
 {
+    
+    // 删除已有的mp4文件
+    [CommonUtils removeDocumentFile:@"/video" fileName:@"video" typeName:@"mp4"];
+    
+    //
     NSString *pathName = [CommonUtils getPathName:@"/video"];
     NSString *movieFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
     NSLog(@"movieFilePath = %@", movieFilePath);
     NSURL *videoURL = [NSURL fileURLWithPath:movieFilePath];
     
-    // 删除已有的mp4文件
-    NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mp4"]];
-    [CommonUtils removeDocumentFile:exportFilePath];
     
+    // 转码
     [self encodeVideo:videoURL];
 }
 
@@ -1082,6 +1131,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVMutableComposition *composition = [AVMutableComposition composition];
     AVMutableCompositionTrack *videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    
     NSArray *assetVideoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
     if (assetVideoTracks.count <= 0)
     {
@@ -1097,15 +1147,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVAssetTrack *assetAudioTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     [audioTrack insertTimeRange:assetAudioTrack.timeRange ofTrack:assetAudioTrack atTime:CMTimeMake(0, 1) error:nil];
     
-    // Begin
-//    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    
     // Export to mp4
     NSString *mp4Quality = AVAssetExportPresetMediumQuality;
     NSString *pathName = [CommonUtils getPathName:@"/video"];
     NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mp4"]];
     NSLog(@"export FilePath = %@", exportFilePath);
-    
     NSURL *exportUrl = [NSURL fileURLWithPath:exportFilePath];
     
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:mp4Quality];
@@ -1119,17 +1165,23 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         switch ([exportSession status])
         {
             case AVAssetExportSessionStatusCompleted:
+            {
                 NSLog(@"MP4 Successful!");
-//                [self showTopMessage:@"转码成功"];
-//                [self showTimeAlert:@"结束" message:[NSString stringWithFormat:@"转码成功, 花费 %.2fs", duration]];
-//                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                // TODO 上传视频
+                NSData *movieData = [NSData dataWithContentsOfURL:exportUrl];
+                [self postVideoMehtod:movieData];
+            }
                 break;
+                
             case AVAssetExportSessionStatusFailed:
                 NSLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
                 break;
+                
             case AVAssetExportSessionStatusCancelled:
                 NSLog(@"Export canceled");
                 break;
+                
             default:
                 break;
         }
@@ -1138,18 +1190,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     return YES;
 }
 
-- (void) convertFinish
-{
-
-    CGFloat duration = [[NSDate date] timeIntervalSinceDate:_startDate];
-    [self showTimeAlert:@"结束" message:[NSString stringWithFormat:@"转码成功, 花费 %.2fs", duration]];
-    
-//    _convertTime.text = [NSString stringWithFormat:@"%.2f s", duration];
-//    _mp4Size.text = [NSString stringWithFormat:@"%d kb", [self getFileSize:_mp4Path]];
-//    _hasMp4 = YES;
-}
-
-- (void)postImageMehtod:(UIImage *)imageToPost
+- (void)postImageMehtod:(UIImage *)imageToPost imgNamePath:(NSString *)imgNamePath
 {
     
     NSString *BoundaryConstant = @"BoundaryConstant";
@@ -1160,7 +1201,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];
     [request setTimeoutInterval:30];
-    [request setHTTPMethod:@"POST"];
+    [request setHTTPMethod:POST_METHOD];
     
     // set Content-Type in HTTP header
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
@@ -1169,7 +1210,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // post body
     NSMutableData *body = [NSMutableData data];
     
-    NSDictionary *params = @{@"fileName": [AppManager instance].objectAttachmentFileName};
+    NSDictionary *params = @{@"fileName" : imgNamePath};
     // add params (all params are strings)
     for (NSString *param in params) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1181,7 +1222,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSData *imageData = UIImageJPEGRepresentation(imageToPost, 0.7);
     if (imageData) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\".jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:imageData];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1203,48 +1244,93 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
-- (void)postVideoMehtod
+- (void)postVideoMehtod:(NSData *)videoToPost
 {
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
-    NSString *typeName = @"image";
-    
-    // Local dir
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    
-    // video
-    //    typeName = @"video";
-    //    NSDictionary *parameters = @{@"fileName": @"test.mov"};
-    //    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/video"];
-    //    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"test" stringByAppendingPathExtension:@"mov"]];
-    
-    // photo
-    NSDictionary *parameters = @{@"fileName": @"1428661887.png"};
-    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"/image"];
-    NSString *dataFilePath = [dataPath stringByAppendingPathComponent:[@"1428661887" stringByAppendingPathExtension:@"png"]];
-    
-    NSLog(@"dataFilePath = %@", dataFilePath);
-    
-    NSURL *filePath = [NSURL fileURLWithPath:dataFilePath];
-    
-    [manager POST:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileURL:filePath name:@"image" error:nil];
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Success: %@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[dat timeIntervalSince1970];
+    NSString *imgNamePath = [NSString stringWithFormat:@"%.0f.mp4", a];
     
     
-    //    NSString *videoURL = [[NSBundle mainBundle] pathForResource:@"myVideo" ofType:@"mov"];
-    //    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath: videoURL]];
+    NSString *BoundaryConstant = @"BoundaryConstant";
+    NSString *FileParamConstant = @"BoundaryConstant";
     
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST_METHOD];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    NSDictionary *params = @{@"fileName" : imgNamePath};
+    // add params (all params are strings)
+    for (NSString *param in params) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    // add image data
+    if (videoToPost) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\".mp4\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // application/octet-stream
+        // video/quicktime
+        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:videoToPost];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg"]];
+    
+    //建立连接（异步的response在专门的代理协议中实现）
+    [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+- (void)uploadVideo
+{
+    NSString *pathName = [CommonUtils getPathName:@"/video"];
+    NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
+    
+    NSURL *fileURL = [NSURL fileURLWithPath:exportFilePath];
+    NSData *movieData = [NSData dataWithContentsOfURL:fileURL];
+    
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg"]];
+    
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[dat timeIntervalSince1970];
+    NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+    
+    [request setPostValue:dateId forKey:@"fileName"];
+    
+    [request setData:movieData withFileName:@"video.mov" andContentType:@"multipart/form-data" forKey:@"video"];
+    
+    [request setTimeOutSeconds:500];
+    [request setRequestMethod:POST_METHOD];
+    
+    [request startSynchronous];
 }
 
 #pragma mark -
-#pragma mark - URLConnectionDataDelegate 异步加载数据需要下面几个方法常用的有四个方法
+#pragma mark - URLConnectionDataDelegate 异步网络传输数据需要下面几个方法常用的有四个方法
 //接受服务器响应－－接收到服务器回应的时候会执行该方法
 -(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     

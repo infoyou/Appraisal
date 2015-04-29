@@ -142,7 +142,6 @@
     UIBarButtonItem *rightBarBtnItem = [[UIBarButtonItem alloc] initWithCustomView:rightBut];
     paneViewController.navigationItem.rightBarButtonItem = rightBarBtnItem;
     
-    
     UINavigationController *paneNavigationViewController = [[UINavigationController alloc] initWithRootViewController:paneViewController];
     [self.dynamicsDrawerViewController setPaneViewController:paneNavigationViewController animated:animateTransition completion:nil];
     

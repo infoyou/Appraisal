@@ -240,6 +240,24 @@ static NSBundle *bundle = nil;
     return pathName;
 }
 
+#pragma mark
+#pragma mark - dirName:[image, video] fileName typeName:[png, mov, mp4]
++ (void)removeDocumentFile:(NSString *)dirName fileName:(NSString *)fileName typeName:(NSString *)typeName
+{
+    
+    NSString *pathName = [self getPathName:dirName];
+    
+    NSString *movieFilePath = [pathName stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:typeName]];
+    
+    NSFileManager* manager = [[NSFileManager alloc] init];
+    
+    NSError *error = nil;
+    if ([manager fileExistsAtPath:movieFilePath]) {
+        [manager removeItemAtPath:movieFilePath error:&error];
+    }
+    
+}
+
 + (void)removeDocumentFile:(NSString *)dataPath
 {
 

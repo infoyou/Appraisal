@@ -16,4 +16,8 @@
 
 @property (weak, nonatomic) IBOutlet UIWebView *mWebView;
 
+@property (weak, nonatomic) IBOutlet UIView *activityIndicatorViewBG;
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
+
 @end

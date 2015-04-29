@@ -37,7 +37,11 @@
 @property (weak, nonatomic) IBOutlet UIView *resultView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
-@property (weak, nonatomic) IBOutlet UIImageView *photoView;
+
+@property (weak, nonatomic) IBOutlet UIImageView *delVideoScreenShotView;
+@property (weak, nonatomic) IBOutlet UIImageView *videoScreenShotView;
+@property (weak, nonatomic) IBOutlet UIImageView *videoScreenShotBoardView;
+
 @property (weak, nonatomic) IBOutlet UIImageView *resultTextImg;
 @property (weak, nonatomic) IBOutlet UIImageView *resultRightImg;
 @property (weak, nonatomic) IBOutlet UIImageView *resultLeftImg;

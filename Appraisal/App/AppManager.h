@@ -45,7 +45,8 @@
 @property (nonatomic, assign) BabyType babyType;
 // 标的物记录号
 @property (nonatomic, copy) NSString *objectRecordId;
-@property (nonatomic, copy) NSString *objectAttachmentFileName;
+@property (nonatomic, copy) NSString *objectVideoId;
+@property (nonatomic, retain) NSMutableArray *objectAttachmentFileNameArray;
 @property (nonatomic, retain) NSMutableArray *objectUploadImgIdArray;
 
 @property (nonatomic, copy) NSString *longitude;

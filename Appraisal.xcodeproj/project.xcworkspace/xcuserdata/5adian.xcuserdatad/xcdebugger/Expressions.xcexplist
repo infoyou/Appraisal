@@ -3,10 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[LeftMenuViewController updateCellStateToNormal]:LeftMenuViewController.m">
+         contextName = "-[PhotoViewController doEncodeVideoPre]:PhotoViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "iconView.image">
+               value = "body">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -25,10 +25,26 @@
                value = "iconView.image">
             </PersistentString>
             <PersistentString
-               value = "[CommonUtils loadImageFromDocument:@&quot;/image&quot; file:assessObject.fileName]">
+               value = "localImage">
             </PersistentString>
             <PersistentString
-               value = "localImage">
+               value = "[CommonUtils loadImageFromDocument:@&quot;/image&quot; file:assessObject.fileName]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PhotoViewController postVideoMehtod:]:PhotoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "body">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[LeftMenuViewController updateCellStateToNormal]:LeftMenuViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "iconView.image">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

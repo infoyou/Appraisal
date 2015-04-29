@@ -6,8 +6,11 @@
 //  Copyright (c) 2015年 Adam. All rights reserved.
 //
 
-@interface UIWebViewController : UIViewController  <UIWebViewDelegate>
+#import "RootViewController.h"
+
+@interface UIWebViewController : RootViewController  <UIWebViewDelegate>
 
 @property (nonatomic, strong) UIWebView *webView;
+
 
 @end

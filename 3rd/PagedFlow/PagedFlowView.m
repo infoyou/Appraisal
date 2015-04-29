@@ -121,7 +121,7 @@
                     cell.frame = UIEdgeInsetsInsetRect(originCellFrame, UIEdgeInsetsMake(inset, inset, inset, inset));
                 }
                 
-                NSLog(@"No.%d alpha = %f _currentPageIndex = %d", (NSInteger)cell.frame.origin.x/52, cell.alpha, _currentPageIndex);
+//                NSLog(@"No.%d alpha = %f _currentPageIndex = %d", (NSInteger)cell.frame.origin.x/52, cell.alpha, _currentPageIndex);
                 
                 [UIView commitAnimations];
                 

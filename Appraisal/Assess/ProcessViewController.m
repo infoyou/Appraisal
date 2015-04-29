@@ -37,6 +37,9 @@
 {
     [super viewDidLoad];
     
+    self.activityIndicatorViewBG.layer.cornerRadius = 6;
+    self.activityIndicatorViewBG.layer.masksToBounds = YES;
+    
     logicType = [AppManager instance].logicType;
 
     [self loadTitle];
@@ -314,6 +317,9 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)aWebView
 {
+    self.activityIndicatorViewBG.hidden = NO;
+    self.activityIndicatorView.hidden = NO;
+    [self.activityIndicatorView startAnimating];
     
     NSLog(@"webViewDidStartLoad");
 }
@@ -382,6 +388,14 @@
                     }
                 }
                 
+                // 判断是否有视频文件需要上传
+                if ([AppManager instance].objectVideoId != nil) {
+
+                    [mediaDict setObject:[AppManager instance].objectVideoId forKey:@"mediaId"];
+                    [mediaDict setObject:@"vedio" forKey:@"mediatype"];
+                    [mediaArray addObject:mediaDict];
+                }
+                
                 [dataDict setObject:mediaArray forKey:@"media"];
             }
             
@@ -398,7 +412,7 @@
                  [HttpRequestData dataWithDic:paramDict
                                   requestType:POST_METHOD
                                     serverUrl:HOST_URL
-                                     andBlock:^(NSString*requestStr) {
+                                     andBlock:^(NSString* requestStr) {
                                          
                                          if (completionBlock) {
                                              completionBlock();
@@ -509,6 +523,18 @@
         }
         
         return NO;
+    }  else if([[[url scheme] lowercaseString] isEqualToString:@"hideloading"]) {
+        
+        // 处理js的alert
+        if([[url host] isEqualToString:@"data"])
+        {
+            
+            [self.activityIndicatorView stopAnimating];
+            self.activityIndicatorView.hidden = YES;
+            self.activityIndicatorViewBG.hidden = YES;
+        }
+        
+        return NO;
     }
     
     return YES;
@@ -551,7 +577,24 @@
     assessInfo.logicType = @(type);
 
     assessInfo.attachType = @(INPUT_PHOTO_TYPE);
-    assessInfo.fileName = [AppManager instance].objectAttachmentFileName;
+    
+    NSUInteger imgFileCount = [[AppManager instance].objectAttachmentFileNameArray count];
+    
+    if (imgFileCount > 0) {
+        
+        NSMutableString *imgFileStr = [NSMutableString string];
+        
+        for (NSUInteger index = 0; index < imgFileCount; index ++) {
+            
+            [imgFileStr appendString:[AppManager instance].objectAttachmentFileNameArray[index]];
+            [imgFileStr appendString:@"$"];
+        }
+        
+        assessInfo.fileName = imgFileStr;
+    } else {
+        
+        assessInfo.fileName = @"";
+    }
     
     if ([AppManager instance].logicType == ASSESS_LOGIC_TYPE) {
         

@@ -107,6 +107,7 @@
     
     if ([assessObject.fileName length] > 0)
     {
+        NSString *localFileName = [assessObject.fileName componentsSeparatedByString:@"$"][0];
         
         UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
         if (userImage) { // if the dictionary of images has it just display it
@@ -114,7 +115,7 @@
         } else {
             
 //            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
-            NSString *filePath = [CommonUtils loadImagePath:@"/image" file:assessObject.fileName];
+            NSString *filePath = [CommonUtils loadImagePath:@"/image" file:localFileName];
             
             BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

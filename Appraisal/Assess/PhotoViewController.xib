@@ -9,10 +9,10 @@
             <connections>
                 <outlet property="actionView" destination="OkB-YO-C0N" id="Igm-fQ-5wc"/>
                 <outlet property="cameraImgView" destination="55q-R5-fEj" id="igP-F7-bIP"/>
+                <outlet property="delVideoScreenShotView" destination="hdz-ts-p1f" id="vWv-3W-0h4"/>
                 <outlet property="doneBtn" destination="vrx-et-RAS" id="VEw-I9-ssp"/>
                 <outlet property="photoBgView" destination="pq9-JB-9Jf" id="43Z-fP-2xP"/>
                 <outlet property="photoScrollView" destination="8cr-UA-K4i" id="o9d-Xm-FIf"/>
-                <outlet property="photoView" destination="5om-vI-N2a" id="ZwJ-Md-aW1"/>
                 <outlet property="previewView" destination="1YN-Xz-2Zz" id="eOl-gI-5Fb"/>
                 <outlet property="promptNoteImg" destination="VHI-Cx-psa" id="g2I-zd-X4b"/>
                 <outlet property="resultDoneBtn" destination="kbf-SZ-lOw" id="sRi-mA-imZ"/>
@@ -26,6 +26,8 @@
                 <outlet property="titleLabel" destination="7xv-WK-dWx" id="Sdb-Vs-tKb"/>
                 <outlet property="typeFlowView" destination="0EI-0f-pBu" id="5lb-Mr-Um4"/>
                 <outlet property="videoImgView" destination="4GO-hv-zfY" id="kjp-kR-H1M"/>
+                <outlet property="videoScreenShotBoardView" destination="Eyg-ub-3wn" id="IkG-4J-PwX"/>
+                <outlet property="videoScreenShotView" destination="5om-vI-N2a" id="H5y-SW-2aj"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="z1T-QA-Jhq"/>
             </connections>
         </placeholder>
@@ -110,8 +112,16 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="229"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photoBoard.png" id="Eyg-ub-3wn">
+                            <rect key="frame" x="127" y="67" width="64" height="64"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="5om-vI-N2a">
-                            <rect key="frame" x="129" y="66" width="64" height="64"/>
+                            <rect key="frame" x="131" y="71" width="56" height="56"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delete_photo.png" id="hdz-ts-p1f">
+                            <rect key="frame" x="170" y="62" width="30" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="title_item1.png" id="KSc-I8-SNe">
@@ -194,7 +204,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="doSwitchType:" destination="-1" eventType="touchUpInside" id="qx2-eO-rOc"/>
+                        <action selector="doSwitchInputType:" destination="-1" eventType="touchUpInside" id="2h3-zg-c62"/>
                     </connections>
                 </button>
             </subviews>
@@ -209,9 +219,11 @@
         <image name="btnDone.png" width="245" height="128"/>
         <image name="btnTakePhoto.png" width="245" height="128"/>
         <image name="camera.png" width="61" height="51"/>
+        <image name="delete_photo.png" width="44" height="44"/>
         <image name="focus.png" width="128" height="103"/>
         <image name="home.png" width="39" height="39"/>
         <image name="left.png" width="30" height="41"/>
+        <image name="photoBoard.png" width="135" height="135"/>
         <image name="photoBottomBg.png" width="640" height="437"/>
         <image name="photoLine.png" width="640" height="128"/>
         <image name="photoTopBg.png" width="106" height="68"/>

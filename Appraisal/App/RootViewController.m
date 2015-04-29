@@ -467,4 +467,39 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
+#pragma mark - activity indicator view
+- (void)addActivityIndicatorView
+{
+
+    // bg
+    self.activityIndicatorViewBG = [[UIView alloc] initWithFrame:CGRectMake(126, 282, 67, 67)];
+    self.activityIndicatorViewBG.backgroundColor = [UIColor grayColor];
+    self.activityIndicatorViewBG.alpha = 0.7f;
+    
+    // activity indicator view
+    self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicatorView.frame = CGRectMake(15, 15, 37, 37);
+    [self.activityIndicatorViewBG addSubview:self.activityIndicatorView];
+    
+    self.activityIndicatorViewBG.layer.cornerRadius = 6;
+    self.activityIndicatorViewBG.layer.masksToBounds = YES;
+    
+    [self.view addSubview:self.activityIndicatorViewBG];
+}
+
+- (void)showActivityIndicatorView
+{
+    
+    self.activityIndicatorViewBG.hidden = NO;
+    self.activityIndicatorView.hidden = NO;
+    [self.activityIndicatorView startAnimating];
+}
+
+- (void)closeActivityIndicatorView
+{
+    [self.activityIndicatorView stopAnimating];
+    self.activityIndicatorView.hidden = YES;
+    self.activityIndicatorViewBG.hidden = YES;
+}
+
 @end

@@ -74,7 +74,8 @@
     }
     
     // Object Image
-    photoImg.image = [CommonUtils loadImageFromDocument:@"/image" file:assessObject.fileName];
+    NSString *localFileName = [assessObject.fileName componentsSeparatedByString:@"$"][0];
+    photoImg.image = [CommonUtils loadImageFromDocument:@"/image" file:localFileName];
 }
 
 - (void)adjustView

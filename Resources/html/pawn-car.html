@@ -41,9 +41,6 @@
         </div>
 	</div>
     <div id="isLoadComplete" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute; z-index:-1;"></div>
-    <!--<div class="loading" >-->
-        <!--<div class="loadBox"><img src="loading2.gif" style="vertical-align:middle;"></div>-->
-    <!--</div>-->
     <script type="text/javascript">
 		$(function(){
 			var opt = {
@@ -60,7 +57,7 @@
 			};
    				 $("#cardDate").mobiscroll(opt).date(opt);
 				ProgressAnimate(50);	
-				
+				hideLoading();
 				
 		})
 		var SubmitData = {}

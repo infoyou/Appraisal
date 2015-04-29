@@ -51,6 +51,7 @@
 
 + (NSString *)getPathName:(NSString *)dirName;
 + (void)removeDocumentFile:(NSString *)fileName;
++ (void)removeDocumentFile:(NSString *)dirName fileName:(NSString *)fileName typeName:(NSString *)typeName;
 + (NSString *)documentsDirectory;
 + (CGFloat)currentOSVersion;
 

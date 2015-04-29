@@ -50,6 +50,7 @@ static AppManager *shareInstance = nil;
 - (void)prepareData
 {
     [AppManager instance].objectUploadImgIdArray = [NSMutableArray array];
+    [AppManager instance].objectAttachmentFileNameArray = [NSMutableArray array];
     
     [self initLocation];
 }

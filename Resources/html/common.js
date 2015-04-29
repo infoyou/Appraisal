@@ -58,6 +58,26 @@ function SubmitToApp(apiName,SubmitData){
 		$("#isLoadComplete").html("<iframe scrolling='no' src='"+iosUrlString+"' frameborder='0'></iframe>");
 	}
 }
+/**
+ * 显示loading
+ */
+function showLoading(){
+	if(getParam("plat") == "android"){
+		window.jsObj.showLoading();	
+	}else{
+		$("#isLoadComplete").html("<iframe scrolling='no' src='showLoading://data?' frameborder='0'></iframe>");
+	}
+}
+/**
+ * 隐藏loading
+ */
+function hideLoading(){
+	if(getParam("plat") == "android"){
+		window.jsObj.hideLoading();	
+	}else{
+		$("#isLoadComplete").html("<iframe scrolling='no' src='hideLoading://data?' frameborder='0'></iframe>");
+	}
+}
 
 function AppReturnFun(ReturnFunName,Data){
 	ReturnFunName(Data);	

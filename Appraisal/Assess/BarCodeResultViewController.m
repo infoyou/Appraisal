@@ -11,7 +11,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"扫描页面";
+    self.title = @"扫一扫";
     
     NSURL *url = [NSURL URLWithString:[AppManager instance].webUrl];
     [self.mWebView loadRequest:[[NSURLRequest alloc] initWithURL:url]];

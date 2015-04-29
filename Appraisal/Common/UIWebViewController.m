@@ -9,9 +9,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.webView.frame = (CGRect){/*CGPointMake(0, 65)*/ CGPointZero, self.view.frame.size};
     [self.view addSubview:self.webView];
+    
+    [self addActivityIndicatorView];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -37,6 +41,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+    /*
     UIActivityIndicatorView *actView;
     for ( id object in webView.subviews ) {
         if ([object isMemberOfClass:[UIActivityIndicatorView class]]) {
@@ -46,10 +51,14 @@
     NSLog(@"Web view did start loading");
     [actView startAnimating];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    */
+    
+    [self showActivityIndicatorView];
 }
 
 - (void)webViewDidFinishLoad: (UIWebView *)webView
 {
+    /*
     UIActivityIndicatorView *actView;
     for ( id object in webView.subviews ) {
         if ([object isMemberOfClass:[UIActivityIndicatorView class]]) {
@@ -59,6 +68,9 @@
     NSLog(@"Web view did finish loading");
     [actView stopAnimating];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    */
+    
+    [self closeActivityIndicatorView];
     
     // 禁用用户选择
     [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitUserSelect='none';"];

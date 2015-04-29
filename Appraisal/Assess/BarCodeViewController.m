@@ -15,7 +15,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"扫码";
+    self.title = @"扫一扫";
     
     ZBarImageScanner *imageScanner = [[ZBarImageScanner alloc] init];
     readerView = [[ZBarReaderView alloc] initWithImageScanner:imageScanner];
@@ -55,7 +55,7 @@
     
     // Back
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(76.25, SCREEN_HEIGHT - 80, 167.5, 64)];
-    backImg.image = [UIImage imageNamed:@"backGujia.png"];
+    backImg.image = [UIImage imageNamed:@"bottomBackHome.png"];
     [self.view addSubview:backImg];
     
     [self addTapGestureRecognizer:backImg];
