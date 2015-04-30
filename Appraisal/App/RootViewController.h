@@ -26,7 +26,7 @@
 #import "CommonUtils.h"
 #import "StringCategory.h"
 
-@interface RootViewController : UIViewController <UIGestureRecognizerDelegate>
+@interface RootViewController : UIViewController <UIGestureRecognizerDelegate, CLLocationManagerDelegate>
 {
 
 }
@@ -37,8 +37,6 @@
 
 // Share
 @property (nonatomic, strong) HYActivityView *activityView;
-
-@property (nonatomic, retain) NSMutableData *myData;
 
 // activity indicator
 @property (nonatomic, strong) UIView *activityIndicatorViewBG;

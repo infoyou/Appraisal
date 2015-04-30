@@ -389,9 +389,9 @@
                 }
                 
                 // 判断是否有视频文件需要上传
-                if ([AppManager instance].objectVideoId != nil) {
+                if ([AppManager instance].objectUploadVideoId != nil) {
 
-                    [mediaDict setObject:[AppManager instance].objectVideoId forKey:@"mediaId"];
+                    [mediaDict setObject:[AppManager instance].objectUploadVideoId forKey:@"mediaId"];
                     [mediaDict setObject:@"vedio" forKey:@"mediatype"];
                     [mediaArray addObject:mediaDict];
                 }

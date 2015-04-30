@@ -121,7 +121,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     isFirst = NO;
     
-    [AppManager instance].objectVideoId = nil;
+    [AppManager instance].objectUploadVideoId = nil;
     
 }
 
@@ -941,7 +941,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             // 转码
             // [self doEncodeVideoPre];
             // 上传
-            [self doUploadVideoPre];
+             [self doUploadVideoPre];
         }
     });
 }
@@ -1108,14 +1108,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)doUploadVideoPre
 {
-    // 得到本地视频文件转换成NSData
-    NSString *pathName = [CommonUtils getPathName:@"/video"];
-    NSString *movieFilePath = [pathName stringByAppendingPathComponent:[AppManager instance].objectVideoFileName];
-    NSLog(@"movieFilePath = %@", movieFilePath);
-    NSURL *videoURL = [NSURL fileURLWithPath:movieFilePath];
-    NSData *movieData = [NSData dataWithContentsOfURL:videoURL];
     
-    [self postVideoMehtod:movieData];
+    [self postVideoMehtod];
 }
 
 - (void)doEncodeVideoPre
@@ -1180,8 +1174,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 NSLog(@"MP4 Successful!");
                 
                 // TODO 上传视频
-                NSData *movieData = [NSData dataWithContentsOfURL:exportUrl];
-                [self postVideoMehtod:movieData];
+                [self postVideoMehtod];
             }
                 break;
                 
@@ -1204,8 +1197,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)postImageMehtod:(UIImage *)imageToPost imgNamePath:(NSString *)imgNamePath
 {
     
-    NSString *BoundaryConstant = @"BoundaryConstant";
-    NSString *FileParamConstant = @"BoundaryConstant";
+    NSString *BoundaryConstant = @"BoundaryConstantImage";
+    NSString *FileParamConstant = @"FileParamConstantImage";
     
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -1252,14 +1245,78 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" ]];
 
     //建立连接（异步的response在专门的代理协议中实现）
-    [NSURLConnection connectionWithRequest:request delegate:self];
+//    [NSURLConnection connectionWithRequest:request delegate:self];
+    
+    [NSURLConnection
+     sendAsynchronousRequest:request
+     queue:[[NSOperationQueue alloc] init]
+     completionHandler:^(NSURLResponse *response,
+                         NSData *data,
+                         NSError *error)
+     {
+         
+         if ([data length] >0 && error == nil)
+         {
+             // DO YOUR WORK HERE
+             NSString *backMsg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+             DLog(@"image backMsg=%@", backMsg);
+             
+             // 解析数据
+             NSDictionary* backDic = [HttpRequestData jsonValue:backMsg];
+             NSLog(@"requestStr = %@", backDic);
+             
+             if (backDic != nil) {
+                 
+                 NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
+                 
+                 if ( [errCodeStr integerValue] == 0 ) {
+                     
+                     NSDictionary *msgDict = [backDic objectForKey:@"result"];
+                     
+                     NSString *resultMsg = @"";
+                     
+                     if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSNumber class]]) {
+                         
+                         resultMsg = [NSString stringWithFormat:@"%@", [msgDict objectForKey:@"Id"]];
+                     } else if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSString class]]) {
+                         
+                         resultMsg = [msgDict objectForKey:@"Id"];
+                     }
+                     
+                     if (resultMsg && resultMsg.length > 0) {
+                         NSLog(@"resultId = %@", resultMsg);
+                         NSLog(@"FileUrl = %@", [msgDict objectForKey:@"FileUrl"]);
+                         
+                         [[AppManager instance].objectUploadImgIdArray addObject:resultMsg];
+                     } else {
+                         NSLog(@"无效的id");
+                     }
+                 }
+             }
+             
+         } else if ([data length] == 0 && error == nil) {
+             NSLog(@"Nothing was downloaded.");
+         } else if (error != nil) {
+             NSLog(@"Error = %@", error);
+         }
+     }];
+
 }
 
-- (void)postVideoMehtod:(NSData *)videoToPost
+- (void)postVideoMehtod
 {
     
-    NSString *BoundaryConstant = @"BoundaryConstant";
-    NSString *FileParamConstant = @"BoundaryConstant";
+    // 得到本地视频文件转换成NSData
+    NSString *pathName = [CommonUtils getPathName:@"/video"];
+    NSString *movieFilePath = [pathName stringByAppendingPathComponent:[AppManager instance].objectVideoFileName];
+//    NSString *movieFilePath = [pathName stringByAppendingPathComponent:@"video.mp4"];
+    NSLog(@"movieFilePath = %@", movieFilePath);
+    NSURL *videoURL = [NSURL fileURLWithPath:movieFilePath];
+    NSData *videoToPost = [NSData dataWithContentsOfURL:videoURL];
+    
+    
+    NSString *BoundaryConstant = @"BoundaryConstantVideo";
+    NSString *FileParamConstant = @"FileParamConstantVideo";
     
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -1276,6 +1333,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSMutableData *body = [NSMutableData data];
     
     NSDictionary *params = @{@"fileName" : [AppManager instance].objectVideoFileName};
+//    NSDictionary *params = @{@"fileName" : @"video.mp4"};
+    
     // add params (all params are strings)
     for (NSString *param in params) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1285,13 +1344,16 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // add image data
     if (videoToPost) {
+        
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\".mov\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\".mp4\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
         
         // application/octet-stream
         // video/quicktime
-        [body appendData:[@"Content-Type: video/quicktime\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:videoToPost];
+        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[NSData dataWithData:videoToPost]];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
@@ -1306,103 +1368,60 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // set URL
     [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg"]];
-    
-    //建立连接（异步的response在专门的代理协议中实现）
-    [NSURLConnection connectionWithRequest:request delegate:self];
-}
 
-- (void)uploadVideo
-{
-    NSString *pathName = [CommonUtils getPathName:@"/video"];
-    NSString *exportFilePath = [pathName stringByAppendingPathComponent:[@"video" stringByAppendingPathExtension:@"mov"]];
-    
-    NSURL *fileURL = [NSURL fileURLWithPath:exportFilePath];
-    NSData *movieData = [NSData dataWithContentsOfURL:fileURL];
-    
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg"]];
-    
-    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-    NSTimeInterval a=[dat timeIntervalSince1970];
-    NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
-    
-    [request setPostValue:dateId forKey:@"fileName"];
-    
-    [request setData:movieData withFileName:@"video.mov" andContentType:@"multipart/form-data" forKey:@"video"];
-    
-    [request setTimeOutSeconds:500];
-    [request setRequestMethod:POST_METHOD];
-    
-    [request startSynchronous];
-}
+    [NSURLConnection
+     sendAsynchronousRequest:request
+     queue:[[NSOperationQueue alloc] init]
+     completionHandler:^(NSURLResponse *response,
+                         NSData *data,
+                         NSError *error)
+     {
+         
+         if ([data length] >0 && error == nil)
+         {
+             // DO YOUR WORK HERE
+             NSString *backMsg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+             DLog(@"video backMsg=%@", backMsg);
 
-#pragma mark -
-#pragma mark - URLConnectionDataDelegate 异步网络传输数据需要下面几个方法常用的有四个方法
-//接受服务器响应－－接收到服务器回应的时候会执行该方法
--(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    
-    DLog(@"服务器响应");
-    
-    self.myData = [NSMutableData dataWithCapacity:5000];
-}
-
-//接收服务器数据－－接收服务器传输数据的时候会调用，会根据数据量的大小，多次执行
--(void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    DLog(@"服务器返回数据");
-    
-    //将返回数据放入缓存区
-    [self.myData appendData:data];
-}
-
-//显示数据，直到所有的数据接收完毕
--(void) connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    DLog(@"数据接受完毕");
-    NSString *backMsg = [[NSString alloc] initWithData:self.myData encoding:NSUTF8StringEncoding];
-    DLog(@"backMsg=%@", backMsg);
-    
-    NSDictionary* backDic = [HttpRequestData jsonValue:backMsg];
-    NSLog(@"requestStr = %@", backDic);
-    
-    if (backDic != nil) {
-        
-        NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
-        
-        if ( [errCodeStr integerValue] == 0 ) {
-            
-            NSDictionary *msgDict = [backDic objectForKey:@"result"];
-            
-            NSString *resultMsg = @"";
-            
-            if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSNumber class]]) {
-                
-                resultMsg = [NSString stringWithFormat:@"%@", [msgDict objectForKey:@"Id"]];
-            } else if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSString class]]) {
-                
-                resultMsg = [msgDict objectForKey:@"Id"];
-            }
-            
-            if (resultMsg && resultMsg.length > 0) {
-                NSLog(@"resultId = %@", resultMsg);
-                NSLog(@"FileUrl = %@", [msgDict objectForKey:@"FileUrl"]);
-                
-                [[AppManager instance].objectUploadImgIdArray addObject:resultMsg];
-            } else {
-                NSLog(@"无效的id");
-            }
-        }
-    }
-    
-    /*
-     {"errcode":0,"errmsg":"ok","result":{"Id":1715,"FileUrl":"http://115.29.161.226:85/Upload/weixin/Images/37b72286-1c8c-4921-a6ea-2af355acb6ab.jpg"}}
-     */
-    
-}
-
-//接受失败的时候调用的方法（断网或者是连接超时）
--(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    DLog(@"数据接受失败，失败原因：%@", [error localizedDescription]);
+             // 解析数据
+             NSDictionary* backDic = [HttpRequestData jsonValue:backMsg];
+             NSLog(@"requestStr = %@", backDic);
+             
+             if (backDic != nil) {
+                 
+                 NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
+                 
+                 if ( [errCodeStr integerValue] == 0 ) {
+                     
+                     NSDictionary *msgDict = [backDic objectForKey:@"result"];
+                     
+                     NSString *resultMsg = @"";
+                     
+                     if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSNumber class]]) {
+                         
+                         resultMsg = [NSString stringWithFormat:@"%@", [msgDict objectForKey:@"Id"]];
+                     } else if ([[msgDict objectForKey:@"Id"] isKindOfClass:[NSString class]]) {
+                         
+                         resultMsg = [msgDict objectForKey:@"Id"];
+                     }
+                     
+                     if (resultMsg && resultMsg.length > 0) {
+                         NSLog(@"resultId = %@", resultMsg);
+                         NSLog(@"FileUrl = %@", [msgDict objectForKey:@"FileUrl"]);
+                         
+                         [AppManager instance].objectUploadVideoId = resultMsg;
+                     } else {
+                         NSLog(@"无效的id");
+                     }
+                 }
+             }
+             
+         } else if ([data length] == 0 && error == nil) {
+             NSLog(@"Nothing was downloaded.");
+         } else if (error != nil) {
+             NSLog(@"Error = %@", error);
+         }
+     }];
 }
 
 #pragma mark - image to full screen

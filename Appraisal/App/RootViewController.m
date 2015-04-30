@@ -1,12 +1,11 @@
 
 #import "RootViewController.h"
 
-@interface RootViewController () <CLLocationManagerDelegate>
+@interface RootViewController ()
 
 @end
 
 @implementation RootViewController
-@synthesize myData;
 @synthesize locationManager;
 @synthesize currentLocation;
 
@@ -56,46 +55,6 @@
 - (void)adjustView
 {
     
-}
-
-#pragma mark -
-#pragma mark - URLConnectionDataDelegate 异步加载数据需要下面几个方法常用的有四个方法
-//接受服务器响应－－接收到服务器回应的时候会执行该方法
--(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    
-    NSLog(@"服务器响应");
-    
-    self.myData = [NSMutableData dataWithCapacity:5000];
-}
-
-//接收服务器数据－－接收服务器传输数据的时候会调用，会根据数据量的大小，多次执行
--(void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSLog(@"服务器返回数据");
-    
-    //将返回数据放入缓存区
-    [self.myData appendData:data];
-}
-
-//显示数据，直到所有的数据接收完毕
--(void) connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSLog(@"数据接受完毕");
-    
-    NSString *result = [[NSString alloc] initWithData:myData encoding:NSUTF8StringEncoding];
-    NSLog(@"result=%@", result);
-}
-
-//接受失败的时候调用的方法（断网或者是连接超时）
--(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"数据接受失败，失败原因：%@", [error localizedDescription]);
-    
-    [[[UIAlertView alloc] initWithTitle:[error localizedDescription]
-                                message:@""
-                               delegate:nil
-                      cancelButtonTitle:@"OK"
-                      otherButtonTitles:nil] show];
 }
 
 #pragma mark
