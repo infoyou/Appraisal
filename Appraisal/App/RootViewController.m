@@ -31,6 +31,7 @@
     [self adjustView];
     
     [self loadLocation];
+    
 }
 
 - (void)loadLocation
@@ -188,8 +189,8 @@
 - (void)initAllSharePlat
 {
     
-    NSString *title = [NSString stringWithFormat:@"我正在用东方典当,小伙伴们快去试试吧~~~"];
-    NSString *shareUrl = [NSString stringWithFormat:@"https://www.5adian.com/ios/ipad/dfdd/jdpg/"];
+    NSString *title = [NSString stringWithFormat:@"估一估谁是任性土豪---"];
+    NSString *shareUrl = [NSString stringWithFormat:@"http://www.hurongclub.com/download/download.html"];
     
     if (!self.activityView) {
         self.activityView = [[HYActivityView alloc]initWithTitle:@"分享至" referView:self.view];

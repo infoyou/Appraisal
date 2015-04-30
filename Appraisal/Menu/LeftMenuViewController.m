@@ -340,4 +340,22 @@
     
 }
 
+- (void)goHome
+{
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    // 样式修改
+    UITableViewCell * selCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIImageView *iconView = (UIImageView *)[selCell viewWithTag:10];
+    UILabel *typeName = (UILabel*)[selCell viewWithTag:11];
+    
+    iconView.image = [UIImage imageNamed:menuIconSelArray[0]];
+    typeName.textColor = [CommonUtils colorWithHexString:@"3d98ff"];
+    selCell.backgroundColor = [CommonUtils colorWithHexString:@"0a1425"];
+    
+    // 页面切换
+    MSPaneLeftViewControllerType paneViewControllerType = [self paneViewControllerTypeForIndexPath:indexPath];
+    [self transitionToViewController:paneViewControllerType];
+}
+
 @end

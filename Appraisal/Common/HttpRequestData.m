@@ -1,10 +1,3 @@
-//
-//  HttpRequestData.m
-//  ADianIPhone
-//
-//  Created by Adam on 14/12/5.
-//  Copyright (c) 2014年 5adian. All rights reserved.
-//
 
 #import "HttpRequestData.h"
 #import "ASIFormDataRequest.h"

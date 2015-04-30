@@ -28,10 +28,6 @@
     
     self.dynamicsDrawerViewController = [[MSDynamicsDrawerViewController alloc] init];
     
-    // Add some example stylers
-//    [self.dynamicsDrawerViewController addStylersFromArray:@[[MSDynamicsDrawerScaleStyler styler], [MSDynamicsDrawerFadeStyler styler]] forDirection:MSDynamicsDrawerDirectionLeft];
-//    [self.dynamicsDrawerViewController addStylersFromArray:@[[MSDynamicsDrawerParallaxStyler styler]] forDirection:MSDynamicsDrawerDirectionRight];
-    
     // Left
     leftMenuVC = [[LeftMenuViewController alloc] init];
     leftMenuVC.dynamicsDrawerViewController = self.dynamicsDrawerViewController;
@@ -90,16 +86,20 @@
     
 //    UIWebViewController *webVC = [[UIWebViewController alloc] init];
     UINavigationController *webNav = [[UINavigationController alloc] initWithRootViewController:self.dynamicsDrawerViewController];
-    [webNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"naviBg.png"] forBarMetrics:UIBarMetricsDefault];
+    [webNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"naviBg.png"]
+                               forBarMetrics:UIBarMetricsDefault];
+    
     [webNav.navigationBar setBarStyle:UIBarStyleBlack];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
+     setTitleTextAttributes:
      @{UITextAttributeTextColor:[UIColor blackColor],
        UITextAttributeTextShadowOffset:[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
        UITextAttributeTextShadowColor:[UIColor whiteColor],
        UITextAttributeFont: [UIFont fontWithName:@"Helvetica" size:17.0]
        }
-                                                                                            forState:UIControlStateNormal];
+     
+     forState:UIControlStateNormal];
     
     self.window.rootViewController = webNav;
 }
@@ -175,6 +175,13 @@
 - (void)resetLeftMenuState
 {
     [leftMenuVC updateCellStateToNormal];
+}
+
+- (void)goHome
+{
+    // Transition to the first view controller
+    [leftMenuVC transitionToViewController:JDPGVC];
+    [leftMenuVC goHome];
 }
 
 @end

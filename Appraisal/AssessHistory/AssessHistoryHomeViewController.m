@@ -90,8 +90,6 @@
     
     UITableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"AssessHistoryListCell" owner:self options:nil] lastObject];
     
-    UIImageView *listIconView = (UIImageView *)[cell viewWithTag:99];
-    
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:100];
     UILabel *marketPrice = (UILabel *)[cell viewWithTag:101];
     UILabel *usedPrice = (UILabel *)[cell viewWithTag:102];
@@ -111,7 +109,8 @@
         
         UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
         if (userImage) { // if the dictionary of images has it just display it
-            cell.imageView.image = userImage;
+            UIImageView *updateIconView = (UIImageView *)[cell viewWithTag:99];
+            updateIconView.image = userImage;
         } else {
             
 //            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
@@ -147,38 +146,40 @@
             });
         }
     } else {
+        
+        UIImageView *iconView = (UIImageView *)[cell viewWithTag:99];
         // 默认图片
         switch (assessObject.logicType) {
             case 1:// 房地产
-                listIconView.image = [UIImage imageNamed:@"houseIcon.png"];
+                iconView.image = [UIImage imageNamed:@"houseIcon.png"];
                 break;
                 
             case 2:// 汽车
-                listIconView.image = [UIImage imageNamed:@"carIcon.png"];
+                iconView.image = [UIImage imageNamed:@"carIcon.png"];
                 break;
                 
             case 3:// 钻石
-                listIconView.image = [UIImage imageNamed:@"demandIcon.png"];
+                iconView.image = [UIImage imageNamed:@"demandIcon.png"];
                 break;
                 
             case 4:// 手表
-                listIconView.image = [UIImage imageNamed:@"watchIcon.png"];
+                iconView.image = [UIImage imageNamed:@"watchIcon.png"];
                 break;
                 
             case 5:// 素金
-                listIconView.image = [UIImage imageNamed:@"goldIcon.png"];
+                iconView.image = [UIImage imageNamed:@"goldIcon.png"];
                 break;
                 
             case 6:// 有色宝石
-                listIconView.image = [UIImage imageNamed:@"metalIcon.png"];
+                iconView.image = [UIImage imageNamed:@"metalIcon.png"];
                 break;
                 
             case 7:// 玉石饰品
-                listIconView.image = [UIImage imageNamed:@"stoneIcon.png"];
+                iconView.image = [UIImage imageNamed:@"stoneIcon.png"];
                 break;
                 
             case 8:// 艺术品
-                listIconView.image = [UIImage imageNamed:@"artIcon.png"];
+                iconView.image = [UIImage imageNamed:@"artIcon.png"];
                 break;
                 
             default:

@@ -48,6 +48,20 @@
     [super viewDidLoad];
     
     self.title = @"典当报告";
+    
+    UIImage *image = [UIImage imageNamed:@"home.png"];
+    UIButton *imageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [imageBtn addTarget:self action:@selector(doHomeAction:) forControlEvents:UIControlEventTouchUpInside];
+    imageBtn.bounds = CGRectMake( 0, 0, 20, 20);
+    [imageBtn setImage:image forState:UIControlStateNormal];
+    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithCustomView:imageBtn];
+    
+//    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"home.png"] style:UIBarButtonItemStylePlain target:self action:@selector(doHomeAction:)];
+    self.navigationItem.rightBarButtonItem = homeButton;
+    
+//    UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Show" style:UIBarButtonItemStylePlain target:self action:@selector(refreshPropertyList:)];
+//    self.navigationItem.rightBarButtonItem = anotherButton;
+    
 }
 
 - (void)loadLogicDataFromServer
@@ -188,9 +202,9 @@
 
 - (IBAction)doHomeAction:(id)sender {
     
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:YES];
     
-    [((AppDelegate *)APP_DELEGATE).window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+//    [(AppDelegate *)APP_DELEGATE goHome];
 }
 
 @end

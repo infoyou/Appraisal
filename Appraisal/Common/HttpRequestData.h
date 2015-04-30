@@ -1,13 +1,9 @@
 //
 //  HttpRequestData.h
-//  ADianIPhone
 //
-//  connection by ASIFormDataRequest
+//  Created by Adam on 15/4/5.
+//  All rights reserved.
 //
-//  Created by Adam on 14/12/5.
-//  Copyright (c) 2014年 5adian. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 @interface HttpRequestData : NSObject

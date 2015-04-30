@@ -25,5 +25,6 @@ typedef NS_ENUM(NSUInteger, MSPaneLeftViewControllerType) {
 - (void)transitionToViewController:(MSPaneLeftViewControllerType)paneViewControllerType;
 
 - (void)updateCellStateToNormal;
+- (void)goHome;
 
 @end

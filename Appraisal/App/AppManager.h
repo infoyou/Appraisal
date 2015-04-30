@@ -46,9 +46,15 @@
 // 标的物记录号
 @property (nonatomic, copy) NSString *objectRecordId;
 @property (nonatomic, copy) NSString *objectVideoId;
+
+// 图片信息 [image]
 @property (nonatomic, retain) NSMutableArray *objectAttachmentFileNameArray;
 @property (nonatomic, retain) NSMutableArray *objectUploadImgIdArray;
 
+// 视频信息 [video]
+@property (nonatomic, copy) NSString *objectVideoFileName;
+
+// 位置信息
 @property (nonatomic, copy) NSString *longitude;
 @property (nonatomic, copy) NSString *latitude;
 

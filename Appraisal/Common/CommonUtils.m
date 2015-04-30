@@ -258,6 +258,22 @@ static NSBundle *bundle = nil;
     
 }
 
++ (void)removeDocumentFile:(NSString *)dirName fileName:(NSString *)fileName
+{
+    
+    NSString *pathName = [self getPathName:dirName];
+    
+    NSString *movieFilePath = [pathName stringByAppendingPathComponent:fileName];
+    
+    NSFileManager* manager = [[NSFileManager alloc] init];
+    
+    NSError *error = nil;
+    if ([manager fileExistsAtPath:movieFilePath]) {
+        [manager removeItemAtPath:movieFilePath error:&error];
+    }
+    
+}
+
 + (void)removeDocumentFile:(NSString *)dataPath
 {
 

@@ -624,8 +624,8 @@
                 
                 assessInfo.mark1 = [NSString stringWithFormat:@"品牌: %@", watchType];
                 assessInfo.mark2 = [NSString stringWithFormat:@"系列: %@", watchSeries];
-                assessInfo.mark3 = [NSString stringWithFormat:@"性别: %@", watchSex];
-                assessInfo.mark4 = [NSString stringWithFormat:@"材料: %@", material];
+                assessInfo.mark3 = [NSString stringWithFormat:@"适用人群: %@", watchSex];
+//                assessInfo.mark4 = [NSString stringWithFormat:@"材料: %@", material];
             }
                 break;
                 

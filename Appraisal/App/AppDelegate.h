@@ -31,5 +31,6 @@
 
 - (void)resetRightMenuState;
 - (void)resetLeftMenuState;
+- (void)goHome;
 
 @end

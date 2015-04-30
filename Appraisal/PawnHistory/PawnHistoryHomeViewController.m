@@ -90,11 +90,6 @@
     
     UITableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"PawnHistoryListCell" owner:self options:nil] lastObject];
     
-    UIImageView *iconBackView = (UIImageView *)[cell viewWithTag:98];
-    DLog(@"iconView.frame = %@", NSStringFromCGRect(iconBackView.frame));
-    
-    UIImageView *iconView = (UIImageView *)[cell viewWithTag:99];
-    
     UILabel *title = (UILabel *)[cell viewWithTag:100];
     UILabel *title1 = (UILabel *)[cell viewWithTag:101];
     UILabel *title2 = (UILabel *)[cell viewWithTag:102];
@@ -114,10 +109,11 @@
         
         UIImage *userImage = [imageArray objectForKey:[NSNumber numberWithInt:row]];
         if (userImage) { // if the dictionary of images has it just display it
-            cell.imageView.image = userImage;
+            UIImageView *updateIconView = (UIImageView *)[cell viewWithTag:99];
+            updateIconView.image = userImage;
         } else {
             
-            //            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
+            // cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
             NSString *filePath = [CommonUtils loadImagePath:@"/image" file:localFileName];
             
             BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
@@ -141,8 +137,6 @@
                         UITableViewCell *lookedUpCell = [tableView cellForRowAtIndexPath:indexPath];
                         UIImageView *updateIconView = (UIImageView *)[lookedUpCell viewWithTag:99];
                         
-                        DLog(@"updateIconView.frame = %@", NSStringFromCGRect(updateIconView.frame));
-                        
                         if (lookedUpCell){
                             updateIconView.image = image;
                             [lookedUpCell setNeedsLayout];
@@ -153,6 +147,8 @@
         }
     } else {
         // 默认图片
+        UIImageView *iconView = (UIImageView *)[cell viewWithTag:99];
+        
         switch (assessObject.logicType) {
             case 1:// 房地产
                 iconView.image = [UIImage imageNamed:@"houseIcon.png"];
