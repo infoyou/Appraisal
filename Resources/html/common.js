@@ -1,4 +1,6 @@
-var url = 'http://115.29.161.226:85/weixin/jsonapi';
+//var url = 'http://115.29.161.226:85/weixin/jsonapi';
+var url = 'http://wx.orientalpawn.com/weixin/jsonapi';
+
 function ProgressAnimate(num){
 	var oi = 0; 
 	var tTimeout = null; 

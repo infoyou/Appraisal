@@ -169,6 +169,25 @@
     
     self.pawnPriceLabel.attributedText = pawnPriceAttributed;
     
+    if ([AppManager instance].babyType == GOLD_TYPE) {
+        
+        // 素金饰品, 去掉市场价和二手价
+        
+        self.marketPriceLabel.hidden = YES;
+        self.usedPriceLabel.hidden = YES;
+        self.pawnPriceLabel.frame = CGRectOffset(self.pawnPriceLabel.frame, 0, -57);
+        
+    } else if ([AppManager instance].babyType == DIAMOND_TYPE) {
+        
+        // 钻石, 去掉二手价
+        self.usedPriceLabel.hidden = YES;
+        self.pawnPriceLabel.frame = CGRectOffset(self.pawnPriceLabel.frame, 0, -29);
+
+    } else {
+        
+        self.marketPriceLabel.hidden = NO;
+        self.usedPriceLabel.hidden = NO;
+    }
     
 }
 

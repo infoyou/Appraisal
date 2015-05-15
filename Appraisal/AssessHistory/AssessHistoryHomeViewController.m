@@ -53,6 +53,7 @@
     
     // add additional scroll area arround content
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        
         const CGRect navBarFrame = self.navigationController.navigationBar.frame;
         const CGFloat blankVerticalSpace = navBarFrame.origin.y + navBarFrame.size.height;
         mTableView.contentInset = UIEdgeInsetsMake(blankVerticalSpace, 0, 0, 0);
@@ -102,6 +103,25 @@
     marketPrice.text = assessObject.marketPrice;
     usedPrice.text = assessObject.usedPrice;
     pawnPrice.text = assessObject.pawnPrice;
+    
+    if (assessObject.logicType == 5) {
+        // 素金饰品，去掉市场价和二手价
+        marketPrice.hidden = YES;
+        usedPrice.hidden = YES;
+        pawnPrice.hidden = NO;
+        pawnPrice.frame = CGRectOffset(pawnPrice.frame, 0, -34);
+        
+    } else if (assessObject.logicType == 5 || assessObject.logicType == 3) {
+        // 钻石评估结果页面和鉴定评估记录里属于钻石评估结果的 去掉二手价
+        marketPrice.hidden = NO;
+        usedPrice.hidden = YES;
+        pawnPrice.hidden = NO;
+        pawnPrice.frame = CGRectOffset(pawnPrice.frame, 0, -17);
+    } else {
+        marketPrice.hidden = NO;
+        usedPrice.hidden = NO;
+        pawnPrice.hidden = NO;
+    }
     
     if ([assessObject.fileName length] > 0)
     {

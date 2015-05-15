@@ -53,6 +53,7 @@
     
     // add additional scroll area arround content
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        
         const CGRect navBarFrame = self.navigationController.navigationBar.frame;
         const CGFloat blankVerticalSpace = navBarFrame.origin.y + navBarFrame.size.height;
         mTableView.contentInset = UIEdgeInsetsMake(blankVerticalSpace, 0, 0, 0);

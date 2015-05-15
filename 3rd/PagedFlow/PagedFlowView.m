@@ -458,6 +458,11 @@
             break;
     }
     
+    if (pageIndex < 0 || pageIndex >= _pageCount) {
+        // 超出范围
+        return;
+    }
+    
     if (pageControl && [pageControl respondsToSelector:@selector(setCurrentPage:)]) {
         [pageControl setCurrentPage:pageIndex];
     }

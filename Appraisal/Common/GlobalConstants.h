@@ -25,7 +25,10 @@
 #define GET_METHOD                  @"GET"
 #define POST_METHOD                 @"POST"
 
-#define HOST_URL                    @"http://115.29.161.226:85/weixin/jsonapi"
+//Test
+//#define HOST_URL                    @"http://115.29.161.226:85/weixin/jsonapi"
+//Publish
+#define HOST_URL                    @"http://wx.orientalpawn.com/weixin/jsonapi"
 
 // ######################### Share Begin #########################
 

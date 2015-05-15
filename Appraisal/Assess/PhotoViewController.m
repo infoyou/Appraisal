@@ -939,7 +939,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             // 停止录制
             [[self movieFileOutput] stopRecording];
             // 转码
-            // [self doEncodeVideoPre];
+//             [self doEncodeVideoPre];
             // 上传
              [self doUploadVideoPre];
         }
@@ -1242,7 +1242,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     // set URL
-    [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg" ]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/uploadImg", HOST_URL];
+    [request setURL:[NSURL URLWithString:urlStr]];
 
     //建立连接（异步的response在专门的代理协议中实现）
 //    [NSURLConnection connectionWithRequest:request delegate:self];
@@ -1367,7 +1368,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     // set URL
-    [request setURL:[NSURL URLWithString:@"http://115.29.161.226:85/weixin/jsonapi/uploadImg"]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@/uploadImg", HOST_URL];
+    [request setURL:[NSURL URLWithString:urlStr]];
 
     [NSURLConnection
      sendAsynchronousRequest:request

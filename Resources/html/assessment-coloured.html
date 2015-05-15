@@ -118,12 +118,13 @@
 			});
 		})
 		var numPage = 0;
-		var name,userName,telephone,categoryType,weight,Size,commodityName,fineness,brand,qualityDescription,certificate,certificateNo,description='';
+		var name,userName,telephone,categoryType,categoryTypeText,weight,Size,commodityName,fineness,brand,qualityDescription,certificate,certificateNo,description='';
 		function nextPage(obj){		
 			 name = $.trim($("#name").val());
 			 userName = $.trim($("#userName").val());
 			 telephone = $.trim($("#telephone").val());	
 			 categoryType = $.trim($("#categoryType").find('option:selected').val());
+             categoryTypeText= $.trim($("#categoryType  option:selected").text())
 			 weight = $.trim($("#weight").val());
 			 Size = $.trim($("#Size").val());
 			 commodityName = $.trim($("#commodityName").val());
@@ -208,7 +209,7 @@
 						return false;
 				}	
 				ProgressAnimate(100);
-			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),categoryType:encodeURIComponent(categoryType),weight:encodeURIComponent(weight),Size:encodeURIComponent(Size),commodityName:encodeURIComponent(commodityName),brand:encodeURIComponent(brand),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"6"};	
+			var SubmitData ={name:encodeURIComponent(name),userName:encodeURIComponent(userName),telephone:encodeURIComponent(telephone),categoryTypeText:encodeURIComponent(categoryTypeText),categoryType:encodeURIComponent(categoryType),weight:encodeURIComponent(weight),Size:encodeURIComponent(Size),commodityName:encodeURIComponent(commodityName),brand:encodeURIComponent(brand),qualityDescription:encodeURIComponent(qualityDescription),certificate:encodeURIComponent(certificate),certificateNo:encodeURIComponent(certificateNo),description:encodeURIComponent(description),type:"6"};
 			//console.log(SubmitData); //SubmitAlert
 			SubmitToApp('createImpawn',SubmitData)//【玉石饰品 艺术品 有色宝石】  这三种评估。直接调用我要当的结果。 会返回id的。在典当记录里能看到。在评估记录里看不到后续通过id可以获得评估结果
 		}

@@ -67,7 +67,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="icon.png" width="114" height="114"/>
+        <image name="icon.png" width="72" height="72"/>
         <image name="imgBoard.png" width="184" height="194"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -281,7 +281,7 @@ static FMDBConnection *instance = nil;
 
     NSMutableArray *assessArray = [NSMutableArray array];
 
-    NSString *sql = [NSString stringWithFormat:@"select * from assess where assessType == %d", logicType];
+    NSString *sql = [NSString stringWithFormat:@"select * from assess where assessType == %d order by assessId desc", logicType];
     FMResultSet *res = [self.db executeQuery:sql];
     
     while ([res next]) {

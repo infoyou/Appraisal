@@ -12,12 +12,9 @@
 
 @property (nonatomic, copy) NSString *assessId;
 
-// 标的物返回结果id
-@property (nonatomic, copy) NSString *logicId;
-// 标的物类型
-@property (nonatomic, assign) NSInteger logicType;
-// 评估 or 典当
-@property (nonatomic, assign) NSInteger assessType;
+@property (nonatomic, copy) NSString *logicId; // 标的物返回结果id
+@property (nonatomic, assign) NSInteger logicType; // 标的物类型
+@property (nonatomic, assign) NSInteger assessType; // 评估 or 典当
 
 // 图片 or 视频
 @property (nonatomic, assign) NSInteger attachType;
