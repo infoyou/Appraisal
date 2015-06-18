@@ -157,6 +157,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self loadTypeResource];
     
     dispatch_async([self sessionQueue], ^{
+        
         [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
         [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
         [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
@@ -170,6 +171,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [[strongSelf session] startRunning];
             });
         }]];
+        
         [[self session] startRunning];
     });
     
@@ -644,8 +646,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point monitorSubjectAreaChange:(BOOL)monitorSubjectAreaChange
 {
     dispatch_async([self sessionQueue], ^{
+        
         AVCaptureDevice *device = [[self videoDeviceInput] device];
         NSError *error = nil;
+        
         if ([device lockForConfiguration:&error])
         {
             if ([device isFocusPointOfInterestSupported] && [device isFocusModeSupported:focusMode])
@@ -665,6 +669,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         {
             NSLog(@"%@", error);
         }
+        
     });
 }
 
@@ -1314,7 +1319,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSLog(@"movieFilePath = %@", movieFilePath);
     NSURL *videoURL = [NSURL fileURLWithPath:movieFilePath];
     NSData *videoToPost = [NSData dataWithContentsOfURL:videoURL];
-    
     
     NSString *BoundaryConstant = @"BoundaryConstantVideo";
     NSString *FileParamConstant = @"FileParamConstantVideo";

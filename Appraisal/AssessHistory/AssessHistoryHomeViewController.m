@@ -133,7 +133,7 @@
             updateIconView.image = userImage;
         } else {
             
-//            cell.imageView.image = [UIImage imageNamed:@"icon.png"]; // set placeholder image
+//            cell.imageView.image = [UIImage imageNamed:@"Icon.png"]; // set placeholder image
             NSString *filePath = [CommonUtils loadImagePath:@"/image" file:localFileName];
             
             BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];

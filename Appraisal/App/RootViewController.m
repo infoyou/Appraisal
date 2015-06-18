@@ -210,7 +210,6 @@
     [self.activityView show];
 }
 
-
 /*!
  @method
  @abstract	分享视频信息
@@ -265,7 +264,6 @@
                     }];
     
 }
-
 
 /*!
  @method
@@ -418,6 +416,13 @@
     NSLog(@"altitude %@",
           [NSString stringWithFormat:@"%gm", self.currentLocation.altitude]);
      */
+    
+    if ([AppManager instance].isStartFirst) {
+        
+        [self uploadLocationData];
+        
+        [AppManager instance].isStartFirst = NO;
+    }
 }
 
 #pragma mark - push view controller
@@ -460,6 +465,63 @@
     [self.activityIndicatorView stopAnimating];
     self.activityIndicatorView.hidden = YES;
     self.activityIndicatorViewBG.hidden = YES;
+}
+
+#pragma mark - Location
+- (void)uploadLocationData
+{
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[dat timeIntervalSince1970];
+    NSString *dateId = [NSString stringWithFormat:@"%.0f", a];
+    
+    NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
+    [dataDict setObject:[AppManager instance].longitude forKey:@"lon"];
+    [dataDict setObject:[AppManager instance].latitude forKey:@"lat"];
+    [dataDict setObject:dateId forKey:@"time"];
+    
+    NSMutableDictionary *paramDict = [CommonUtils getParamDict:@"uploadLonLat"
+                                                      dataDict:dataDict];
+    
+    [self showHUDWithText:@"正在加载"
+                   inView:self.view
+              methodBlock:^(CompletionBlock completionBlock, ATMHud *hud)
+     {
+         
+         [HttpRequestData dataWithDic:paramDict
+                          requestType:POST_METHOD
+                            serverUrl:HOST_URL
+                             andBlock:^(NSString*requestStr) {
+                                 
+                                 if (completionBlock) {
+                                     completionBlock();
+                                 }
+                                 
+                                 if ([requestStr isEqualToString:@"Start"]) {
+                                     
+                                     DLog(@"Start");
+                                 } else if([requestStr isEqualToString:@"Failed"]) {
+                                     
+                                     DLog(@"Failed");
+                                     
+                                 } else {
+                                     
+                                     NSDictionary* backDic = [HttpRequestData jsonValue:requestStr];
+                                     NSLog(@"requestStr = %@", backDic);
+                                     
+                                     if (backDic != nil) {
+                                         
+                                         NSString *errCodeStr = (NSString *)[backDic valueForKey:@"errcode"];
+                                         
+                                         if ( [errCodeStr integerValue] == 0 ) {
+                                             
+                                         } else {
+                                             
+                                           //  [self showHUDWithText:[backDic valueForKey:@"errmsg"]];
+                                         }
+                                     }
+                                 }
+                             }];
+     }];
 }
 
 @end

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PawnReportViewController">
@@ -52,7 +52,7 @@
                                     <rect key="frame" x="21" y="0.0" width="116" height="116"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon.png" id="vCQ-sc-rzW">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" id="vCQ-sc-rzW">
                                     <rect key="frame" x="25" y="3" width="109" height="109"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
@@ -161,10 +161,10 @@
         </view>
     </objects>
     <resources>
+        <image name="Icon.png" width="184" height="194"/>
         <image name="back.png" width="23" height="37"/>
         <image name="bg0.png" width="640" height="1079"/>
         <image name="home.png" width="39" height="39"/>
-        <image name="icon.png" width="114" height="114"/>
         <image name="imgBoard.png" width="184" height="194"/>
         <image name="pawnTop.png" width="426" height="128"/>
         <image name="photoTopBg.png" width="106" height="68"/>

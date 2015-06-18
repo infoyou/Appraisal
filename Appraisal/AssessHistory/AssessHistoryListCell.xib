@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -31,7 +31,7 @@
                         <rect key="frame" x="15" y="13" width="92" height="96"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" tag="99" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon.png" id="nwp-mn-AUA">
+                    <imageView userInteractionEnabled="NO" tag="99" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" id="nwp-mn-AUA">
                         <rect key="frame" x="18" y="15" width="86" height="91"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
@@ -67,7 +67,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="icon.png" width="72" height="72"/>
+        <image name="Icon.png" width="184" height="194"/>
         <image name="imgBoard.png" width="184" height="194"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

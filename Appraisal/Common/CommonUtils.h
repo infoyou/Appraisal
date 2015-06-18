@@ -103,4 +103,7 @@
 #pragma mark - Common Method
 + (UIColor*)colorWithHexString:(NSString*)hex;
 
+//压缩图片
++ (UIImage *)imageWithImageSimple:(UIImage *)image scaledToSize:(CGSize)newSize;
+
 @end

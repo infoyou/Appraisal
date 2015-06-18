@@ -61,6 +61,8 @@
 //是否发表评论
 @property (nonatomic) BOOL isUserComment;
 
+@property (nonatomic, assign) BOOL isStartFirst;
+
 + (AppManager *)instance;
 
 - (BOOL)loadUser;

@@ -184,4 +184,15 @@
     [leftMenuVC goHome];
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [AppManager instance].isStartFirst = YES;
+    NSLog(@"applicationDidBecomeActive");
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    NSLog(@"applicationWillResignActive");
+}
+
 @end

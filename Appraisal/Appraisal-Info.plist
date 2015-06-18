@@ -9,11 +9,22 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIcons</key>
-	<dict/>
+	<dict>
+		<key>Item 0</key>
+		<string>Icon.png</string>
+		<key>Item 1</key>
+		<string>60.png</string>
+		<key>Item 2</key>
+		<string>76.png</string>
+		<key>Item 3</key>
+		<string>120.png</string>
+		<key>Item 4</key>
+		<string>152.png</string>
+	</dict>
 	<key>CFBundleIcons~ipad</key>
 	<dict/>
 	<key>CFBundleIdentifier</key>
-	<string>com.bx.Appraisal</string>
+	<string>com.hrc.Appraisal</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
